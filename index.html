@@ -11,68 +11,153 @@
             color: #e0e0e0;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            justify-content: center;
-            align-items: center;
+            line-height: 1.6;
+        }
+        header {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 40px 20px;
             text-align: center;
+            border-bottom: 3px solid #ff5722;
+        }
+        header h1 {
+            color: #ff5722;
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+        header p.tagline {
+            font-size: 1.2rem;
+            color: #b0b0b0;
+            margin: 0;
         }
         .container {
-            max-width: 600px;
-            padding: 40px;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .section {
             background: #1e1e1e;
+            padding: 30px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.5);
             border: 1px solid #333;
-        }
-        h1 {
-            color: #ff5722;
-            margin-bottom: 10px;
-        }
-        p.tagline {
-            font-size: 1.2rem;
-            color: #b0b0b0;
             margin-bottom: 30px;
         }
-        .info-box {
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 8px;
+        h2 {
+            color: #ffa726;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .price-tag {
+            font-size: 1.5rem;
+            color: #ff5722;
+            font-weight: bold;
             margin-bottom: 20px;
         }
-        .info-box h3 {
-            margin-top: 0;
-            color: #ffa726;
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .menu-item {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #3a3a3a;
+        }
+        .menu-item h4 {
+            margin: 0 0 5px 0;
+            color: #fff;
+        }
+        .menu-item p {
+            margin: 0;
+            color: #b0b0b0;
+            font-size: 0.95rem;
         }
         .contacts {
             font-size: 1.1rem;
-            line-height: 1.6;
+            text-align: center;
         }
         .contacts a {
             color: #ff5722;
             text-decoration: none;
+            font-weight: bold;
         }
         .contacts a:hover {
             text-decoration: underline;
         }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+
+    <header>
         <h1>Ember & Gatherer</h1>
-        <p class="tagline">Smokehouse and Catering</p>
-        
-        <div class="info-box">
-            <h3>Operating Hours</h3>
-            <p>Monday – Sunday: 8:00 AM – 6:00 PM</p>
+        <p class="tagline">Smokehouse & Catering • Edmonton, Alberta</p>
+    </header>
+
+    <div class="container">
+
+        <!-- Меню Кейтеринга -->
+        <div class="section">
+            <h2>Premium Catering Menu</h2>
+            <div class="price-tag">$80 CAD / Person</div>
+            <p>Includes five starters, premium platters, 3 salads, 3 main courses, 3 sides, 2 desserts, and a seasonal fruit platter[span_3](start_span)[span_3](end_span). We can create a custom menu to suit your preferences[span_4](start_span)[span_4](end_span).</p>
+
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <h4>Five Starters</h4>
+                    <p>Roulade Assortment (Spinach, salmon & cream cheese, Cheese & ham), Shrimp & Guacamole Profiteroles, Eggplant & Walnut Rolls, Baby Mozzarella Canapé, Chicken Pâté Tartlets[span_5](start_span)[span_5](end_span).</p>
+                </div>
+                <div class="menu-item">
+                    <h4>Meat & Cheese Platters</h4>
+                    <p><strong>Meat Platter:</strong> Smoked bacon, Salo, Buzhenina, Smoked sausage, Ham, Salami, Prosciutto[span_6](start_span)[span_6](end_span).<br><strong>Cheese Platter:</strong> Brie, Aged cheddar, Gouda, Blue cheese, Grapes, walnuts, honey & crackers[span_7](start_span)[span_7](end_span).</p>
+                </div>
+                <div class="menu-item">
+                    <h4>Salads (Choose Three)</h4>
+                    <p>Caesar Salad, Greek Salad, Coleslaw, Potato Salad with Ham[span_8](start_span)[span_8](end_span).</p>
+                </div>
+                <div class="menu-item">
+                    <h4>Main Courses (Choose Three)</h4>
+                    <p>Roast Beef with Gravy, Roast Chicken, Roast Pork Loin (Apple-caramel glaze), Baked Salmon (Orange glaze), Meatloaf[span_9](start_span)[span_9](end_span).</p>
+                </div>
+                <div class="menu-item">
+                    <h4>Sides (Choose Three)</h4>
+                    <p>Pierogies, Mac & Cheese, Mashed Potatoes, Herb-Roasted Potatoes, Vegetable Rice, Steamed Rice[span_10](start_span)[span_10](end_span).</p>
+                </div>
+                <div class="menu-item">
+                    <h4>Desserts (Choose Two)</h4>
+                    <p>Tiramisu, Napoleon, Honey Cake, Vanilla Cream Profiteroles[span_11](start_span)[span_11](end_span).</p>
+                </div>
+            </div>
         </div>
 
-        <div class="contacts">
-            <h3>Contact Us</h3>
-            <p>Phone 1: <a href="tel:+13683992562">+1 (368) 399-2562</a></p>
-            <p>Phone 2: <a href="tel:+17808186312">+1 (780) 818-6312</a></p>
+        <!-- Часы работы -->
+        <div class="section">
+            <h2>Operating Hours</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin: 0;">Monday – Sunday: 8:00 AM – 6:00 PM[span_12](start_span)[span_12](end_span)</p>
         </div>
+
+        <!-- Контакты -->
+        <div class="section contacts">
+            <h2>Contact Information</h2>
+            <p>Artisan Smoked Meats • All items prepared in Edmonton, AB[span_13](start_span)[span_13](end_span)</p>
+            <p>Phone 1: <a href="tel:+13683992562">+1 (368) 399-2562</a>[span_14](start_span)[span_14](end_span)</p>
+            <p>Phone 2: <a href="tel:+17808186312">+1 (780) 818-6312</a>[span_15](start_span)[span_15](end_span)</p>
+        </div>
+
     </div>
+
+    <footer>
+        &copy; 2026 Ember & Gatherer. All rights reserved.
+    </footer>
+
 </body>
 </html>
