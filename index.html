@@ -201,6 +201,53 @@
             color: var(--primary-red);
             white-space: nowrap;
         }
+        /* Стили калькулятора */
+        .calc-box {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid var(--primary-red);
+            box-shadow: var(--shadow);
+        }
+        .calc-row {
+            margin-bottom: 15px;
+        }
+        .calc-row label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        .calc-row select, .calc-row input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #fcf9f5;
+            font-size: 1rem;
+            color: var(--text-main);
+            box-sizing: border-box;
+        }
+        .calc-total {
+            background: #fcf9f5;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .calc-total span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+        }
+        .calc-total h3 {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            margin: 5px 0 0 0;
+        }
         .faq-item {
             border-bottom: 1px solid var(--border-color);
             padding: 15px 0;
@@ -253,10 +300,41 @@
             </div>
         </section>
 
-        <!-- Меню ремісничих копченостей (Прайс-лист за фунт) -->
+        <!-- Интерактивный калькулятор -->
+        <section class="calc-box">
+            <h2>Instant Catering Calculator</h2>
+            <div class="calc-row">
+                <label for="packageSelect">Select Catering Package:</label>
+                <select id="packageSelect" onchange="calculateTotal()">
+                    <option value="29.85">Buffet M — $29.85 / guest</option>
+                    <option value="58.88" selected>Buffet L — $58.88 / guest</option>
+                    <option value="88.85">Buffet XL — $88.85 / guest</option>
+                </select>
+            </div>
+            <div class="calc-row">
+                <label for="guestsInput">Number of Guests:</label>
+                <input type="number" id="guestsInput" value="50" min="10" max="500" oninput="calculateTotal()">
+            </div>
+            <div class="calc-row">
+                <label for="deliverySelect">Delivery & Setup (Edmonton):</label>
+                <select id="deliverySelect" onchange="calculateTotal()">
+                    <option value="99">Edmonton delivery & setup ($99)</option>
+                    <option value="149">Spruce Grove / Leduc ($149)</option>
+                    <option value="199">Calgary ($199)</option>
+                    <option value="299">Banff / Canmore ($299)</option>
+                    <option value="0">Pickup / No delivery fee ($0)</option>
+                </select>
+            </div>
+            <div class="calc-total">
+                <span>Estimated total (Food + Delivery, before GST):</span>
+                <h3 id="totalOutput">$3,043.00</h3>
+            </div>
+        </section>
+
+        <!-- Меню ремесичных копченостей (Прайс-лист за фунт) -->
         <section class="card">
             <h2>Artisan Smoked Meats & Seafood</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">All prices in CAD per lb of finished product[span_0](start_span)[span_0](end_span). Prepared fresh in Edmonton.</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">All prices in CAD per lb of finished product[span_4](start_span)[span_4](end_span). Prepared fresh in Edmonton.</p>
             
             <div class="smoke-grid">
                 <div class="smoke-item">
@@ -264,7 +342,7 @@
                         <h4>Whole Chicken</h4>
                         <p>Tender & juicy smoked whole chicken</p>
                     </div>
-                    <div class="smoke-price">$10.89 / lb[span_1](start_span)[span_1](end_span)</div>
+                    <div class="smoke-price">$10.89 / lb[span_5](start_span)[span_5](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -272,7 +350,7 @@
                         <h4>Chicken Leg Quarters</h4>
                         <p>Flavorful smoked chicken legs</p>
                     </div>
-                    <div class="smoke-price">$10.89 / lb[span_2](start_span)[span_2](end_span)</div>
+                    <div class="smoke-price">$10.89 / lb[span_6](start_span)[span_6](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -280,7 +358,7 @@
                         <h4>Chicken Wings</h4>
                         <p>Classic smoked BBQ wings</p>
                     </div>
-                    <div class="smoke-price">$17.24 / lb[span_3](start_span)[span_3](end_span)</div>
+                    <div class="smoke-price">$17.24 / lb[span_7](start_span)[span_7](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -288,7 +366,7 @@
                         <h4>Pork Belly (Підчеревина)</h4>
                         <p>Rich, slow-smoked pork belly</p>
                     </div>
-                    <div class="smoke-price">$12.70 / lb[span_4](start_span)[span_4](end_span)</div>
+                    <div class="smoke-price">$12.70 / lb[span_8](start_span)[span_8](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -296,7 +374,7 @@
                         <h4>Pork Loin (Корейка)</h4>
                         <p>Lean and expertly smoked pork loin</p>
                     </div>
-                    <div class="smoke-price">$13.15 / lb[span_5](start_span)[span_5](end_span)</div>
+                    <div class="smoke-price">$13.15 / lb[span_9](start_span)[span_9](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -304,7 +382,7 @@
                         <h4>Pork Tenderloin</h4>
                         <p>Extremely tender smoked pork</p>
                     </div>
-                    <div class="smoke-price">$15.42 / lb[span_6](start_span)[span_6](end_span)</div>
+                    <div class="smoke-price">$15.42 / lb[span_10](start_span)[span_10](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -312,7 +390,7 @@
                         <h4>Beef Top Sirloin</h4>
                         <p>Premium smoked beef roast</p>
                     </div>
-                    <div class="smoke-price">$22.23 / lb[span_7](start_span)[span_7](end_span)</div>
+                    <div class="smoke-price">$22.23 / lb[span_11](start_span)[span_11](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -320,7 +398,7 @@
                         <h4>Pork Ribs</h4>
                         <p>Signature BBQ smoked pork ribs</p>
                     </div>
-                    <div class="smoke-price">$14.51 / lb[span_8](start_span)[span_8](end_span)</div>
+                    <div class="smoke-price">$14.51 / lb[span_12](start_span)[span_12](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -328,7 +406,7 @@
                         <h4>Salmon</h4>
                         <p>Delicate craft smoked salmon</p>
                     </div>
-                    <div class="smoke-price">$26.76 / lb[span_9](start_span)[span_9](end_span)</div>
+                    <div class="smoke-price">$26.76 / lb[span_13](start_span)[span_13](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -336,7 +414,7 @@
                         <h4>Shrimp</h4>
                         <p>Smoked tiger shrimp</p>
                     </div>
-                    <div class="smoke-price">$20.41 / lb[span_10](start_span)[span_10](end_span)</div>
+                    <div class="smoke-price">$20.41 / lb[span_14](start_span)[span_14](end_span)</div>
                 </div>
             </div>
         </section>
@@ -406,22 +484,6 @@
             <a href="tel:+13683992562" class="btn-primary" style="margin-bottom: 0; padding: 12px;">Choose Buffet XL</a>
         </div>
 
-        <!-- Custom Menu -->
-        <div class="package-card">
-            <div class="package-header">
-                <div class="package-title">
-                    <h3>Custom Menu</h3>
-                    <span>No minimum guest count</span>
-                </div>
-                <div class="package-price">
-                    $750
-                    <span>min order</span>
-                </div>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Build your own menu with a minimum food and beverage order of $750 before GST.</p>
-            <a href="tel:+13683992562" class="btn-primary" style="margin-bottom: 0; padding: 12px;">Build your menu →</a>
-        </div>
-
         <!-- Дополнительные услуги (Экстры) -->
         <section class="card">
             <h2>Choose the extras your reception needs</h2>
@@ -454,7 +516,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Operating Hours & Contact</div>
-                <div class="faq-answer">Monday – Sunday: 8:00 AM – 6:00 PM[span_11](start_span)[span_11](end_span)<br>Phone 1: <a href="tel:+13683992562">+1 (368) 399-2562</a>[span_12](start_span)[span_12](end_span)<br>Phone 2: <a href="tel:+17808186312">+1 (780) 818-6312</a>[span_13](start_span)[span_13](end_span)</div>
+                <div class="faq-answer">Monday – Sunday: 8:00 AM – 6:00 PM[span_15](start_span)[span_15](end_span)<br>Phone 1: <a href="tel:+13683992562">+1 (368) 399-2562</a>[span_16](start_span)[span_16](end_span)<br>Phone 2: <a href="tel:+17808186312">+1 (780) 818-6312</a>[span_17](start_span)[span_17](end_span)</div>
             </div>
         </section>
 
@@ -462,8 +524,21 @@
 
     <footer>
         &copy; 2026 Ember & Gatherer. All rights reserved.<br>
-        Artisan Smoked Meats & Catering in Edmonton, AB[span_14](start_span)[span_14](end_span).
+        Artisan Smoked Meats & Catering in Edmonton, AB[span_18](start_span)[span_18](end_span).
     </footer>
+
+    <script>
+        function calculateTotal() {
+            const pricePerGuest = parseFloat(document.getElementById('packageSelect').value);
+            const guests = parseInt(document.getElementById('guestsInput').value) || 0;
+            const deliveryFee = parseFloat(document.getElementById('deliverySelect').value);
+            
+            const total = (pricePerGuest * guests) + deliveryFee;
+            document.getElementById('totalOutput').innerText = '$' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        // Запуск при загрузке
+        calculateTotal();
+    </script>
 
 </body>
 </html>
