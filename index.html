@@ -26,34 +26,42 @@
             line-height: 1.6;
         }
         header {
-            padding: 40px 20px 20px 20px;
-            text-align: center;
+            padding: 25px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
-        .brand-title {
-            font-size: 1.5rem;
+        .brand-logo {
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--primary-red);
+            text-transform: uppercase;
             letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 5px;
+            text-decoration: none;
         }
-        .brand-subtitle {
+        .header-btn {
+            background: var(--primary-red);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 20px;
             font-size: 0.85rem;
-            color: var(--text-muted);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(163, 29, 52, 0.2);
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px 40px 20px;
         }
         .hero {
             text-align: center;
-            padding: 30px 0;
+            padding: 20px 0 40px 0;
         }
         .hero-tag {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--primary-red);
@@ -61,14 +69,14 @@
             margin-bottom: 15px;
         }
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             line-height: 1.2;
             color: var(--text-main);
             margin-bottom: 20px;
             font-weight: 800;
         }
         .hero p {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--text-muted);
             margin-bottom: 30px;
         }
@@ -100,7 +108,7 @@
             font-weight: 700;
             font-size: 1rem;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         .card {
             background: var(--card-bg);
@@ -111,7 +119,7 @@
             box-shadow: var(--shadow);
         }
         h2 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: var(--text-main);
             margin-top: 0;
             margin-bottom: 15px;
@@ -123,7 +131,6 @@
             margin-bottom: 20px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            position: relative;
         }
         .package-header {
             display: flex;
@@ -132,17 +139,17 @@
             margin-bottom: 15px;
         }
         .package-title h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.4rem;
+            margin: 0 0 4px 0;
+            font-size: 1.3rem;
             color: var(--primary-red);
         }
         .package-title span {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
         .package-price {
             text-align: right;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--text-main);
         }
@@ -154,10 +161,10 @@
         }
         .package-badges {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             background: #fcf9f5;
             padding: 10px;
@@ -166,12 +173,12 @@
         .smoke-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 12px;
             margin-top: 15px;
         }
         .smoke-item {
             background: #fcf9f5;
-            padding: 15px;
+            padding: 14px 16px;
             border-radius: 12px;
             border: 1px solid #f0e6dc;
             display: flex;
@@ -179,17 +186,17 @@
             align-items: center;
         }
         .smoke-info h4 {
-            margin: 0 0 4px 0;
-            font-size: 1.05rem;
+            margin: 0 0 2px 0;
+            font-size: 1rem;
             color: var(--text-main);
         }
         .smoke-info p {
             margin: 0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
         }
         .smoke-price {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--primary-red);
             white-space: nowrap;
@@ -203,31 +210,30 @@
         }
         .faq-question {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-main);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .faq-answer {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
             margin: 0;
         }
         footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             background: #f0e6dc;
             border-top: 1px solid var(--border-color);
-            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand-title">Ember & Gatherer</div>
-        <div class="brand-subtitle">Smokehouse & Catering • Edmonton</div>
+        <a href="#" class="brand-logo">Ember & Gatherer</a>
+        <a href="tel:+13683992562" class="header-btn">Check Availability →</a>
     </header>
 
     <div class="container">
@@ -239,18 +245,18 @@
             <p>Hot, handcrafted smoked meats and buffet catering—delivered, professionally set up and ready before dinner service.</p>
             
             <a href="tel:+13683992562" class="btn-primary">Check Availability & Request a Quote →</a>
-            <a href="tel:+17808186312" class="btn-gold">Request a Tasting →</a>
+            <a href="tel:+17808186312" class="btn-gold">Request a Wedding Tasting →</a>
 
-            <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-muted);">
-                ✓ No automatic gratuity<br>
-                ✓ We respond within 24 hours — seven days a week
+            <div style="font-size: 0.85rem; color: var(--text-muted);">
+                • No automatic gratuity<br>
+                • We respond within 24 hours — seven days a week
             </div>
         </section>
 
         <!-- Меню ремісничих копченостей (Прайс-лист за фунт) -->
         <section class="card">
             <h2>Artisan Smoked Meats & Seafood</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0;">All prices in CAD per lb of finished product[span_1](start_span)[span_1](end_span). Prepared fresh in Edmonton.</p>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0;">All prices in CAD per lb of finished product[span_0](start_span)[span_0](end_span). Prepared fresh in Edmonton.</p>
             
             <div class="smoke-grid">
                 <div class="smoke-item">
@@ -258,7 +264,7 @@
                         <h4>Whole Chicken</h4>
                         <p>Tender & juicy smoked whole chicken</p>
                     </div>
-                    <div class="smoke-price">$10.89 / lb[span_2](start_span)[span_2](end_span)</div>
+                    <div class="smoke-price">$10.89 / lb[span_1](start_span)[span_1](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -266,7 +272,7 @@
                         <h4>Chicken Leg Quarters</h4>
                         <p>Flavorful smoked chicken legs</p>
                     </div>
-                    <div class="smoke-price">$10.89 / lb[span_3](start_span)[span_3](end_span)</div>
+                    <div class="smoke-price">$10.89 / lb[span_2](start_span)[span_2](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -274,7 +280,7 @@
                         <h4>Chicken Wings</h4>
                         <p>Classic smoked BBQ wings</p>
                     </div>
-                    <div class="smoke-price">$17.24 / lb[span_4](start_span)[span_4](end_span)</div>
+                    <div class="smoke-price">$17.24 / lb[span_3](start_span)[span_3](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -282,7 +288,7 @@
                         <h4>Pork Belly (Підчеревина)</h4>
                         <p>Rich, slow-smoked pork belly</p>
                     </div>
-                    <div class="smoke-price">$12.70 / lb[span_5](start_span)[span_5](end_span)</div>
+                    <div class="smoke-price">$12.70 / lb[span_4](start_span)[span_4](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -290,7 +296,7 @@
                         <h4>Pork Loin (Корейка)</h4>
                         <p>Lean and expertly smoked pork loin</p>
                     </div>
-                    <div class="smoke-price">$13.15 / lb[span_6](start_span)[span_6](end_span)</div>
+                    <div class="smoke-price">$13.15 / lb[span_5](start_span)[span_5](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -298,7 +304,7 @@
                         <h4>Pork Tenderloin</h4>
                         <p>Extremely tender smoked pork</p>
                     </div>
-                    <div class="smoke-price">$15.42 / lb[span_7](start_span)[span_7](end_span)</div>
+                    <div class="smoke-price">$15.42 / lb[span_6](start_span)[span_6](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -306,7 +312,7 @@
                         <h4>Beef Top Sirloin</h4>
                         <p>Premium smoked beef roast</p>
                     </div>
-                    <div class="smoke-price">$22.23 / lb[span_8](start_span)[span_8](end_span)</div>
+                    <div class="smoke-price">$22.23 / lb[span_7](start_span)[span_7](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -314,7 +320,7 @@
                         <h4>Pork Ribs</h4>
                         <p>Signature BBQ smoked pork ribs</p>
                     </div>
-                    <div class="smoke-price">$14.51 / lb[span_9](start_span)[span_9](end_span)</div>
+                    <div class="smoke-price">$14.51 / lb[span_8](start_span)[span_8](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -322,7 +328,7 @@
                         <h4>Salmon</h4>
                         <p>Delicate craft smoked salmon</p>
                     </div>
-                    <div class="smoke-price">$26.76 / lb[span_10](start_span)[span_10](end_span)</div>
+                    <div class="smoke-price">$26.76 / lb[span_9](start_span)[span_9](end_span)</div>
                 </div>
 
                 <div class="smoke-item">
@@ -330,13 +336,13 @@
                         <h4>Shrimp</h4>
                         <p>Smoked tiger shrimp</p>
                     </div>
-                    <div class="smoke-price">$20.41 / lb[span_11](start_span)[span_11](end_span)</div>
+                    <div class="smoke-price">$20.41 / lb[span_10](start_span)[span_10](end_span)</div>
                 </div>
             </div>
         </section>
 
         <!-- Пакеты кейтеринга -->
-        <h2 style="text-align: center; margin-bottom: 20px;">Explore our catering menu</h2>
+        <h2 style="margin-bottom: 15px;">Explore our catering menu</h2>
         
         <!-- Buffet M -->
         <div class="package-card">
@@ -354,7 +360,6 @@
                 <span>🍰 3 Starters</span>
                 <span>🥩 1 Main</span>
                 <span>🥔 1 Side</span>
-                <span>🧁 No dessert</span>
             </div>
             <a href="tel:+13683992562" class="btn-primary" style="margin-bottom: 0; padding: 12px;">Choose Buffet M</a>
         </div>
@@ -413,7 +418,7 @@
                     <span>min order</span>
                 </div>
             </div>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">Build your own menu with a minimum food and beverage order of $750 before GST.</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Build your own menu with a minimum food and beverage order of $750 before GST.</p>
             <a href="tel:+13683992562" class="btn-primary" style="margin-bottom: 0; padding: 12px;">Build your menu →</a>
         </div>
 
@@ -449,7 +454,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">Operating Hours & Contact</div>
-                <div class="faq-answer">Monday – Sunday: 8:00 AM – 6:00 PM[span_12](start_span)[span_12](end_span)<br>Phone 1: <a href="tel:+13683992562">+1 (368) 399-2562</a>[span_13](start_span)[span_13](end_span)<br>Phone 2: <a href="tel:+17808186312">+1 (780) 818-6312</a>[span_14](start_span)[span_14](end_span)</div>
+                <div class="faq-answer">Monday – Sunday: 8:00 AM – 6:00 PM[span_11](start_span)[span_11](end_span)<br>Phone 1: <a href="tel:+13683992562">+1 (368) 399-2562</a>[span_12](start_span)[span_12](end_span)<br>Phone 2: <a href="tel:+17808186312">+1 (780) 818-6312</a>[span_13](start_span)[span_13](end_span)</div>
             </div>
         </section>
 
@@ -457,7 +462,7 @@
 
     <footer>
         &copy; 2026 Ember & Gatherer. All rights reserved.<br>
-        Artisan Smoked Meats & Catering in Edmonton, AB[span_15](start_span)[span_15](end_span).
+        Artisan Smoked Meats & Catering in Edmonton, AB[span_14](start_span)[span_14](end_span).
     </footer>
 
 </body>
