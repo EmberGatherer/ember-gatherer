@@ -1,670 +1,847 @@
-// Ember-Gatherer.mjs
-// Node.js 22+
-//
-// Start: node Ember-Gatherer.mjs
-//
-// Hosting environment:
-//   STRIPE_SECRET_KEY   Your private Stripe key
-//   SITE_ORIGIN         https://embergatherer.com
-//   PORT                Optional, defaults to 3000
-//
-// Unzip the supplied assets folder beside this file.
-
-import http from "node:http";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { readFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
-
-const ROOT = path.dirname(fileURLToPath(import.meta.url));
-const PORT = Number(process.env.PORT || 3000);
-const ORIGIN = new URL(
-  process.env.SITE_ORIGIN || `http://localhost:${PORT}`
-).origin;
-const FREE_DELIVERY = 10000;
-const PHONE = "+1 (368) 399-2562";
-
-// Prices are in Canadian cents.
-// Each row contains: name, portion, price, photo.
-const menu = [
-  {
-    title: "Catering packages",
-    type: "package",
-    rows: [
-      ["Classic Catering", "per guest", 3000, "photo-1547592180-85f173990554"],
-      ["Signature Catering", "per guest", 5500, "photo-1555939594-58d7cb561ad1"],
-      ["Premium Catering", "per guest", 8000, "starter-7"]
-    ]
-  },
-  {
-    title: "Sharing platters",
-    type: "starter",
-    rows: [
-      ["Garden Vegetable Platter", "90 g", 525, "starter-1"],
-      ["Pickled Vegetables & Mushrooms", "75 g", 450, "starter-2"],
-      ["Lightly Cured Salmon Platter", "50 g", 750, "starter-3"],
-      ["Artisan Bread Basket", "50 g", 200, "starter-4"],
-      ["Signature Meat Platter", "60 g", 595, "starter-5"],
-      ["Deluxe Meat Platter", "70 g", 695, "starter-6"],
-      ["Premium Meat Platter", "80 g", 850, "starter-7"],
-      ["Cheese Board with Honey & Walnuts", "70 g", 725, "starter-8"]
-    ]
-  },
-  {
-    title: "Canapés & bruschetta",
-    type: "starter",
-    rows: [
-      ["Smoked Sprat & Cornichon Canapé", "1 piece", 275, "starter-9"],
-      ["Smoked Salmon & Guacamole Bruschetta", "1 piece", 375, "starter-10"],
-      ["Fig, Cheese & Walnut Canapé", "1 piece", 350, "starter-11"],
-      ["Pear & Brie Bruschetta", "1 piece", 325, "starter-12"],
-      ["Roast Beef Bruschetta with Horseradish Cream", "1 piece", 450, "starter-13"],
-      ["Ham & Cheddar Canapé", "1 piece", 275, "starter-14"],
-      ["Caprese Skewer", "1 skewer", 295, "starter-15"],
-      ["Baby Mozzarella, Cherry Tomato & Pesto Canapé with Arugula", "1 piece", 325, "starter-16"]
-    ]
-  },
-  {
-    title: "Roulades & rolls",
-    type: "starter",
-    rows: [
-      ["Spinach Roulade with Salmon & Cream Cheese", "2 slices", 450, "starter-17"],
-      ["Cheese Roulade with Ham", "2 slices", 375, "starter-18"],
-      ["Spinach & Cheese Roulade Duo", "2 slices", 425, "starter-19"],
-      ["Eggplant Rolls with Walnuts", "2 pieces", 425, "starter-20"]
-    ]
-  },
-  {
-    title: "Small bites",
-    type: "starter",
-    rows: [
-      ["Shrimp & Guacamole Profiterole", "1 piece", 375, "starter-21"],
-      ["Tuna Profiterole", "1 piece", 275, "starter-22"],
-      ["Chicken Pâté Tartlet with Berry Chutney", "1 piece", 325, "starter-23"],
-      ["Shrimp & Smoked Salmon Cup", "1 cup", 595, "starter-24"]
-    ]
-  },
-  {
-    title: "Bakery & warm bites",
-    type: "starter",
-    rows: [
-      ["Mini Ham Croissant", "1 piece", 425, "starter-25"],
-      ["Mini Beef Slider", "1 piece", 550, "starter-26"],
-      ["Assorted Savoury Tartlets", "2 pieces", 550, "starter-27"],
-      ["Stuffed Mushroom Caps", "2 pieces", 450, "starter-28"]
-    ]
-  },
-  {
-    title: "Smokehouse",
-    type: "meat",
-    rows: [
-      ["Whole Chicken", "per lb", 1089, "photo-1587593810167-a84920ea0781"],
-      ["Chicken Leg Quarters", "per lb", 1089, "photo-1532550907401-a500c9a57435"],
-      ["Chicken Wings", "per lb", 1724, "photo-1527477396000-e27163b481c2"],
-      ["Pork Belly", "per lb", 1270, "photo-1544025162-d76694265947"],
-      ["Pork Loin", "per lb", 1315, "photo-1607623814075-e51df1bdc82f"],
-      ["Pork Tenderloin", "per lb", 1542, "photo-1544025162-d76694265947"],
-      ["Beef Top Sirloin", "per lb", 2223, "photo-1558030006-450675393462"],
-      ["Pork Ribs", "per lb", 1451, "photo-1529193591184-b1d58069ecdd"],
-      ["Salmon", "per lb", 2676, "starter-3"],
-      ["Shrimp", "per lb", 2041, "photo-1565680018434-b513d5e5fd47"]
-    ]
-  }
-];
-
-const quoteMenu = {
-  "Custom platters": [
-    "Seasonal Charcuterie Board", "Cheese, Grapes, Nuts & Crackers",
-    "Smoked Fish Platter", "Vegetable & Dip Platter"
-  ],
-  "Salads": [
-    "Caesar Salad", "Greek Salad", "Coleslaw", "Potato Salad with Ham",
-    "Seasonal Garden Salad", "Vegetable Salad", "Beet Salad",
-    "Cucumber & Dill Salad"
-  ],
-  "Main courses": [
-    "Roast Beef with Gravy", "Roast Chicken", "Apple-Glazed Pork Loin",
-    "Orange-Glazed Baked Salmon", "Meatloaf", "Baked Stuffed Basa Rolls",
-    "Smoked Chicken", "Smoked Pork Ribs", "Slow-Roasted Beef Brisket",
-    "BBQ Pulled Pork"
-  ],
-  "Sides": [
-    "Pierogies", "Mac & Cheese", "Mashed Potatoes",
-    "Herb-Roasted Potatoes", "Vegetable Rice", "Steamed Rice",
-    "Seasonal Roasted Vegetables", "Grilled Vegetables",
-    "Buttered Corn", "Garlic Green Beans"
-  ],
-  "Desserts": [
-    "Tiramisu", "Napoleon Cake", "Honey Cake",
-    "Vanilla Cream Profiteroles", "Seasonal Dessert Selection",
-    "Mini Dessert Assortment"
-  ],
-  "Fruit": [
-    "Seasonal Fresh Fruit Platter", "Premium Cheese & Fruit Board",
-    "Custom Celebration Platter"
-  ]
-};
-
-const slug = value => value.toLowerCase()
-  .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-  .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-
-const products = new Map();
-for (const group of menu) {
-  for (const [name, portion, cents, photo] of group.rows) {
-    const id = slug(group.type + "-" + name);
-    products.set(id, { id, name, portion, cents, photo, type: group.type });
-  }
-}
-
-const dollars = cents => new Intl.NumberFormat("en-CA", {
-  style: "currency", currency: "CAD"
-}).format(cents / 100);
-
-const escapeHTML = value => String(value)
-  .replaceAll("&", "&amp;").replaceAll("<", "&lt;")
-  .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
-
-function card(group, row) {
-  const [name, portion, cents, photo] = row;
-  const id = slug(group.type + "-" + name);
-  const per = group.type === "meat" ? "lb" : "guest";
-
-  const control = group.type === "meat"
-    ? `<label>Pounds
-         <input class="pounds" data-id="${id}" type="number"
-                min="0" max="200" step="1" value="0"
-                aria-label="${escapeHTML(name)} pounds">
-       </label>`
-    : `<button type="button" data-add="${id}" aria-pressed="false"
-               aria-label="Select ${escapeHTML(name)}">Add</button>`;
-
-  return `<article class="card">
-    <img src="/assets/${photo}.webp" loading="lazy" alt="">
-    <div>
-      <h3>${escapeHTML(name)}</h3>
-      <small>${escapeHTML(portion)}</small>
-      <div class="actions">
-        <strong>${dollars(cents)} / ${per}</strong>${control}
-      </div>
-    </div>
-  </article>`;
-}
-
-const categories = [
-  ...menu.map(group => group.title),
-  ...Object.keys(quoteMenu)
-];
-
-const categoryButtons = categories.map(name =>
-  `<button class="filter" type="button" data-filter="${slug(name)}"
-           aria-pressed="false">${escapeHTML(name)}</button>`
-).join("");
-
-const pricedSections = menu.map(group =>
-  `<section class="category" data-category="${slug(group.title)}">
-    <h2>${escapeHTML(group.title)}</h2>
-    <div class="grid">${group.rows.map(row => card(group, row)).join("")}</div>
-  </section>`
-).join("");
-
-const quoteSections = Object.entries(quoteMenu).map(([name, dishes]) =>
-  `<section class="category" data-category="${slug(name)}">
-    <h2>${escapeHTML(name)}</h2>
-    <p>Choose dishes for a custom quote.</p>
-    <div class="quote-grid">${dishes.map(dish =>
-      `<label class="quote"><input type="checkbox" data-quote
-              value="${escapeHTML(dish)}"> ${escapeHTML(dish)}</label>`
-    ).join("")}</div>
-  </section>`
-).join("");
-
-const html = `<!doctype html>
-<html lang="en-CA">
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#401d26">
-<title>Ember &amp; Gatherer | Edmonton Smokehouse &amp; Catering</title>
+<meta name="theme-color" content="#f8f6f0">
+<title>Ember & Gatherer | Smokehouse & Catering — Edmonton</title>
 <style>
+:root{
+  --ink:#292521;
+  --muted:#746d63;
+  --gold:#b18a4a;
+  --gold2:#d9bd83;
+  --cream:#fbf9f4;
+  --paper:#fffefa;
+  --line:#e8dfcf;
+  --wine:#7c344b;
+  --shadow:0 14px 40px rgba(53,40,22,.09)
+}
 *{box-sizing:border-box}
-:root{--wine:#751e39;--ink:#302522;--gold:#b78949;--line:#e2d5c6}
-body{margin:0;background:#fffaf3;color:var(--ink);font:16px/1.5 system-ui,sans-serif}
-.wrap{width:min(1120px,92%);margin:auto}
-h1,h2,h3,.brand{font-family:Georgia,serif;line-height:1.13}
-h1{font-size:clamp(36px,6vw,76px);margin:8px 0 14px}
-h2{font-size:clamp(28px,4vw,40px);margin:30px 0 14px}
-h3{font-size:21px;margin:0 0 5px}
-a{color:var(--wine)}
-.bar,footer{background:#401d26;color:#ffe5bc;padding:10px;text-align:center}
-header{background:white;border-bottom:1px solid var(--line)}
-.head,.hero,.actions,nav,.filters{display:flex;align-items:center;gap:12px}
-.head{justify-content:space-between;flex-wrap:wrap;padding:16px 0}
-.brand{font-size:24px;text-decoration:none;color:var(--ink)}
-nav{flex-wrap:wrap}nav a{text-decoration:none}
-.hero{display:grid;grid-template-columns:minmax(120px,32%) 1fr;gap:5vw;padding:45px 0}
-.hero img{width:100%;max-width:295px;border-radius:16px;border:1px solid var(--line)}
-.hero p{margin:0 0 12px}
-.filters{overflow-x:auto;padding:8px 0 14px}
-button,.button{font:inherit;cursor:pointer;background:var(--wine);color:white;
-border:1px solid var(--wine);border-radius:10px;padding:9px 15px;text-decoration:none}
-button:disabled{opacity:.65}
-.filter{white-space:nowrap;background:white;color:var(--wine);border-color:var(--line)}
-.filter[aria-pressed=true],.card button[aria-pressed=true]{background:#48212b;color:white}
-.grid,.quote-grid,.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card,.panel,.quote{background:white;border:1px solid var(--line);border-radius:15px;padding:14px}
-.card{display:grid;grid-template-columns:clamp(90px,12vw,135px) 1fr;align-items:center;gap:14px}
-.card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px}
-.actions{justify-content:space-between;flex-wrap:wrap;margin-top:8px}
-small{color:#665a52}.pounds{width:58px;padding:5px}
-.category[hidden]{display:none}
-.order{display:grid;grid-template-columns:1.45fr 1fr;gap:18px;align-items:start}
-.field{display:block;font-weight:600}
-.field input,.field select,.field textarea{display:block;width:100%;padding:9px;margin-top:4px;
-font:inherit;border:1px solid #cfc1b2;border-radius:8px;background:white}
-.full{grid-column:1/-1}.line{display:flex;justify-content:space-between;gap:10px;
-padding:7px 0;border-bottom:1px solid var(--line)}.line b{white-space:nowrap}
-#status{color:var(--wine);font-weight:600}
-footer{margin-top:35px}footer a{color:#ffe5bc}
-@media(max-width:760px){.grid,.order{grid-template-columns:1fr}
-.hero{grid-template-columns:clamp(92px,25vw,155px) minmax(0,1fr);gap:15px}}
-@media(max-width:470px){.form-grid,.quote-grid{grid-template-columns:1fr}
-.card{grid-template-columns:85px 1fr}.hero{padding:26px 0}.hero h1{font-size:32px}}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:Georgia,'Times New Roman',serif;
+  line-height:1.5
+}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(1160px,92%);margin:auto}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(255,254,250,.94);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line)
+}
+.nav{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:10px 0
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:230px
+}
+.brand img{
+  width:68px;
+  height:68px;
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center;
+  box-shadow:0 2px 12px #0002;
+  border:2px solid var(--gold2)
+}
+.brand strong{display:block;font-size:20px;letter-spacing:.02em}
+.brand small{
+  display:block;
+  color:var(--muted);
+  font:700 9px Arial,sans-serif;
+  letter-spacing:.19em
+}
+.links{
+  display:flex;
+  align-items:center;
+  gap:17px;
+  margin-left:auto;
+  font:12px Arial,sans-serif;
+  font-weight:700
+}
+.links a:hover{color:var(--gold)}
+.nav-actions{display:flex;gap:8px;align-items:center}
+.btn{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  border:1px solid var(--gold);
+  background:var(--gold);
+  color:white;
+  padding:12px 19px;
+  border-radius:999px;
+  font:700 12px Arial,sans-serif;
+  letter-spacing:.04em;
+  transition:.2s
+}
+.btn:hover{background:#98733c;transform:translateY(-1px)}
+.btn.light{
+  background:transparent;
+  color:var(--ink);
+  border-color:var(--line)
+}
+.btn.light:hover{border-color:var(--gold);color:var(--gold)}
+.cart-pill{white-space:nowrap}
+.cart-count{
+  display:inline-grid;
+  place-items:center;
+  margin-left:7px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:white;
+  color:var(--gold);
+  font-size:11px
+}
+.hero{padding:48px 0 34px}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.02fr .98fr;
+  gap:34px;
+  align-items:center
+}
+.eyebrow{
+  color:var(--wine);
+  font:700 11px Arial,sans-serif;
+  letter-spacing:.22em;
+  text-transform:uppercase
+}
+h1{
+  font-size:clamp(42px,6vw,72px);
+  line-height:1.02;
+  font-weight:500;
+  margin:14px 0
+}
+h1 em{color:var(--gold);font-weight:400}
+.hero p{
+  max-width:540px;
+  color:var(--muted);
+  font-size:17px
+}
+.hero-photo{position:relative}
+.hero-photo img{
+  display:block;
+  width:100%;
+  height:430px;
+  object-fit:cover;
+  border-radius:24px;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow)
+}
+.photo-tag{
+  position:absolute;
+  bottom:16px;
+  left:16px;
+  right:16px;
+  padding:12px 15px;
+  background:#fffefaeb;
+  border-radius:12px;
+  color:var(--ink);
+  font:700 11px Arial,sans-serif;
+  letter-spacing:.08em
+}
+.trust{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin:16px 0 28px
+}
+.trust div{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  color:var(--muted);
+  font:12px Arial,sans-serif
+}
+.trust b{display:block;color:var(--ink);margin-bottom:4px}
+section{padding:48px 0}
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:20px;
+  margin-bottom:22px
+}
+.section-head h2{
+  font-size:clamp(28px,4vw,42px);
+  font-weight:500;
+  margin:7px 0
+}
+.section-head p{color:var(--muted);margin:0}
+.packages{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px
+}
+.package{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow)
+}
+.package img{
+  display:block;
+  width:100%;
+  height:205px;
+  object-fit:cover
+}
+.package-body{padding:20px}
+.package h3{font-size:24px;margin:0 0 5px}
+.price{font-size:30px;color:var(--gold)}
+.price small{font:12px Arial,sans-serif;color:var(--muted)}
+.package ul{padding-left:18px;color:var(--muted);font-size:14px}
+.catalog-layout{
+  display:grid;
+  grid-template-columns:250px 1fr;
+  gap:22px
+}
+.sidebar{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  height:max-content
+}
+.sidebar h3{margin:0 0 12px}
+.cat-btn{
+  display:block;
+  width:100%;
+  text-align:left;
+  border:0;
+  background:transparent;
+  padding:9px 10px;
+  border-radius:9px;
+  color:var(--muted);
+  font-size:13px
+}
+.cat-btn:hover,.cat-btn.active{
+  background:#f2eadc;
+  color:var(--ink)
+}
+.subnav{font-size:12px;color:var(--muted);margin-top:12px}
+.toolbar{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px
+}
+.toolbar input,.toolbar select{
+  min-width:0;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:white
+}
+.toolbar input{flex:1}
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px
+}
+.product{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:15px;
+  overflow:hidden
+}
+.menu-photo{
+  display:block;
+  width:100%;
+  height:160px;
+  object-fit:cover
+}
+.product-body{padding:13px}
+.product h3{font-size:17px;margin:0 0 5px}
+.product p{font-size:12px;color:var(--muted);min-height:34px}
+.product .tag{
+  display:inline-block;
+  font:10px Arial,sans-serif;
+  color:var(--wine);
+  margin-bottom:5px
+}
+.product-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px
+}
+.product-price{font-weight:bold;color:var(--gold)}
+.add-btn{
+  border:0;
+  background:var(--gold);
+  color:white;
+  padding:9px 12px;
+  border-radius:20px;
+  font:700 11px Arial,sans-serif
+}
+.smoke-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:12px
+}
+.smoke-card{
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--paper);
+  padding:16px;
+  text-align:center
+}
+.smoke-card h3{font-size:16px}
+.smoke-card b{display:block;color:var(--gold);font-size:20px}
+.smoke-card small{color:var(--muted);font-size:11px}
+.smoke-card input{
+  width:65px;
+  padding:7px;
+  border:1px solid var(--line);
+  border-radius:7px;
+  margin:8px
+}
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px
+}
+.gallery img{
+  width:100%;
+  height:205px;
+  object-fit:cover;
+  border-radius:16px;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow)
+}
+.gallery img.wide{grid-column:span 2}
+.banquet{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  align-items:center;
+  background:#f1eadf;
+  border-radius:22px;
+  padding:20px
+}
+.banquet img{
+  width:100%;
+  height:340px;
+  object-fit:cover;
+  border-radius:16px
+}
+.calc{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+  box-shadow:var(--shadow)
+}
+.calc-option,.field{margin-bottom:15px}
+.field label{
+  display:block;
+  font:700 12px Arial,sans-serif;
+  margin-bottom:6px
+}
+.field input,.field select,.field textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:white
+}
+.stepper{display:flex;align-items:center;gap:15px}
+.stepper button{
+  width:34px;
+  height:34px;
+  border:1px solid var(--line);
+  background:white;
+  border-radius:50%
+}
+.total-box{
+  background:#f5efe5;
+  padding:20px;
+  border-radius:16px
+}
+.total-line{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:8px 0;
+  border-bottom:1px solid var(--line)
+}
+.grand{font-size:25px;color:var(--gold);font-weight:bold}
+.cart-layout{
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:22px
+}
+.cart-items,.checkout{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px
+}
+.cart-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:13px 0;
+  border-bottom:1px solid var(--line)
+}
+.cart-row button{
+  border:0;
+  background:#f2eadc;
+  padding:6px 10px;
+  border-radius:8px
+}
+.empty{color:var(--muted);padding:24px;text-align:center}
+.notice{font-size:12px;color:var(--muted)}
+.faq-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px
+}
+.faq{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:17px;
+  color:var(--muted);
+  font-size:14px
+}
+.faq b{display:block;color:var(--ink);margin-bottom:5px}
+footer{
+  background:#f0e9dd;
+  border-top:1px solid var(--line);
+  padding:34px 0;
+  margin-top:30px
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:20px
+}
+.footer-grid p,.footer-grid a{
+  color:var(--muted);
+  font-size:13px
+}
+@media(max-width:900px){
+  .links{display:none}
+  .hero-grid,.banquet,.calc,.cart-layout{grid-template-columns:1fr}
+  .hero-photo img{height:330px}
+  .catalog-layout{grid-template-columns:1fr}
+  .smoke-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .nav{gap:8px}
+  .brand{min-width:0}
+  .brand img{width:48px;height:48px}
+  .brand strong{font-size:16px}
+  .brand small{font-size:8px}
+  .nav-actions .btn{padding:9px 12px;font-size:10px}
+  .packages,.product-grid,.gallery,.faq-grid{grid-template-columns:1fr 1fr}
+  .smoke-grid{grid-template-columns:1fr 1fr}
+  .section-head{display:block}
+  .toolbar{flex-direction:column}
+  .gallery img{height:140px}
+  .cart-layout{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="bar">Free Edmonton delivery on food orders of $100 CAD or more before tax.</div>
-<header><div class="wrap head">
-<a class="brand" href="#home">Ember &amp; Gatherer</a>
-<nav><a href="#menu">Menu</a><a href="#order">Order online</a><a href="#contact">Contact</a></nav>
-</div></header>
-
-<main class="wrap">
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="#home">
+      <img id="brandImage" alt="Ember & Gatherer emblem">
+      <span>
+        <strong>Ember & Gatherer</strong>
+        <small>SMOKEHOUSE & CATERING · EDMONTON</small>
+      </span>
+    </a>
+    <nav class="links">
+      <a href="#packages">Packages</a>
+      <a href="#menu">Menu</a>
+      <a href="#smokehouse">Smokehouse</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#faq">Information</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn light" href="#order">Order</a>
+      <a class="btn cart-pill" href="#order">
+        Cart <span class="cart-count" id="cartCount">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+<main>
 <section class="hero" id="home">
-<img src="/assets/emblem.webp" alt="Ember & Gatherer flame and gold wreath emblem">
-<div><small>SMOKEHOUSE &amp; CATERING · EDMONTON, ALBERTA</small>
-<h1>Gather around the good stuff.</h1>
-<p>Smoked meats, Ukrainian favourites and handcrafted starters for your gathering.</p>
-<a href="#menu">Explore the menu ↓</a></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Smokehouse · Catering · Edmonton, Alberta</div>
+      <h1>Flavor that<br><em>brings people together.</em></h1>
+      <p>House-smoked meats, signature appetizers and catering for weddings, banquets, corporate events and private celebrations.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
+        <a class="btn" href="#menu">Explore the Menu</a>
+        <a class="btn light" href="#calculator">Calculate Catering</a>
+      </div>
+    </div>
+    <div class="hero-photo">
+      <img id="heroImage" alt="Ember & Gatherer catering buffet">
+      <div class="photo-tag">Smokehouse & Catering · Edmonton, Alberta</div>
+    </div>
+  </div>
+  <div class="wrap trust">
+    <div><b>Classic · Signature · Premium</b>Catering packages</div>
+    <div><b>Free delivery $100+</b>Free delivery on orders of $100 CAD or more</div>
+    <div><b>Online ordering</b>Secure Stripe checkout</div>
+  </div>
+</section>
+<section id="packages">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Catering packages</div>
+        <h2>Choose Your Catering Package</h2>
+        <p>Choose a ready-made package or create a custom event menu.</p>
+      </div>
+    </div>
+    <div class="packages">
+      <article class="package">
+        <img id="classicImg" alt="Classic catering package">
+        <div class="package-body">
+          <h3>Classic</h3>
+          <div class="price">$30 <small>CAD / person</small></div>
+          <ul>
+            <li>Selection of classic appetizers</li>
+            <li>Fresh salads and side dishes</li>
+            <li>Beautiful buffet presentation</li>
+          </ul>
+          <button class="btn" onclick="addPackage('Classic',30)">Choose Classic</button>
+        </div>
+      </article>
+      <article class="package">
+        <img id="signatureImg" alt="Signature catering package">
+        <div class="package-body">
+          <h3>Signature</h3>
+          <div class="price">$55 <small>CAD / person</small></div>
+          <ul>
+            <li>Signature appetizers and platters</li>
+            <li>Premium salads and sides</li>
+            <li>House specialties</li>
+          </ul>
+          <button class="btn" onclick="addPackage('Signature',55)">Choose Signature</button>
+        </div>
+      </article>
+      <article class="package">
+        <img id="premiumImg" alt="Premium catering package">
+        <div class="package-body">
+          <h3>Premium</h3>
+          <div class="price">$80 <small>CAD / person</small></div>
+          <ul>
+            <li>Premium smoked meat selection</li>
+            <li>Luxury appetizer and food stations</li>
+            <li>Special event presentation</li>
+          </ul>
+          <button class="btn" onclick="addPackage('Premium',80)">Choose Premium</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+<section id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Our food selection</div>
+        <h2>Explore Our Menu</h2>
+        <p>Browse our catering menu and add your favorites to your order.</p>
+      </div>
+    </div>
+
+    <div class="catalog-layout">
+      <aside class="sidebar">
+        <h3>Menu Categories</h3>
+        <button class="cat-btn active" onclick="filterMenu('All',this)">All Items</button>
+        <button class="cat-btn" onclick="filterMenu('Smoked Meats',this)">Smoked Meats</button>
+        <button class="cat-btn" onclick="filterMenu('Appetizers',this)">Appetizers</button>
+        <button class="cat-btn" onclick="filterMenu('Platters',this)">Platters</button>
+        <button class="cat-btn" onclick="filterMenu('Salads',this)">Salads</button>
+        <button class="cat-btn" onclick="filterMenu('Side Dishes',this)">Side Dishes</button>
+        <button class="cat-btn" onclick="filterMenu('Hot Dishes',this)">Hot Dishes</button>
+        <button class="cat-btn" onclick="filterMenu('Desserts',this)">Desserts</button>
+        <button class="cat-btn" onclick="filterMenu('Wedding Catering',this)">Wedding Catering</button>
+        <div class="subnav">
+          Custom menus are available for weddings, corporate events and private celebrations.
+        </div>
+      </aside>
+
+      <div>
+        <div class="toolbar">
+          <input id="menuSearch" type="search" placeholder="Search menu..." oninput="renderMenu()">
+          <select id="menuSort" onchange="renderMenu()">
+            <option value="default">Featured</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+        </div>
+        <div class="product-grid" id="menuGrid"></div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section id="menu"><h2>Our menu</h2>
-<p>Choose a category. Starter and catering package prices are per guest.
-Smokehouse prices are per pound.</p>
-<div class="filters" aria-label="Menu categories">
-<button type="button" class="filter" data-filter="all" aria-pressed="true">All</button>
-${categoryButtons}</div>
-${pricedSections}${quoteSections}
+<section id="smokehouse">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Low and slow</div>
+        <h2>From Our Smokehouse</h2>
+        <p>Rich smoky flavor, carefully prepared for your table.</p>
+      </div>
+    </div>
+    <div class="smoke-grid" id="smokeGrid"></div>
+  </div>
 </section>
 
-<section id="order"><h2>Your order</h2>
-<div class="order">
-<form class="panel form-grid" id="orderForm">
-<label class="field">Name<input name="name" autocomplete="name" maxlength="250" required></label>
-<label class="field">Email<input name="email" type="email" autocomplete="email" required></label>
-<label class="field">Phone<input name="phone" type="tel" autocomplete="tel" maxlength="80" required></label>
-<label class="field">Event date<input name="date" type="date" required></label>
-<label class="field">Guests<input id="guests" name="guests" type="number" min="1" max="500" step="1" value="25" required></label>
-<label class="field">Service<select name="service" id="service">
-<option>Pickup</option><option>Edmonton delivery</option>
-<option>Buffet setup</option><option>Full service</option></select></label>
-<label class="field full">Venue or address<input name="venue" autocomplete="street-address" maxlength="450" required></label>
-<label class="field full">Dietary requirements or event notes
-<textarea name="notes" maxlength="450" rows="2"></textarea></label>
-<div class="full"><button id="pay" type="submit">Pay online with Stripe</button>
-<p id="status" role="status" aria-live="polite"></p></div>
-</form>
-<aside class="panel"><h3>Order summary</h3>
-<div id="lines"></div><p><b>Food subtotal: <output id="total">$0.00</output></b></p>
-<p id="delivery"></p><small>CAD. Applicable taxes are calculated at checkout.
-Custom menu items and staffed events require a quote.</small></aside>
-</div></section>
+<section id="weddings">
+  <div class="wrap">
+    <div class="banquet">
+      <div>
+        <div class="eyebrow">Weddings & special events</div>
+        <h2>Make Your Celebration Unforgettable</h2>
+        <p>From elegant appetizer tables to generous buffet spreads, Ember & Gatherer brings delicious food and thoughtful presentation to your special day.</p>
+        <ul>
+          <li>Wedding buffet selections</li>
+          <li>Appetizer and grazing tables</li>
+          <li>Smoked meat stations</li>
+          <li>Hot dishes, salads and sides</li>
+          <li>Custom menus for your guest count</li>
+        </ul>
+        <a class="btn" href="#order">Request Wedding Catering</a>
+      </div>
+      <img id="weddingImage" alt="Wedding catering buffet">
+    </div>
+  </div>
+</section>
 
-<section id="contact"><h2>Contact</h2>
-<p>Ember &amp; Gatherer · Edmonton, Alberta</p>
-<a href="tel:+13683992562">+1 (368) 399-2562</a> ·
-<a href="tel:+17808186312">+1 (780) 818-6312</a></section>
+<section id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">A taste of our table</div>
+        <h2>Food & Catering Gallery</h2>
+        <p>Explore our catering presentation and food selection.</p>
+      </div>
+    </div>
+    <div class="gallery" id="galleryGrid"></div>
+  </div>
+</section>
+
+<section id="calculator">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Plan your event</div>
+        <h2>Catering Price Calculator</h2>
+        <p>Estimate your catering package based on the number of guests.</p>
+      </div>
+    </div>
+
+    <div class="calc">
+      <div>
+        <div class="field">
+          <label for="calcPackage">Catering Package</label>
+          <select id="calcPackage" onchange="calculateCatering()">
+            <option value="30">Classic — $30 per person</option>
+            <option value="55" selected>Signature — $55 per person</option>
+            <option value="80">Premium — $80 per person</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="guestCount">Number of Guests</label>
+          <div class="stepper">
+            <button type="button" onclick="changeGuests(-1)">−</button>
+            <input id="guestCount" type="number" min="1" max="1000" value="30" oninput="calculateCatering()" style="width:100px;text-align:center">
+            <button type="button" onclick="changeGuests(1)">+</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="eventDate">Event Date</label>
+          <input id="eventDate" type="date">
+        </div>
+
+        <div class="field">
+          <label for="eventType">Event Type</label>
+          <select id="eventType">
+            <option>Wedding</option>
+            <option>Corporate Event</option>
+            <option>Birthday</option>
+            <option>Private Celebration</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <button class="btn" type="button" onclick="addCalculatedPackage()">Add Package to Cart</button>
+      </div>
+
+      <div class="total-box">
+        <h3>Your Estimate</h3>
+        <div class="total-line"><span>Package price</span><b id="calcUnit">$55.00</b></div>
+        <div class="total-line"><span>Guests</span><b id="calcGuests">30</b></div>
+        <div class="total-line"><span>Food subtotal</span><b id="calcSubtotal">$1,650.00</b></div>
+        <div class="total-line"><span>Delivery</span><b>Calculated at checkout</b></div>
+        <div class="total-line"><span>Estimated total</span><b class="grand" id="calcTotal">$1,650.00</b></div>
+        <p class="notice">This is an estimate. Final catering details and availability will be confirmed with your order.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="order">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Your selection</div>
+        <h2>Shopping Cart & Order</h2>
+        <p>Review your items and send your order request.</p>
+      </div>
+    </div>
+
+    <div class="cart-layout">
+      <div class="cart-items">
+        <h3>Your Cart</h3>
+        <div id="cartItems">
+          <div class="empty">Your cart is currently empty.</div>
+        </div>
+      </div>
+
+      <aside class="checkout">
+        <h3>Order Summary</h3>
+        <div class="total-line"><span>Subtotal</span><b id="orderSubtotal">$0.00</b></div>
+        <div class="total-line"><span>Delivery</span><b id="deliveryCost">$15.00</b></div>
+        <div class="total-line"><span>Total</span><b class="grand" id="orderTotal">$15.00</b></div>
+        <p class="notice">Delivery is $15 for orders under $100 CAD. Delivery is free for orders of $100 CAD or more.</p>
+
+        <form id="orderForm" onsubmit="submitOrder(event)">
+          <div class="field">
+            <label for="customerName">Full Name *</label>
+            <input id="customerName" name="name" required autocomplete="name">
+          </div>
+
+          <div class="field">
+            <label for="customerEmail">Email *</label>
+            <input id="customerEmail" name="email" type="email" required autocomplete="email">
+          </div>
+
+          <div class="field">
+            <label for="customerPhone">Phone *</label>
+            <input id="customerPhone" name="phone" type="tel" required autocomplete="tel">
+          </div>
+
+          <div class="field">
+            <label for="orderDate">Preferred Date *</label>
+            <input id="orderDate" name="date" type="date" required>
+          </div>
+
+          <div class="field">
+            <label for="orderAddress">Delivery Address *</label>
+            <textarea id="orderAddress" name="address" rows="2" required></textarea>
+          </div>
+
+          <div class="field">
+            <label for="orderNotes">Additional Details</label>
+            <textarea id="orderNotes" name="notes" rows="3" placeholder="Event details, dietary requirements, delivery instructions..."></textarea>
+          </div>
+
+          <button class="btn" type="submit" style="width:100%">Continue to Secure Checkout</button>
+          <p class="notice">Payments are processed securely through Stripe when the checkout service is configured.</p>
+        </form>
+        <div id="orderMessage" role="status" aria-live="polite"></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Good to know</div>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+    </div>
+
+    <div class="faq-grid">
+      <div class="faq">
+        <b>Where do you provide catering?</b>
+        We are based in Edmonton, Alberta. Contact us to discuss your event location.
+      </div>
+      <div class="faq">
+        <b>How much is delivery?</b>
+        Delivery is $15 CAD for orders under $100 CAD. Orders of $100 CAD or more qualify for free delivery.
+      </div>
+      <div class="faq">
+        <b>Can I customize my catering menu?</b>
+        Yes. Contact us with your guest count, event date and menu preferences.
+      </div>
+      <div class="faq">
+        <b>Do you cater weddings?</b>
+        Yes. We offer wedding buffet options, appetizer tables and custom catering arrangements.
+      </div>
+      <div class="faq">
+        <b>How do I pay?</b>
+        Online checkout is designed to use secure Stripe payment processing.
+      </div>
+      <div class="faq">
+        <b>Can I request special dietary options?</b>
+        Please include dietary requirements in the order notes so they can be reviewed.
+      </div>
+    </div>
+  </div>
+</section>
 </main>
-<footer>Ember &amp; Gatherer · Smokehouse &amp; Catering</footer>
 
-<script>
-const catalog = ${JSON.stringify(Object.fromEntries(products))};
-const selected = new Set();
-const get = id => document.getElementById(id);
-const cash = cents => new Intl.NumberFormat("en-CA", {
-  style:"currency", currency:"CAD"
-}).format(cents / 100);
-let attempt;
-
-function cart() {
-  const guests = get("guests").valueAsNumber;
-  if (!Number.isInteger(guests) || guests < 1 || guests > 500)
-    throw Error("Enter 1–500 guests.");
-
-  const items = [];
-  for (const id of selected) items.push({id, quantity:guests});
-
-  for (const input of document.querySelectorAll(".pounds")) {
-    const quantity = input.value === "" ? 0 : input.valueAsNumber;
-    if (!Number.isInteger(quantity) || quantity < 0 || quantity > 200)
-      throw Error("Enter 0–200 whole pounds per smokehouse item.");
-    if (quantity) items.push({id:input.dataset.id, quantity});
-  }
-
-  const quotes = [...document.querySelectorAll("[data-quote]:checked")]
-    .map(input => input.value);
-  const subtotal = items.reduce((sum, item) =>
-    sum + catalog[item.id].cents * item.quantity, 0);
-
-  return {guests, items, quotes, subtotal};
-}
-
-function update() {
-  const lines = get("lines");
-  lines.replaceChildren();
-
-  try {
-    const order = cart();
-
-    for (const item of order.items) {
-      const p = catalog[item.id];
-      const row = document.createElement("div");
-      row.className = "line";
-      const name = document.createElement("span");
-      name.textContent = p.name + " × " + item.quantity +
-        (p.type === "meat" ? " lb" : " guests");
-      const amount = document.createElement("b");
-      amount.textContent = cash(p.cents * item.quantity);
-      row.append(name, amount);
-      lines.append(row);
-    }
-
-    for (const quote of order.quotes) {
-      const row = document.createElement("p");
-      row.textContent = quote + " — quote requested";
-      lines.append(row);
-    }
-
-    if (!order.items.length && !order.quotes.length)
-      lines.textContent = "No items selected yet.";
-
-    get("total").textContent = cash(order.subtotal);
-    const service = get("service").value;
-    get("delivery").textContent = service === "Edmonton delivery"
-      ? (order.subtotal >= 10000 ? "Edmonton delivery: FREE."
-          : "Please call for a delivery quote on orders under $100.")
-      : service === "Pickup" ? "Pickup selected." : "Staffed service requires a quote.";
-  } catch (error) {
-    lines.textContent = error.message;
-    get("total").textContent = "—";
-    get("delivery").textContent = "";
-  }
-
-  for (const button of document.querySelectorAll("[data-add]")) {
-    const active = selected.has(button.dataset.add);
-    button.textContent = active ? "Added ✓" : "Add";
-    button.setAttribute("aria-pressed", String(active));
-  }
-}
-
-for (const button of document.querySelectorAll("[data-add]")) {
-  button.addEventListener("click", () => {
-    const id = button.dataset.add;
-    if (selected.has(id)) selected.delete(id);
-    else {
-      if (catalog[id].type === "package") {
-        for (const old of selected)
-          if (catalog[old].type === "package") selected.delete(old);
-      }
-      selected.add(id);
-    }
-    update();
-  });
-}
-
-for (const button of document.querySelectorAll("[data-filter]")) {
-  button.addEventListener("click", () => {
-    for (const panel of document.querySelectorAll("[data-category]"))
-      panel.hidden = button.dataset.filter !== "all" &&
-        panel.dataset.category !== button.dataset.filter;
-
-    for (const other of document.querySelectorAll("[data-filter]"))
-      other.setAttribute("aria-pressed", String(other === button));
-  });
-}
-
-for (const input of document.querySelectorAll(".pounds,[data-quote],#guests,#service"))
-  input.addEventListener("input", update);
-
-get("orderForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  const status = get("status");
-  const pay = get("pay");
-
-  try {
-    const order = cart();
-    const fields = Object.fromEntries(new FormData(event.currentTarget));
-
-    if (order.quotes.length || !["Pickup","Edmonton delivery"].includes(fields.service))
-      throw Error("Please call ${PHONE} to confirm pricing for your custom menu.");
-
-    if (!order.items.length) throw Error("Add at least one priced item.");
-    if (fields.service === "Edmonton delivery" && order.subtotal < 10000)
-      throw Error("Please call ${PHONE} for delivery under $100, or select pickup.");
-
-    pay.disabled = true;
-    status.textContent = "Opening secure Stripe checkout…";
-    attempt ||= crypto.randomUUID();
-
-    const response = await fetch("/api/checkout", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({...fields, ...order, attempt})
-    });
-
-    const result = await response.json();
-    if (!response.ok || !result.url)
-      throw Error(result.error || "Checkout could not be opened.");
-
-    location.assign(result.url);
-  } catch (error) {
-    status.textContent = error.message;
-    pay.disabled = false;
-  }
-});
-
-const payment = new URLSearchParams(location.search).get("payment");
-if (payment === "returned")
-  get("status").textContent = "You have returned from checkout. Check your Stripe receipt.";
-if (payment === "cancelled")
-  get("status").textContent = "Checkout was cancelled. You can build another order.";
-update();
-</script>
-</body></html>`;
-
-function jsonResponse(res, status, data) {
-  res.writeHead(status, {
-    "Content-Type": "application/json; charset=utf-8",
-    "Cache-Control": "no-store"
-  });
-  res.end(JSON.stringify(data));
-}
-
-async function readOrder(req) {
-  const chunks = [];
-  let size = 0;
-  for await (const chunk of req) {
-    size += chunk.length;
-    if (size > 32768) throw Error("Order is too large.");
-    chunks.push(chunk);
-  }
-  try {
-    return JSON.parse(Buffer.concat(chunks).toString("utf8"));
-  } catch {
-    throw Error("Invalid order. Please refresh the page.");
-  }
-}
-
-function buildPayment(order) {
-  if (!order || typeof order !== "object") throw Error("Invalid order.");
-  if (!Number.isInteger(order.guests) || order.guests < 1 || order.guests > 500)
-    throw Error("Enter 1–500 guests.");
-  if (!["Pickup", "Edmonton delivery"].includes(order.service))
-    throw Error("Please request a quote for this service.");
-  if (order.quotes?.length) throw Error("Custom items require a quote.");
-  if (!Array.isArray(order.items) || !order.items.length ||
-      order.items.length > products.size)
-    throw Error("Review your selected items.");
-  if (typeof order.attempt !== "string" ||
-      !/^[a-f0-9-]{36}$/i.test(order.attempt))
-    throw Error("Refresh the page and try again.");
-
-  for (const key of ["name", "phone", "venue", "date", "email"]) {
-    if (typeof order[key] !== "string" || !order[key].trim() ||
-        order[key].length > 500)
-      throw Error("Complete the " + key + " field.");
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(order.email))
-    throw Error("Enter a valid email address.");
-  if (order.notes && (typeof order.notes !== "string" || order.notes.length > 500))
-    throw Error("Shorten the event notes.");
-
-  const fields = new URLSearchParams({
-    mode: "payment",
-    success_url: ORIGIN + "/?payment=returned#order",
-    cancel_url: ORIGIN + "/?payment=cancelled#order",
-    customer_email: order.email,
-    billing_address_collection: "required",
-    "automatic_tax[enabled]": "true",
-    "payment_method_types[0]": "card"
-  });
-
-  for (const key of ["name", "phone", "venue", "date", "service", "guests", "notes"])
-    if (order[key]) fields.set(`metadata[${key}]`, String(order[key]));
-
-  let subtotal = 0;
-  let packageCount = 0;
-  const used = new Set();
-
-  for (const [index, item] of order.items.entries()) {
-    const p = products.get(item?.id);
-    if (!p || used.has(p.id)) throw Error("Invalid or duplicate product.");
-    used.add(p.id);
-
-    if (p.type === "package" && ++packageCount > 1)
-      throw Error("Choose one catering package.");
-
-    // The server uses its own catalog for every price.
-    const quantity = p.type === "meat" ? item.quantity : order.guests;
-    if (!Number.isInteger(quantity) || quantity < 1 ||
-        (p.type === "meat" && quantity > 200))
-      throw Error("Invalid quantity for " + p.name);
-
-    const key = `line_items[${index}]`;
-    fields.set(key + "[quantity]", String(quantity));
-    fields.set(key + "[price_data][currency]", "cad");
-    fields.set(key + "[price_data][unit_amount]", String(p.cents));
-    fields.set(key + "[price_data][tax_behavior]", "exclusive");
-    fields.set(key + "[price_data][product_data][name]", p.name);
-    subtotal += quantity * p.cents;
-  }
-
-  if (order.service === "Edmonton delivery") {
-    if (subtotal < FREE_DELIVERY)
-      throw Error("Please confirm the delivery fee for orders under $100 CAD.");
-    fields.set("metadata[delivery_fee_cad]", "0.00");
-  }
-
-  return fields;
-}
-
-async function checkout(req, res) {
-  const secret = process.env.STRIPE_SECRET_KEY;
-  if (!secret || !process.env.SITE_ORIGIN)
-    return jsonResponse(res, 503, {
-      error: "Online checkout is awaiting store configuration. Call " + PHONE
-    });
-
-  let order, fields;
-  try {
-    order = await readOrder(req);
-    fields = buildPayment(order);
-  } catch (error) {
-    return jsonResponse(res, 400, { error: error.message });
-  }
-
-  const retryKey = createHash("sha256")
-    .update(order.attempt).update(fields.toString()).digest("hex");
-
-  try {
-    const response = await fetch(
-      "https://api.stripe.com/v1/checkout/sessions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + secret,
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Idempotency-Key": retryKey
-        },
-        body: fields,
-        signal: AbortSignal.timeout(15000)
-      }
-    );
-    const session = await response.json();
-    if (!response.ok || !session.url) {
-      console.error("Stripe checkout:", session.error?.code || response.status);
-      throw Error("Stripe checkout is unavailable.");
-    }
-    jsonResponse(res, 200, { url: session.url });
-  } catch {
-    jsonResponse(res, 502, {
-      error: "Checkout could not be opened. Please try again or call " + PHONE
-    });
-  }
-}
-
-const server = http.createServer(async (req, res) => {
-  try {
-    const route = new URL(req.url || "/", ORIGIN).pathname;
-
-    if (route === "/api/checkout") {
-      if (req.method !== "POST") {
-        res.setHeader("Allow", "POST");
-        return jsonResponse(res, 405, { error: "Use POST." });
-      }
-      return await checkout(req, res);
-    }
-
-    if (!["GET", "HEAD"].includes(req.method))
-      return jsonResponse(res, 405, { error: "Method unavailable." });
-
-    if (route === "/" || route === "/index.html") {
-      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-      return res.end(req.method === "HEAD" ? undefined : html);
-    }
-
-    if (/^\/assets\/[a-zA-Z0-9_-]+\.webp$/.test(route)) {
-      let bytes;
-      try {
-        bytes = await readFile(path.join(ROOT, "assets", path.basename(route)));
-      } catch {
-        return jsonResponse(res, 404, { error: "Image not found." });
-      }
-      res.writeHead(200, {
-        "Content-Type": "image/webp",
-        "Content-Length": bytes.length,
-        "Cache-Control": "public, max-age=3600"
-      });
-      return res.end(req.method === "HEAD" ? undefined : bytes);
-    }
-
-    jsonResponse(res, 404, { error: "Page not found." });
-  } catch {
-    if (!res.headersSent) jsonResponse(res, 500, { error: "Request failed." });
-    else res.destroy();
-  }
-});
-
-server.listen(PORT, "0.0.0.0", () => {
-  console.log("Ember & Gatherer is running on port " + PORT);
-});
+<footer>
+  <div class="wrap footer-grid">
+    <div>
+      <h3>Ember & Gatherer</h3>
+      <p>Smokehouse & Catering</p>
+      <p>Edmonton, Alberta, Canada</p>
+      <p>Flavor that brings people together.</p>
+    </div>
+    <div>
+      <h3>Explore</h3>
+      <p><a href="#packages">Catering Packages</a></p>
+      <p><a href="#menu">Menu</a></p>
+      <p><a href="#gallery">Gallery</a></p>
+    </div>
+    <div>
+      <h3>Order</h3>
+      <p><a href="#calculator">Catering Calculator</a></p>
+      <p><a href="#order">Online Order</a></p>
+      <p><a href="#faq">Information</a></p>
+    </div>
+  </div>
+  <div class="wrap notice" style="margin-top:25px">© <span id="year"></span> Ember & Gatherer. All rights reserved.</div>
+</footer>
