@@ -1,928 +1,221 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ember & Gatherer | Smokehouse and Catering</title>
-    <style>
-        :root {
-            --bg-light: #fbf9f5;
-            --card-bg: #ffffff;
-            --primary: #7b1126;
-            --primary-dark: #5c1d24;
-            --gold: #b8973b;
-            --text-main: #2c2c2c;
-            --text-muted: #666666;
-            --border-color: #e6e0d5;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        header {
-            position: relative;
-            background: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.92)), 
-                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" opacity="0.1"><path d="M0 0h100v100H0z" fill="%23b8973b"/></svg>');
-            background-color: #f2ede4;
-            color: var(--text-main);
-            text-align: center;
-            padding: 50px 20px;
-            border-bottom: 4px solid var(--gold);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        header h1 {
-            margin: 0 0 5px 0;
-            font-size: 36px;
-            letter-spacing: 1.5px;
-            color: var(--primary);
-            text-transform: uppercase;
-            font-weight: 800;
-        }
-
-        header p {
-            margin: 0;
-            font-size: 16px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .contact-info {
-            margin-top: 15px;
-            font-size: 15px;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        .badges {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 18px;
-        }
-
-        .badge {
-            background: #ffffff;
-            border: 1px solid var(--gold);
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-
-        .main-container {
-            max-width: 950px;
-            margin: 35px auto;
-            padding: 0 20px;
-        }
-
-        /* Секция о работе */
-        .about-section {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .about-section {
-                flex-direction: row;
-                align-items: center;
-            }
-        }
-
-        .about-text {
-            flex: 1;
-        }
-
-        .about-text h2 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 24px;
-        }
-
-        .about-image {
-            flex: 1;
-            text-align: center;
-        }
-
-        .about-image img {
-            max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .section-title {
-            color: var(--primary);
-            font-size: 24px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 8px;
-            margin-top: 40px;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-        }
-
-        .categories-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-muted);
-            transition: all 0.2s;
-            font-size: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: #ffffff;
-            border-color: var(--primary);
-        }
-
-        .category-content {
-            display: none;
-        }
-
-        .category-content.active {
-            display: block;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        @media (min-width: 650px) {
-            .menu-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .menu-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-
-        .menu-item img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .item-details h4 {
-            margin: 0 0 5px 0;
-            font-size: 18px;
-            color: var(--text-main);
-        }
-
-        .item-details p {
-            margin: 0 0 15px 0;
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 12px;
-        }
-
-        .item-price {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 17px;
-        }
-
-        .weight-select {
-            background: #fdfbf7;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 13px;
-            margin-right: 8px;
-        }
-
-        .add-btn {
-            background: var(--primary);
-            color: #ffffff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-
-        .add-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .package-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        }
-
-        .package-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .package-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px dashed var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-        }
-
-        .package-header h3 {
-            margin: 0;
-            color: var(--primary);
-            font-size: 22px;
-        }
-
-        .package-price {
-            font-size: 18px;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        .menu-section-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--primary);
-            margin-top: 12px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-
-        /* КАЛЬКУЛЯТОР КЕЙТЕРИНГА */
-        .calculator-box {
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 40px;
-            box-shadow: 0 8px 25px rgba(123, 17, 38, 0.08);
-        }
-
-        .calc-package-select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 16px;
-            background: #fdfbf7;
-            color: var(--text-main);
-            font-weight: bold;
-            margin-bottom: 25px;
-        }
-
-        .guests-control-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fdfbf7;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-        }
-
-        .guests-label {
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .guests-subtext {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .counter-box {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .counter-btn {
-            background: #ffffff;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .counter-btn:hover {
-            background: var(--primary);
-            color: #ffffff;
-        }
-
-        .counter-input {
-            width: 70px;
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 6px;
-            background: #ffffff;
-        }
-
-        .range-slider {
-            width: 100%;
-            margin-bottom: 25px;
-            accent-color: var(--primary);
-        }
-
-        .example-total-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 20px 0;
-            margin-bottom: 20px;
-        }
-
-        .total-title-group {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-
-        .total-amount-display {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .breakdown-toggle {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0;
-            font-size: 14px;
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        .breakdown-details {
-            background: #fdfbf7;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            display: none;
-            border: 1px dashed var(--border-color);
-        }
-
-        /* КОРЗИНА */
-        .cart-section {
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 45px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-        }
-
-        .cart-items {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 15px 0;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 14px;
-        }
-
-        .delivery-note {
-            background-color: #fdfbf7;
-            border: 1px dashed var(--gold);
-            border-radius: 8px;
-            padding: 12px;
-            margin: 15px 0;
-            font-size: 14px;
-            text-align: center;
-            color: var(--primary);
-            font-weight: bold;
-        }
-
-        .pay-button {
-            display: block;
-            width: 100%;
-            background-color: var(--primary);
-            color: #ffffff !important;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 8px;
-            box-sizing: border-box;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(123, 17, 38, 0.3);
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .pay-button:hover {
-            background-color: var(--primary-dark);
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-muted);
-            font-size: 13px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 50px;
-            background: #f2ede4;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>Ember & Gatherer</h1>
-        <p>Smokehouse & Catering • Artisan Smoked Meats in Edmonton, AB</p>
-        <div class="contact-info">
-            📞 +1 (368) 399-2562 &nbsp;|&nbsp; +1 (780) 818-6312
-        </div>
-        <div class="badges">
-            <div class="badge">🕒 8:00 AM – 6:00 PM</div>
-            <div class="badge">📍 Edmonton, Alberta[span_2](start_span)[span_2](end_span)</div>
-        </div>
-    </header>
-
-    <div class="main-container">
-        
-        <!-- СЕКЦИЯ О РАБОТЕ И РЕМЕСЛЕ -->
-        <div class="about-section">
-            <div class="about-text">
-                <h2>Artisan Smoked Meats & Premium Catering</h2>
-                <p>Добро пожаловать в <strong>Ember & Gatherer</strong>! Мы специализируемся на традиционном ремесленном копчении мяса и организации премиального кейтеринга в Эдмонтоне и окрестностях[span_3](start_span)[span_3](end_span).</p>
-                <p>Каждое блюдо готовится по авторским рецептам с использованием натуральной древесины и отборных ингредиентов. Мы предлагаем как продажу изысканных копченостей на вес, так и полноценное выездное обслуживание мероприятий «под ключ» с профессиональной подачей и сервировкой.</p>
-            </div>
-            <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80" alt="Smoked Meats Catering">
-            </div>
-        </div>
-
-        <div class="categories-tabs">
-            <button class="tab-btn active" onclick="switchCategory('smoked')">🔥 Копченості на вагу (lb)</button>
-            <button class="tab-btn" onclick="switchCategory('catering')">✨ Пакетування та Калькулятор</button>
-        </div>
-
-        <!-- КОПЧЕНОСТИ НА ВЕС -->
-        <div id="smoked" class="category-content active">
-            <h2 class="section-title">Artisan Smoked Meats (per lb)</h2>
-            <p style="text-align:center; color:var(--text-muted); font-size:13px; margin-top:-15px; margin-bottom:25px;">All prices in CAD per lb of finished product</p>
-            
-            <div class="menu-grid">
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=500&q=80" alt="Whole Chicken">
-                    <div class="item-details">
-                        <h4>Whole Chicken</h4>
-                        <p>Tender & juicy whole smoked chicken</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$10.89 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_1"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Whole Chicken', 10.89, 'qty_1')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=500&q=80" alt="Chicken Leg Quarters">
-                    <div class="item-details">
-                        <h4>Chicken Leg Quarters</h4>
-                        <p>Flavorful smoked leg quarters</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$10.89 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_2"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Chicken Leg Quarters', 10.89, 'qty_2')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=500&q=80" alt="Chicken Wings">
-                    <div class="item-details">
-                        <h4>Chicken Wings</h4>
-                        <p>Signature smoked crispy wings</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$17.24 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_3"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Chicken Wings', 17.24, 'qty_3')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" alt="Pork Belly">
-                    <div class="item-details">
-                        <h4>Pork Belly</h4>
-                        <p>Rich, artisanal smokehouse cut</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$12.70 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_4"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Pork Belly', 12.70, 'qty_4')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1588168333986-5078d3ae3976?auto=format&fit=crop&w=500&q=80" alt="Pork Loin">
-                    <div class="item-details">
-                        <h4>Pork Loin</h4>
-                        <p>Slow-smoked tender pork loin</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$13.15 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_5"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Pork Loin', 13.15, 'qty_5')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=500&q=80" alt="Pork Tenderloin">
-                    <div class="item-details">
-                        <h4>Pork Tenderloin</h4>
-                        <p>Exquisite smoked tenderloin</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$15.42 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_6"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Pork Tenderloin', 15.42, 'qty_6')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=500&q=80" alt="Beef Top Sirloin">
-                    <div class="item-details">
-                        <h4>Beef Top Sirloin</h4>
-                        <p>Premium smoked beef sirloin cut</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$22.23 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_7"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Beef Top Sirloin', 22.23, 'qty_7')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=500&q=80" alt="Pork Ribs">
-                    <div class="item-details">
-                        <h4>Pork Ribs</h4>
-                        <p>Slow-smoked BBQ pork ribs</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$14.51 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_8"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Pork Ribs', 14.51, 'qty_8')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=500&q=80" alt="Salmon">
-                    <div class="item-details">
-                        <h4>Salmon</h4>
-                        <p>Delicate hot-smoked salmon fillet</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$26.76 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_9"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Salmon', 26.76, 'qty_9')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="menu-item">
-                    <img src="https://images.unsplash.com/photo-1565680314210-5ef5f0397d4c?auto=format&fit=crop&w=500&q=80" alt="Shrimp">
-                    <div class="item-details">
-                        <h4>Shrimp</h4>
-                        <p>Smoked tiger shrimp</p>
-                    </div>
-                    <div class="item-footer">
-                        <span class="item-price">$20.41 / lb</span>
-                        <div>
-                            <select class="weight-select" id="qty_10"><option value="1">1 lb</option><option value="2">2 lb</option><option value="3">3 lb</option><option value="5">5 lb</option></select>
-                            <button class="add-btn" onclick="addWeightedItem('Shrimp', 20.41, 'qty_10')">В кошик</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ПАКЕТЫ КЕЙТЕРИНГА И КАЛЬКУЛЯТОР -->
-        <div id="catering" class="category-content">
-            <h2 class="section-title">Catering Packages & Calculator</h2>
-            
-            <div class="package-card">
-                <img src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=800&q=80" alt="Classic Catering">
-                <div class="package-header">
-                    <h3>Classic Package</h3>
-                    <div class="package-price">$30 CAD / person[span_4](start_span)[span_4](end_span)</div>
-                </div>
-                <p class="menu-section-title">Starters:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">Caprese Skewers, Chicken Pâté Tartlets, Ham & Cheese Canapés[span_5](start_span)[span_5](end_span)</p>
-                <p class="menu-section-title">Platter:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">House Meat Platter (Smoked bacon, Salo, Buzhenina)[span_6](start_span)[span_6](end_span)</p>
-                <p class="menu-section-title">Salad / Main / Side / Dessert:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">Caesar or Greek Salad, Roast Chicken or Roast Pork Loin, Pierogies, Vanilla Cream Profiteroles[span_7](start_span)[span_7](end_span).</p>
-            </div>
-
-            <div class="package-card">
-                <img src="https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=800&q=80" alt="Signature Catering">
-                <div class="package-header">
-                    <h3>Signature Package</h3>
-                    <div class="package-price">$55 CAD / person</div>
-                </div>
-                <p class="menu-section-title">Starters:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">Spinach & Salmon Roulade, Shrimp & Guacamole Profiteroles, Eggplant & Walnut Rolls, Baby Mozzarella Canapé</p>
-                <p class="menu-section-title">Platter & Courses:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">Deluxe Meat Platter, 2 Salads, 2 Main Courses, Sides & Desserts.</p>
-            </div>
-
-            <div class="package-card">
-                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="Premium Catering">
-                <div class="package-header">
-                    <h3>Premium Package</h3>
-                    <div class="package-price">$80 CAD / person[span_8](start_span)[span_8](end_span)</div>
-                </div>
-                <p class="menu-section-title">Starters & Platters:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">5 Starters, Premium Meat Platter, Artisan Cheese Platter[span_9](start_span)[span_9](end_span)</p>
-                <p class="menu-section-title">Courses & Desserts:</p>
-                <p style="margin:0; font-size:14px; color:var(--text-muted);">3 Salads, 3 Main Courses (including Baked Salmon), Sides, Desserts & Fruit Platter[span_10](start_span)[span_10](end_span).</p>
-            </div>
-
-            <!-- КАЛЬКУЛЯТОР -->
-            <div class="calculator-box">
-                <h3 style="margin-top:0; color:var(--primary); font-size:20px; margin-bottom:15px;">🧮 Калькулятор кейтерингу</h3>
-                
-                <select id="packageSelect" class="calc-package-select" onchange="calculateCatering()">
-                    <option value="30">Classic Package — $30.00 / guest[span_11](start_span)[span_11](end_span)</option>
-                    <option value="55">Signature Package — $55.00 / guest</option>
-                    <option value="80">Premium Package — $80.00 / guest[span_12](start_span)[span_12](end_span)</option>
-                </select>
-
-                <div class="guests-control-wrapper">
-                    <div>
-                        <div class="guests-label">Guests</div>
-                        <div class="guests-subtext">Minimum 10 guests</div>
-                    </div>
-                    <div class="counter-box">
-                        <button class="counter-btn" onclick="changeGuests(-5)">-</button>
-                        <input type="number" id="guestsInput" class="counter-input" value="30" min="10" oninput="calculateCatering()">
-                        <button class="counter-btn" onclick="changeGuests(5)">+</button>
-                    </div>
-                </div>
-
-                <input type="range" id="guestsRange" class="range-slider" min="10" max="200" value="30" oninput="syncRangeToInput()">
-
-                <div class="example-total-row">
-                    <div class="total-title-group">
-                        <strong>Example total</strong><br>
-                        Food + Edmonton delivery + GST
-                    </div>
-                    <div class="total-amount-display" id="calcTotalResult">$1,048.95</div>
-                </div>
-
-                <button class="breakdown-toggle" onclick="toggleBreakdown()">▶ Cost breakdown</button>
-                <div class="breakdown-details" id="breakdownDetails">
-                    Food subtotal: <span id="subtotalVal">$900.00</span><br>
-                    Edmonton Delivery & Setup: <span id="deliveryVal">$99.00</span><br>
-                    GST (5%): <span id="gstVal">$49.95</span>
-                </div>
-
-                <button class="pay-button" onclick="addCateringToCart()">Додати цей розрахунок в кошик →</button>
-            </div>
-        </div>
-
-        <!-- КОРЗИНА И ОПЛАТА STRIPE -->
-        <div class="cart-section">
-            <h3 style="margin-top:0; color:var(--primary);">🛒 Ваш кошик замовлення</h3>
-            <ul id="cartItemsList" class="cart-items">
-                <li style="color: var(--text-muted); text-align: center;">Кошик порожній</li>
-            </ul>
-            
-            <div style="font-size: 16px; font-weight: bold; text-align: right; margin-bottom: 10px;">
-                Загальна сума: <span id="cartTotalPrice">$0.00</span> CAD
-            </div>
-
-            <div class="delivery-note" id="deliveryNotice">
-                🚚 Доставка та налаштування: $99.00 (Безкоштовно при замовленні від $100!)
-            </div>
-
-            <!-- ЗАМЕНИТЕ ССЫЛКУ НИЖЕ НА ВАШУ ИЗ СТРАЙПА -->
-            <a href="https://buy.stripe.com/YOUR_LIVE_LINK_HERE" class="pay-button" target="_blank" rel="noopener noreferrer">
-                Pay Online Now →
-            </a>
-        </div>
-
-    </div>
-
-    <footer>
-        <p>© 2026 Ember & Gatherer. All rights reserved. Edmonton, Alberta[span_13](start_span)[span_13](end_span).</p>
-    </footer>
-
-    <script>
-        function switchCategory(catId) {
-            document.querySelectorAll('.category-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(catId).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        function changeGuests(amount) {
-            const input = document.getElementById('guestsInput');
-            let val = parseInt(input.value) || 10;
-            val += amount;
-            if (val < 10) val = 10;
-            input.value = val;
-            document.getElementById('guestsRange').value = val;
-            calculateCatering();
-        }
-
-        function syncRangeToInput() {
-            const rangeVal = document.getElementById('guestsRange').value;
-            document.getElementById('guestsInput').value = rangeVal;
-            calculateCatering();
-        }
-
-        function toggleBreakdown() {
-            const details = document.getElementById('breakdownDetails');
-            if (details.style.display === 'block') {
-                details.style.display = 'none';
-            } else {
-                details.style.display = 'block';
-            }
-        }
-
-        let currentCalc = { name: '', total: 0 };
-
-        function calculateCatering() {
-            const select = document.getElementById('packageSelect');
-            const pricePerPerson = parseFloat(select.value);
-            const packageName = select.options[select.selectedIndex].text.split('—')[0].trim();
-            
-            let guests = parseInt(document.getElementById('guestsInput').value) || 10;
-            if (guests < 1) guests = 1;
-            document.getElementById('guestsRange').value = guests > 200 ? 200 : guests;
-
-            const foodSubtotal = pricePerPerson * guests;
-            const deliveryFee = foodSubtotal >= 100 ? 0 : 99.00;
-            const gst = (foodSubtotal + deliveryFee) * 0.05;
-            const grandTotal = foodSubtotal + deliveryFee + gst;
-
-            document.getElementById('calcTotalResult').innerText = `$${grandTotal.toFixed(2)}`;
-            document.getElementById('subtotalVal').innerText = `$${foodSubtotal.toFixed(2)}`;
-            document.getElementById('deliveryVal').innerText = deliveryFee === 0 ? '$0.00 (Безкоштовно)' : `$${deliveryFee.toFixed(2)}`;
-            document.getElementById('gstVal').innerText = `$${gst.toFixed(2)}`;
-
-            currentCalc = {
-                name: `Кейтеринг: ${packageName} (${guests} гостей)`,
-                total: grandTotal
-            };
-        }
-
-        let cart = [];
-
-        function addWeightedItem(name, pricePerLb, selectId) {
-            const lbs = parseInt(document.getElementById(selectId).value) || 1;
-            const itemTotal = pricePerLb * lbs;
-            cart.push({ name: `${name} (${lbs} lb)`, price: itemTotal });
-            updateCartUI();
-            alert(`${name} (${lbs} lb) додано до кошика!`);
-        }
-
-        function addCateringToCart() {
-            if (currentCalc.total <= 0) return;
-            cart.push({ name: currentCalc.name, price: currentCalc.total });
-            updateCartUI();
-            alert('Кейтеринг успішно додано до кошика!');
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            const listEl = document.getElementById('cartItemsList');
-            const totalEl = document.getElementById('cartTotalPrice');
-            const deliveryNotice = document.getElementById('deliveryNotice');
-            
-            if (cart.length === 0) {
-                listEl.innerHTML = '<li style="color: var(--text-muted); text-align: center;">Кошик порожній</li>';
-                totalEl.innerText = '$0.00';
-                deliveryNotice.innerHTML = '🚚 Доставка та налаштування: $99.00 (Безкоштовно при замовленні від $100!)';
-                return;
-            }
-
-            listEl.innerHTML = '';
-            let sum = 0;
-            cart.forEach((item, index) => {
-                sum += item.price;
-                const li = document.createElement('li');
-                li.className = 'cart-item';
-                li.innerHTML = `<span>${item.name}</span> <span>$${item.price.toFixed(2)} CAD <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ff4d4d; cursor:pointer; margin-left:8px; font-weight:bold;">✕</button></span>`;
-                listEl.appendChild(li);
-            });
-            totalEl.innerText = `$${sum.toFixed(2)}`;
-
-            if (sum >= 100) {
-                deliveryNotice.innerHTML = '🎉 Вітаємо! Ви отримали <strong>безкоштовну доставку</strong> по Едмонтону!';
-            } else {
-                deliveryNotice.innerHTML = `🚚 Доставка та налаштування: $99.00 (Безкоштовно при замовленні від $100!)`;
-            }
-        }
-
-        calculateCatering();
-    </script>
-
-</body>
-</html>
+
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const PACKAGES = {
+  classic: { name: "Classic Catering", cents: 3000 },
+  signature: { name: "Signature Catering", cents: 5500 },
+  premium: { name: "Premium Catering", cents: 8000 }
+};
+
+const MEATS = {
+  whole_chicken: ["Whole Chicken", 1089],
+  leg_quarters: ["Chicken Leg Quarters", 1089],
+  wings: ["Chicken Wings", 1724],
+  pork_belly: ["Pork Belly", 1270],
+  pork_loin: ["Pork Loin", 1315],
+  tenderloin: ["Pork Tenderloin", 1542],
+  sirloin: ["Beef Top Sirloin", 2223],
+  ribs: ["Pork Ribs", 1451],
+  salmon: ["Salmon", 2676],
+  shrimp: ["Shrimp", 2041]
+};
+
+const clean = (value, max = 500) =>
+  String(value ?? "").trim().slice(0, max);
+
+export default async function handler(req, res) {
+
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({
+      error: "Method not allowed."
+    });
+  }
+
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return res.status(500).json({
+      error: "Stripe is not configured. Add STRIPE_SECRET_KEY in Vercel Environment Variables."
+    });
+  }
+
+  try {
+
+    const body = req.body || {};
+
+    const name = clean(body.name, 100);
+    const email = clean(body.email, 254).toLowerCase();
+    const phone = clean(body.phone, 40);
+    const eventDate = clean(body.eventDate, 30);
+    const location = clean(body.location, 300);
+    const notes = clean(body.notes, 500);
+    const packageKey = clean(body.package, 30);
+    const guests = Number(body.guests);
+
+    const selectedMeats =
+      body.smokedMeats &&
+      typeof body.smokedMeats === "object" &&
+      !Array.isArray(body.smokedMeats)
+        ? body.smokedMeats
+        : {};
+
+    if (!name || !email || !phone || !eventDate || !location) {
+      return res.status(400).json({
+        error: "Please complete all required contact and event fields."
+      });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        error: "Please enter a valid email address."
+      });
+    }
+
+    if (packageKey && !PACKAGES[packageKey]) {
+      return res.status(400).json({
+        error: "Invalid catering package."
+      });
+    }
+
+    if (
+      packageKey &&
+      (!Number.isInteger(guests) || guests < 1 || guests > 500)
+    ) {
+      return res.status(400).json({
+        error: "Guest count must be between 1 and 500."
+      });
+    }
+
+    const line_items = [];
+
+    if (packageKey) {
+
+      const item = PACKAGES[packageKey];
+
+      line_items.push({
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: item.name,
+            description: "Catering package per person"
+          },
+          unit_amount: item.cents
+        },
+        quantity: guests
+      });
+
+    }
+
+    const meatDescriptions = [];
+
+    for (const [id, rawQty] of Object.entries(selectedMeats)) {
+
+      if (!MEATS[id]) {
+        return res.status(400).json({
+          error: "Unknown smoked meat item."
+        });
+      }
+
+      const quantity = Number(rawQty);
+
+      if (
+        !Number.isInteger(quantity) ||
+        quantity < 0 ||
+        quantity > 200
+      ) {
+        return res.status(400).json({
+          error: "Smoked meat quantities must be whole pounds from 0 to 200."
+        });
+      }
+
+      if (quantity > 0) {
+
+        const [productName, unitAmount] = MEATS[id];
+
+        line_items.push({
+          price_data: {
+            currency: "cad",
+            product_data: {
+              name: productName,
+              description: "Finished product, per pound"
+            },
+            unit_amount: unitAmount
+          },
+          quantity: quantity
+        });
+
+        meatDescriptions.push(
+          `${productName}: ${quantity} lb`
+        );
+
+      }
+    }
+
+    if (!line_items.length) {
+      return res.status(400).json({
+        error: "Choose a catering package or at least one smoked meat item."
+      });
+    }
+
+    const baseUrl = (
+      process.env.SITE_URL ||
+      `https://${req.headers.host}`
+    ).replace(/\/$/, "");
+
+    const metadata = {
+      customer_name: name,
+      customer_phone: phone,
+      event_date: eventDate,
+      event_location: location,
+      guest_count: String(guests || 0),
+      catering_package: packageKey || "Smoked meats only",
+      smoked_meats: meatDescriptions.join("; ").slice(0, 500),
+      menu_notes: notes
+    };
+
+    const session = await stripe.checkout.sessions.create({
+
+      mode: "payment",
+
+      payment_method_types: ["card"],
+
+      line_items,
+
+      customer_email: email,
+
+      billing_address_collection: "auto",
+
+      phone_number_collection: {
+        enabled: true
+      },
+
+      metadata,
+
+      payment_intent_data: {
+        metadata
+      },
+
+      success_url:
+        `${baseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
+
+      cancel_url:
+        `${baseUrl}/?payment=cancelled`
+
+    });
+
+    return res.status(200).json({
+      url: session.url
+    });
+
+  } catch (error) {
+
+    console.error("Stripe Checkout error:", error);
+
+    return res.status(500).json({
+      error: "Unable to create Stripe checkout. Please try again or contact Ember & Gatherer."
+    });
+
+  }
+
+}
