@@ -639,4 +639,506 @@
     </footer>
 
     <script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember & Gatherer | Catering & Checkout Module</title>
+    <style>
+        :root {
+            --bg-light: #fbf9f5;
+            --card-bg: #ffffff;
+            --primary: #7b1126;
+            --primary-dark: #5c1d24;
+            --gold: #b8973b;
+            --text-main: #2c2c2c;
+            --text-muted: #666666;
+            --border-color: #e6e0d5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .module-container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 24px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .package-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .package-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .package-header h3 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 22px;
+        }
+
+        .package-price {
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .menu-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 12px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* КАЛЬКУЛЯТОР КЕЙТЕРИНГА */
+        .calculator-box {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 8px 25px rgba(123, 17, 38, 0.08);
+        }
+
+        .calc-package-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fdfbf7;
+            color: var(--text-main);
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .guests-control-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fdfbf7;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .guests-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .guests-subtext {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .counter-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .counter-btn {
+            background: #ffffff;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .counter-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .counter-input {
+            width: 70px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px;
+            background: #ffffff;
+        }
+
+        .range-slider {
+            width: 100%;
+            margin-bottom: 25px;
+            accent-color: var(--primary);
+        }
+
+        .example-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .total-title-group {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .total-amount-display {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .breakdown-toggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .breakdown-details {
+            background: #fdfbf7;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: none;
+            border: 1px dashed var(--border-color);
+        }
+
+        /* КОРЗИНА И ОПЛАТА */
+        .cart-section {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 45px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+
+        .cart-items {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        .delivery-note {
+            background-color: #fdfbf7;
+            border: 1px dashed var(--gold);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 14px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .pay-button {
+            display: block;
+            width: 100%;
+            background-color: var(--primary);
+            color: #ffffff !important;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(123, 17, 38, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pay-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .add-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .add-btn:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="module-container">
         
+        <h2 class="section-title">Catering Packages & Calculator</h2>
+        
+        <!-- Classic Package -->
+        <div class="package-card">
+            <div class="package-header">
+                <h3>Classic Package</h3>
+                <div class="package-price">$30 CAD / person</div>
+            </div>
+            <p class="menu-section-title">Starters:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">Caprese Skewers, Chicken Pâté Tartlets, Ham & Cheese Canapés</p>
+            <p class="menu-section-title">Platter:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">House Meat Platter (Smoked bacon, Salo, Buzhenina)</p>
+            <p class="menu-section-title">Salad / Main / Side / Dessert:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">Caesar or Greek Salad, Roast Chicken or Roast Pork Loin, Pierogies, Vanilla Cream Profiteroles.</p>
+        </div>
+
+        <!-- Signature Package -->
+        <div class="package-card">
+            <div class="package-header">
+                <h3>Signature Package</h3>
+                <div class="package-price">$55 CAD / person</div>
+            </div>
+            <p class="menu-section-title">Starters:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">Spinach & Salmon Roulade, Shrimp & Guacamole Profiteroles, Eggplant & Walnut Rolls, Baby Mozzarella Canapé</p>
+            <p class="menu-section-title">Platter & Courses:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">Deluxe Meat Platter, 2 Salads, 2 Main Courses, Sides & Desserts.</p>
+        </div>
+
+        <!-- Premium Package -->
+        <div class="package-card">
+            <div class="package-header">
+                <h3>Premium Package</h3>
+                <div class="package-price">$80 CAD / person</div>
+            </div>
+            <p class="menu-section-title">Starters & Platters:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">5 Starters, Premium Meat Platter, Artisan Cheese Platter</p>
+            <p class="menu-section-title">Courses & Desserts:</p>
+            <p style="margin:0; font-size:14px; color:var(--text-muted);">3 Salads, 3 Main Courses (including Baked Salmon), Sides, Desserts & Fruit Platter.</p>
+        </div>
+
+        <!-- КАЛЬКУЛЯТОР -->
+        <div class="calculator-box">
+            <h3 style="margin-top:0; color:var(--primary); font-size:20px; margin-bottom:15px;">🧮 Калькулятор кейтерингу</h3>
+            
+            <select id="packageSelect" class="calc-package-select" onchange="calculateCatering()">
+                <option value="30">Classic Package — $30.00 / guest</option>
+                <option value="55">Signature Package — $55.00 / guest</option>
+                <option value="80">Premium Package — $80.00 / guest</option>
+            </select>
+
+            <div class="guests-control-wrapper">
+                <div>
+                    <div class="guests-label">Guests</div>
+                    <div class="guests-subtext">Minimum 10 guests</div>
+                </div>
+                <div class="counter-box">
+                    <button class="counter-btn" onclick="changeGuests(-5)">-</button>
+                    <input type="number" id="guestsInput" class="counter-input" value="30" min="10" oninput="calculateCatering()">
+                    <button class="counter-btn" onclick="changeGuests(5)">+</button>
+                </div>
+            </div>
+
+            <input type="range" id="guestsRange" class="range-slider" min="10" max="200" value="30" oninput="syncRangeToInput()">
+
+            <div class="example-total-row">
+                <div class="total-title-group">
+                    <strong>Example total</strong><br>
+                    Food + Edmonton delivery + GST
+                </div>
+                <div class="total-amount-display" id="calcTotalResult">$1,048.95</div>
+            </div>
+
+            <button class="breakdown-toggle" onclick="toggleBreakdown()">▶ Cost breakdown</button>
+            <div class="breakdown-details" id="breakdownDetails">
+                Food subtotal: <span id="subtotalVal">$900.00</span><br>
+                Edmonton Delivery & Setup: <span id="deliveryVal">$99.00</span><br>
+                GST (5%): <span id="gstVal">$49.95</span>
+            </div>
+
+            <button class="add-btn" onclick="addCateringToCart()">Додати цей розрахунок в кошик →</button>
+        </div>
+
+        <!-- КОРЗИНА И ОПЛАТА STRIPE -->
+        <div class="cart-section">
+            <h3 style="margin-top:0; color:var(--primary);">🛒 Ваш кошик замовлення</h3>
+            <ul id="cartItemsList" class="cart-items">
+                <li style="color: var(--text-muted); text-align: center;">Кошик порожній</li>
+            </ul>
+            
+            <div style="font-size: 16px; font-weight: bold; text-align: right; margin-bottom: 10px;">
+                Загальна сума: <span id="cartTotalPrice">$0.00</span> CAD
+            </div>
+
+            <div class="delivery-note" id="deliveryNotice">
+                🚚 Доставка та налаштування: $99.00 (Безкоштовно при замовленні від $100!)
+            </div>
+
+            <!-- ЗАМЕНИТЕ ССЫЛКУ НИЖЕ НА ВАШУ ИЗ СТРАЙПА -->
+            <a href="https://buy.stripe.com/YOUR_LIVE_LINK_HERE" class="pay-button" target="_blank" rel="noopener noreferrer">
+                Pay Online Now →
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        function changeGuests(amount) {
+            const input = document.getElementById('guestsInput');
+            let val = parseInt(input.value) || 10;
+            val += amount;
+            if (val < 10) val = 10;
+            input.value = val;
+            document.getElementById('guestsRange').value = val;
+            calculateCatering();
+        }
+
+        function syncRangeToInput() {
+            const rangeVal = document.getElementById('guestsRange').value;
+            document.getElementById('guestsInput').value = rangeVal;
+            calculateCatering();
+        }
+
+        function toggleBreakdown() {
+            const details = document.getElementById('breakdownDetails');
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+            } else {
+                details.style.display = 'block';
+            }
+        }
+
+        let currentCalc = { name: '', total: 0 };
+
+        function calculateCatering() {
+            const select = document.getElementById('packageSelect');
+            const pricePerPerson = parseFloat(select.value);
+            const packageName = select.options[select.selectedIndex].text.split('—')[0].trim();
+            
+            let guests = parseInt(document.getElementById('guestsInput').value) || 10;
+            if (guests < 1) guests = 1;
+            document.getElementById('guestsRange').value = guests > 200 ? 200 : guests;
+
+            const foodSubtotal = pricePerPerson * guests;
+            const deliveryFee = foodSubtotal >= 100 ? 0 : 99.00;
+            const gst = (foodSubtotal + deliveryFee) * 0.05;
+            const grandTotal = foodSubtotal + deliveryFee + gst;
+
+            document.getElementById('calcTotalResult').innerText = `$${grandTotal.toFixed(2)}`;
+            document.getElementById('subtotalVal').innerText = `$${foodSubtotal.toFixed(2)}`;
+            document.getElementById('deliveryVal').innerText = deliveryFee === 0 ? '$0.00 (Безкоштовно)' : `$${deliveryFee.toFixed(2)}`;
+            document.getElementById('gstVal').innerText = `$${gst.toFixed(2)}`;
+
+            currentCalc = {
+                name: `Кейтеринг: ${packageName} (${guests} гостей)`,
+                total: grandTotal
+            };
+        }
+
+        let cart = [];
+
+        function addCateringToCart() {
+            if (currentCalc.total <= 0) return;
+            cart.push({ name: currentCalc.name, price: currentCalc.total });
+            updateCartUI();
+            alert('Кейтеринг успішно додано до кошика!');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const listEl = document.getElementById('cartItemsList');
+            const totalEl = document.getElementById('cartTotalPrice');
+            const deliveryNotice = document.getElementById('deliveryNotice');
+            
+            if (cart.length === 0) {
+                listEl.innerHTML = '<li style="color: var(--text-muted); text-align: center;">Кошик порожній</li>';
+                totalEl.innerText = '$0.00';
+                deliveryNotice.innerHTML = '🚚 Доставка та налаштування: $99.00 (Безкоштовно при замовленні від $100!)';
+                return;
+            }
+
+            listEl.innerHTML = '';
+            let sum = 0;
+            cart.forEach((item, index) => {
+                sum += item.price;
+                const li = document.createElement('li');
+                li.className = 'cart-item';
+                li.innerHTML = `<span>${item.name}</span> <span>$${item.price.toFixed(2)} CAD <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ff4d4d; cursor:pointer; margin-left:8px; font-weight:bold;">✕</button></span>`;
+                listEl.appendChild(li);
+            });
+            totalEl.innerText = `$${sum.toFixed(2)}`;
+
+            if (sum >= 100) {
+                deliveryNotice.innerHTML = '🎉 Вітаємо! Ви отримали <strong>безкоштовну доставку</strong> по Едмонтону!';
+            } else {
+                deliveryNotice.innerHTML = `🚚 Доставка та налаштування: $99.00 (Безкоштовно при замовленні від $100!)`;
+            }
+        }
+
+        calculateCatering();
+    </script>
+</body>
+</html>
