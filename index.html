@@ -1,221 +1,1470 @@
 
-import Stripe from "stripe";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fbf8f2">
+<meta name="description" content="Ember & Gatherer Smokehouse & Catering — artisan smoked meats, wedding catering, buffets and private events in Edmonton, Alberta.">
+<title>Ember & Gatherer | Smokehouse & Catering</title>
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper:#fbf8f2;
+  --cream:#f3ecdf;
+  --white:#fff;
+  --ink:#292723;
+  --muted:#716b63;
+  --gold:#b78a45;
+  --gold-light:#e4c98f;
+  --red:#8f2931;
+  --green:#526b55;
+  --line:#e7ddce;
+  --shadow:0 14px 40px #49351b12;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',Arial,sans-serif;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  line-height:1.65;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:url('assets/ember-logo.svg') center 155px/min(65vw,560px) auto no-repeat;
+  opacity:.035;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+.wrap{width:min(1160px,92%);margin:auto}
+.section{padding:78px 0}
+.eyebrow{
+  font-size:.73rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  font-weight:800;
+  color:var(--red);
+}
+h1,h2,h3,h4{
+  font-family:var(--serif);
+  line-height:1.16;
+  margin:0 0 14px;
+}
+h1{font-size:clamp(2.8rem,6vw,5.2rem);letter-spacing:-.04em}
+h2{font-size:clamp(2rem,4vw,3.2rem)}
+h3{font-size:1.42rem}
+p{margin:0 0 15px}
+.muted{color:var(--muted)}
+.gold{color:var(--gold)}
+.center{text-align:center}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 21px;
+  border:1px solid var(--gold);
+  border-radius:99px;
+  background:linear-gradient(110deg,#b48139,#e7cc96);
+  color:#241b10;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.04)}
+.btn-red{background:var(--red);border-color:var(--red);color:white}
+.btn-outline{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn-sm{padding:9px 15px;font-size:.88rem}
+.rule{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-light),transparent);
+  margin:25px 0;
+}
+.section-head{max-width:760px;margin:0 auto 38px;text-align:center}
+.section-head p{color:var(--muted)}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:#fffdf9ed;
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav{
+  min-height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand img{width:54px;height:54px;object-fit:contain}
+.brand-name{font:700 1.3rem var(--serif);line-height:1.05}
+.brand-sub{font-size:.57rem;letter-spacing:.2em;color:var(--gold);font-weight:800}
+.navlinks{
+  display:flex;
+  align-items:center;
+  gap:17px;
+  font-size:.83rem;
+  font-weight:700;
+  color:#514b43;
+}
+.navlinks a:hover{color:var(--red)}
+.navright{display:flex;align-items:center;gap:10px}
+.menu-toggle{
+  display:none;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:9px 12px;
+  font-size:1.2rem;
+}
+.notice{
+  padding:12px 4%;
+  text-align:center;
+  font-weight:700;
+  background:#edf5eb;
+  color:#315b35;
+}
+.notice.cancel{background:#fff2df;color:#805521}
+.notice[hidden]{display:none}
+
+.hero{
+  position:relative;
+  min-height:640px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,#fffdf8 0%,#fffdf8ed 40%,#fffdf83b 100%),
+    url('https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=2000&q=85') center/cover;
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:15px;
+  border:1px solid #c9a66c88;
+  pointer-events:none;
+}
+.hero-content{
+  position:relative;
+  z-index:1;
+  max-width:680px;
+  padding:85px 0;
+}
+.hero p{font-size:1.08rem;color:#625b52;max-width:630px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin:25px 0}
+.trust{
+  display:flex;
+  flex-wrap:wrap;
+  gap:18px;
+  font-size:.84rem;
+  font-weight:700;
+  color:#655b4d;
+}
+.trust span:before{content:'✦';color:var(--gold);margin-right:7px}
+.feature-strip{background:#f0e7d8;border-block:1px solid #e4d5bd}
+.features{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  text-align:center;
+  padding:23px 0;
+}
+.features strong{display:block;font:700 1.2rem var(--serif)}
+.features span{font-size:.8rem;color:var(--muted)}
+
+.intro-grid,.two-col{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:42px;
+  align-items:center;
+}
+.photo-frame{
+  padding:9px;
+  border:1px solid var(--gold-light);
+  border-radius:17px;
+  background:white;
+  box-shadow:var(--shadow);
+}
+.photo-frame img{
+  width:100%;
+  height:420px;
+  object-fit:cover;
+  border-radius:10px;
+}
+.checklist{list-style:none;padding:0}
+.checklist li{padding-left:26px;position:relative;margin:9px 0}
+.checklist li:before{
+  content:'✓';
+  position:absolute;
+  left:0;
+  color:var(--green);
+  font-weight:900;
+}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.card>img{width:100%;height:215px;object-fit:cover}
+.card-body{padding:21px}
+.card h3{margin:8px 0}
+.price{font:700 1.9rem var(--serif);color:var(--red)}
+.price small{font:600 .8rem var(--sans);color:var(--muted)}
+.card ul{padding-left:19px;color:var(--muted);font-size:.9rem}
+.card li{margin:5px 0}
+.card .btn{width:100%;margin-top:10px}
+.tag{
+  display:inline-block;
+  padding:5px 10px;
+  border-radius:99px;
+  background:#f7efdf;
+  color:#87612e;
+  font-size:.7rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  font-weight:800;
+}
+.featured{border:2px solid var(--gold);position:relative}
+.ribbon{
+  position:absolute;
+  right:12px;
+  top:12px;
+  background:var(--red);
+  color:white;
+  padding:5px 10px;
+  border-radius:99px;
+  font-size:.68rem;
+  font-weight:800;
+}
+.menu-detail{
+  border-top:1px solid var(--line);
+  padding-top:12px;
+  margin-top:12px;
+  color:var(--muted);
+  font-size:.86rem;
+}
+
+.smoked-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.smoked-item{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:15px;
+  align-items:center;
+  padding:11px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+.smoked-item img{
+  width:110px;
+  height:95px;
+  object-fit:cover;
+  border-radius:9px;
+}
+.smoked-item h3{font-size:1.13rem;margin:0 0 4px}
+.smoked-item .price{font-size:1.35rem}
+.note{
+  background:#fff8e9;
+  border:1px solid #ead9b6;
+  padding:14px 16px;
+  border-radius:11px;
+  color:#67543a;
+  font-size:.88rem;
+  margin-top:18px;
+}
+
+.menu-tabs{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:28px;
+}
+.menu-tabs a{
+  padding:8px 13px;
+  border:1px solid var(--line);
+  border-radius:99px;
+  background:white;
+  font-size:.82rem;
+  font-weight:700;
+}
+.menu-tabs a:hover{border-color:var(--gold);color:var(--red)}
+.menu-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.menu-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  padding:14px 16px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:11px;
+}
+.menu-row small{display:block;color:var(--muted);font-size:.8rem}
+.menu-row b{white-space:nowrap;color:var(--red);font-size:.84rem}
+
+.service-card{
+  padding:22px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+}
+.service-card .icon{font-size:1.8rem}
+.service-card h3{font-size:1.18rem;margin:7px 0}
+.service-card p{font-size:.88rem;color:var(--muted);margin:0}
+
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.gallery figure{
+  margin:0;
+  overflow:hidden;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+.gallery img{
+  width:100%;
+  height:205px;
+  object-fit:cover;
+  transition:transform .3s;
+}
+.gallery figure:hover img{transform:scale(1.04)}
+.gallery figcaption{padding:9px 12px;font-size:.8rem;font-weight:700}
+
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.step{
+  padding:20px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:13px;
+}
+.step b{font:700 2rem var(--serif);color:var(--gold)}
+.step h3{font-size:1.13rem;margin:5px 0}
+.step p{font-size:.85rem;color:var(--muted);margin:0}
+
+.faq{max-width:850px;margin:auto}
+.faq details{padding:16px 0;border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-weight:800}
+.faq details p{margin:10px 0 0;color:var(--muted)}
+
+.order-section{background:#f1e9dc}
+.order-layout{
+  display:grid;
+  grid-template-columns:1.12fr .88fr;
+  gap:22px;
+  align-items:start;
+}
+.form-card,.cart-card{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:23px;
+  box-shadow:var(--shadow);
+}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.field.full{grid-column:1/-1}
+label{
+  display:block;
+  font-size:.82rem;
+  font-weight:800;
+  margin:10px 0 5px;
+  color:#51483e;
+}
+input,select,textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid #ddd2c1;
+  border-radius:9px;
+  background:#fff;
+  color:var(--ink);
+  outline:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px #b78a4520;
+}
+textarea{min-height:95px;resize:vertical}
+.qty-row{
+  display:grid;
+  grid-template-columns:1fr 85px;
+  align-items:center;
+  gap:10px;
+  padding:8px 0;
+  border-bottom:1px solid #eee7dc;
+}
+.qty-row label{margin:0;font-weight:600}
+.qty-row input{padding:8px}
+.cart-card{position:sticky;top:100px}
+.cart-line{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:9px 0;
+  border-bottom:1px solid var(--line);
+  font-size:.88rem;
+}
+.cart-line span:last-child{white-space:nowrap}
+.total{
+  display:flex;
+  justify-content:space-between;
+  font-size:1.25rem;
+  font-weight:900;
+  margin:17px 0;
+}
+.fineprint{font-size:.78rem;color:var(--muted)}
+.form-status{margin-top:12px;font-weight:700;color:var(--red);font-size:.9rem}
+
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.contact-panel{
+  padding:24px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.contact-links{display:flex;flex-wrap:wrap;gap:10px}
+.contact-links a{
+  padding:11px 13px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  font-weight:800;
+  font-size:.9rem;
+}
+.map-panel{
+  margin-top:15px;
+  min-height:150px;
+  border-radius:12px;
+  background:linear-gradient(120deg,#eee4d3,#fff9ed);
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:18px;
+  color:#655640;
+}
+
+footer{background:#292723;color:#f8f1e7;padding:48px 0 22px}
+.footer-grid{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:22px;
+}
+.footer-grid h3{color:#e4c98f}
+.footer-grid a{
+  display:block;
+  color:#e6dccd;
+  margin:7px 0;
+  font-size:.87rem;
+}
+.footer-grid p{color:#cfc2b0;font-size:.88rem}
+.footer-bottom{
+  border-top:1px solid #ffffff25;
+  margin-top:27px;
+  padding-top:17px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:#cfc2b0;
+  font-size:.78rem;
+}
+.mobile-cta{display:none}
+
+@media(max-width:980px){
+  .navlinks{gap:10px;font-size:.76rem}
+  .navright .btn{padding:9px 12px}
+  .grid-4,.gallery{grid-template-columns:repeat(2,1fr)}
+}
+
+@media(max-width:760px){
+  .section{padding:55px 0}
+  .nav{min-height:68px}
+  .menu-toggle{display:block}
+  .navlinks{
+    display:none;
+    position:absolute;
+    top:68px;
+    left:0;
+    right:0;
+    background:#fffdf9;
+    padding:17px 5%;
+    border-bottom:1px solid var(--line);
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .navlinks.open{display:flex}
+  .navright>.btn{display:none}
+  .brand img{width:45px;height:45px}
+  .brand-name{font-size:1.08rem}
+  .hero{min-height:590px;background-position:58% center}
+  .hero-content{padding:70px 0}
+  .intro-grid,.two-col,.order-layout,.contact-grid{grid-template-columns:1fr}
+  .grid,.grid-4{grid-template-columns:1fr}
+  .features{grid-template-columns:repeat(2,1fr)}
+  .smoked-grid,.menu-list{grid-template-columns:1fr}
+  .gallery{grid-template-columns:repeat(2,1fr)}
+  .gallery img{height:155px}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .cart-card{position:static}
+  .footer-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-bottom{flex-direction:column}
+  .mobile-cta{
+    display:block;
+    position:fixed;
+    bottom:10px;
+    left:4%;
+    right:4%;
+    z-index:25;
+  }
+  .mobile-cta .btn{width:100%;box-shadow:0 8px 30px #0003}
+  body{padding-bottom:65px}
+}
+
+@media(max-width:440px){
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .steps{grid-template-columns:1fr}
+  .hero h1{font-size:2.65rem}
+  .smoked-item{grid-template-columns:92px 1fr}
+  .smoked-item img{width:92px;height:88px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#home">
+      <img src="assets/ember-logo.svg" alt="Ember & Gatherer logo">
+      <span>
+        <span class="brand-name">Ember & Gatherer</span><br>
+        <span class="brand-sub">SMOKEHOUSE & CATERING</span>
+      </span>
+    </a>
+
+    <nav class="navlinks" id="navlinks">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#packages">Packages</a>
+      <a href="#smoked">Smoked Meats</a>
+      <a href="#menu">Menu</a>
+      <a href="#services">Services</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="navright">
+      <a class="btn btn-red btn-sm" href="#order">Order Now →</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+    </div>
+  </div>
+</header>
+
+<div class="notice" id="paymentNotice" hidden></div>
+
+<main>
+
+<section class="hero" id="home">
+  <div class="wrap hero-content">
+    <div class="eyebrow">Smokehouse · Catering · Edmonton, Alberta</div>
+    <h1>Gather around<br>the <span class="gold">good stuff.</span></h1>
+    <p>Artisan smoked meats, handcrafted catering and memorable food experiences for weddings, corporate events, family celebrations and private gatherings.</p>
+    <div class="hero-actions">
+      <a class="btn btn-red" href="#order">Request a Quote / Order →</a>
+      <a class="btn btn-outline" href="#packages">Explore Our Menus</a>
+    </div>
+    <div class="trust">
+      <span>Prepared in Edmonton</span>
+      <span>Custom menus</span>
+      <span>Freshly prepared</span>
+    </div>
+  </div>
+</section>
+
+<section class="feature-strip">
+  <div class="wrap features">
+    <div><strong>Freshly Prepared</strong><span>Made for your gathering</span></div>
+    <div><strong>Event Catering</strong><span>Weddings and celebrations</span></div>
+    <div><strong>Artisan Smokehouse</strong><span>Carefully smoked meats</span></div>
+    <div><strong>Edmonton, AB</strong><span>Local service area</span></div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap intro-grid">
+    <div>
+      <div class="eyebrow">Our Story</div>
+      <h2>Good food brings people <span class="gold">together.</span></h2>
+      <p class="muted">Ember & Gatherer Smokehouse & Catering brings handcrafted food, carefully prepared smoked meats and generous hospitality to events throughout Edmonton and the surrounding area.</p>
+      <p class="muted">From an intimate family gathering to a wedding reception or corporate event, we help you plan a menu that fits your occasion, guest count and preferences.</p>
+      <ul class="checklist">
+        <li>Artisan smoked meats and smokehouse favourites</li>
+        <li>Ukrainian, Canadian and European-inspired dishes</li>
+        <li>Buffet, wedding and private event catering</li>
+        <li>Custom menus and platter selections</li>
+        <li>Prepared in Edmonton, Alberta</li>
+      </ul>
+      <a class="btn" href="#order">Plan Your Event</a>
+    </div>
+    <div class="photo-frame">
+      <img src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1100&q=85" alt="Elegant catered buffet table" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="section" id="packages" style="background:#f6f0e6">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Catering Packages</div>
+      <h2>Choose Your <span class="gold">Experience</span></h2>
+      <p>Package prices are in Canadian dollars per person. Select a package and enter your guest count in the order form.</p>
+    </div>
+
+    <div class="grid">
+
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=85" alt="Classic catering dishes" loading="lazy">
+        <div class="card-body">
+          <span class="tag">Classic</span>
+          <h3>Classic Catering</h3>
+          <div class="price">$30 <small>CAD / person</small></div>
+          <p class="muted">A welcoming menu for family gatherings and smaller celebrations.</p>
+          <ul>
+            <li>Three starters</li>
+            <li>House meat platter</li>
+            <li>One salad — Caesar or Greek</li>
+            <li>One main course — chicken or pork loin</li>
+            <li>Pierogies</li>
+            <li>Vanilla cream profiteroles</li>
+          </ul>
+          <div class="menu-detail">Selections and final menu are confirmed with your event.</div>
+          <button class="btn choose-package" data-package="classic">Choose Classic</button>
+        </div>
+      </article>
+
+      <article class="card featured">
+        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=85" alt="Signature catered food selection" loading="lazy">
+        <div class="card-body">
+          <span class="ribbon">Popular Choice</span>
+          <span class="tag">Signature</span>
+          <h3>Signature Catering</h3>
+          <div class="price">$55 <small>CAD / person</small></div>
+          <p class="muted">A fuller selection with variety for a memorable event.</p>
+          <ul>
+            <li>Four starters</li>
+            <li>Deluxe smoked meat platter</li>
+            <li>Two salads — choose one from each pair</li>
+            <li>Two main courses — choose one from each pair</li>
+            <li>Two sides</li>
+            <li>One dessert</li>
+            <li>Seasonal fruit platter</li>
+          </ul>
+          <div class="menu-detail">Choose from the Signature menu and confirm selections with us.</div>
+          <button class="btn btn-red choose-package" data-package="signature">Choose Signature</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <img src="https://images.unsplash.com/photo-1515003197210-e0cd7184f8b5?auto=format&fit=crop&w=900&q=85" alt="Premium catering platter" loading="lazy">
+        <div class="card-body">
+          <span class="tag">Premium</span>
+          <h3>Premium Catering</h3>
+          <div class="price">$80 <small>CAD / person</small></div>
+          <p class="muted">An abundant premium menu for weddings and special occasions.</p>
+          <ul>
+            <li>Five starters</li>
+            <li>Premium smoked meat platter</li>
+            <li>Artisan cheese platter</li>
+            <li>Three salads</li>
+            <li>Three main courses</li>
+            <li>Three sides</li>
+            <li>Two desserts</li>
+            <li>Seasonal fruit platter</li>
+          </ul>
+          <div class="menu-detail">Premium selections are finalized with your event coordinator.</div>
+          <button class="btn choose-package" data-package="premium">Choose Premium</button>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="section" id="smoked">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">From Our Smokehouse</div>
+      <h2>Artisan <span class="gold">Smoked Meats</span></h2>
+      <p>Prices are CAD per pound of finished product. Choose quantities in the order form below.</p>
+    </div>
+    <div class="smoked-grid" id="smokedGrid"></div>
+    <div class="note">All prices are CAD per lb of finished product. Photos are illustrative. Availability and final quantities must be confirmed before payment.</div>
+  </div>
+</section>
+
+<section class="section" id="menu" style="background:#f6f0e6">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Explore the Menu</div>
+      <h2>Something for <span class="gold">Every Gathering</span></h2>
+      <p>Browse our menu categories. Items marked “Quote” can be included in a custom catering request.</p>
+    </div>
+
+    <div class="menu-tabs">
+      <a href="#starters">Appetizers</a>
+      <a href="#platters">Platters</a>
+      <a href="#salads">Salads</a>
+      <a href="#mains">Main Courses</a>
+      <a href="#sides">Sides</a>
+      <a href="#desserts">Desserts</a>
+      <a href="#fruit">Fruit</a>
+    </div>
+
+    <div id="starters">
+      <h3>Appetizers & Finger Foods</h3>
+      <div class="menu-list">
+        <div class="menu-row"><span>Caprese Skewers<small>Cherry tomato, bocconcini, basil and balsamic</small></span><b>Quote</b></div>
+        <div class="menu-row"><span>Chicken Pâté Tartlets<small>Chicken pâté and berry chutney</small></span><b>Quote</b></div>
+        <div class="menu-row"><span>Ham & Cheese Canapés<small>Ham, cheddar, cucumber and olive</small></span><b>Quote</b></div>
+        <div class="menu-row"><span>Spinach & Salmon Roulade<small>Cream cheese, spinach and salmon</small></span><b>Quote</b></div>
+        <div class="menu-row"><span>Shrimp & Guacamole Profiteroles</span><b>Quote</b></div>
+        <div class="menu-row"><span>Eggplant & Walnut Rolls</span><b>Quote</b></div>
+        <div class="menu-row"><span>Baby Mozzarella Canapés<small>Cherry tomato, pesto and arugula</small></span><b>Quote</b></div>
+        <div class="menu-row"><span>Seasonal Finger Foods</span><b>Quote</b></div>
+        <div class="menu-row"><span>Mini Savoury Tartlets</span><b>Quote</b></div>
+        <div class="menu-row"><span>Stuffed Cucumber Bites</span><b>Quote</b></div>
+      </div>
+    </div>
+
+    <div class="rule" id="platters"></div>
+    <h3>Meat & Cheese Platters</h3>
+    <div class="menu-list">
+      <div class="menu-row"><span>House Meat Platter<small>Smoked bacon, salo and buzhennina</small></span><b>Quote</b></div>
+      <div class="menu-row"><span>Deluxe Meat Platter<small>Smoked sausage, ham and salami</small></span><b>Quote</b></div>
+      <div class="menu-row"><span>Premium Meat Platter<small>Smoked meats and prosciutto</small></span><b>Quote</b></div>
+      <div class="menu-row"><span>Artisan Cheese Platter<small>Brie, aged cheddar, gouda and blue cheese</small></span><b>Quote</b></div>
+      <div class="menu-row"><span>Seasonal Charcuterie Board</span><b>Quote</b></div>
+      <div class="menu-row"><span>Seasonal Fruit Platter</span><b>Quote</b></div>
+      <div class="menu-row"><span>Cheese, Grapes, Nuts & Crackers</span><b>Quote</b></div>
+      <div class="menu-row"><span>Smoked Fish Platter</span><b>Quote</b></div>
+    </div>
+
+    <div class="rule" id="salads"></div>
+    <h3>Salads</h3>
+    <div class="menu-list">
+      <div class="menu-row"><span>Caesar Salad</span><b>Quote</b></div>
+      <div class="menu-row"><span>Greek Salad</span><b>Quote</b></div>
+      <div class="menu-row"><span>Coleslaw</span><b>Quote</b></div>
+      <div class="menu-row"><span>Potato Salad with Ham</span><b>Quote</b></div>
+      <div class="menu-row"><span>Seasonal Garden Salad</span><b>Quote</b></div>
+      <div class="menu-row"><span>Vegetable Salad</span><b>Quote</b></div>
+      <div class="menu-row"><span>Beet Salad</span><b>Quote</b></div>
+      <div class="menu-row"><span>Cucumber & Dill Salad</span><b>Quote</b></div>
+    </div>
+
+    <div class="rule" id="mains"></div>
+    <h3>Main Courses</h3>
+    <div class="menu-list">
+      <div class="menu-row"><span>Roast Beef with Gravy</span><b>Quote</b></div>
+      <div class="menu-row"><span>Roast Chicken</span><b>Quote</b></div>
+      <div class="menu-row"><span>Roast Pork Loin<small>Apple-caramel glaze</small></span><b>Quote</b></div>
+      <div class="menu-row"><span>Baked Salmon<small>Orange glaze</small></span><b>Quote</b></div>
+      <div class="menu-row"><span>Meatloaf</span><b>Quote</b></div>
+      <div class="menu-row"><span>Baked Stuffed Basa Rolls</span><b>Quote</b></div>
+      <div class="menu-row"><span>Smoked Chicken</span><b>Quote</b></div>
+      <div class="menu-row"><span>Smoked Pork Ribs</span><b>Quote</b></div>
+      <div class="menu-row"><span>Slow-Roasted Beef Brisket</span><b>Quote</b></div>
+      <div class="menu-row"><span>BBQ Pulled Pork</span><b>Quote</b></div>
+    </div>
+
+    <div class="rule" id="sides"></div>
+    <h3>Side Dishes</h3>
+    <div class="menu-list">
+      <div class="menu-row"><span>Pierogies</span><b>Quote</b></div>
+      <div class="menu-row"><span>Mac & Cheese</span><b>Quote</b></div>
+      <div class="menu-row"><span>Mashed Potatoes</span><b>Quote</b></div>
+      <div class="menu-row"><span>Herb-Roasted Potatoes</span><b>Quote</b></div>
+      <div class="menu-row"><span>Vegetable Rice</span><b>Quote</b></div>
+      <div class="menu-row"><span>Steamed Rice</span><b>Quote</b></div>
+      <div class="menu-row"><span>Seasonal Roasted Vegetables</span><b>Quote</b></div>
+      <div class="menu-row"><span>Grilled Vegetables</span><b>Quote</b></div>
+      <div class="menu-row"><span>Buttered Corn</span><b>Quote</b></div>
+      <div class="menu-row"><span>Garlic Green Beans</span><b>Quote</b></div>
+    </div>
+
+    <div class="rule" id="desserts"></div>
+    <h3>Desserts</h3>
+    <div class="menu-list">
+      <div class="menu-row"><span>Tiramisu</span><b>Quote</b></div>
+      <div class="menu-row"><span>Napoleon Cake</span><b>Quote</b></div>
+      <div class="menu-row"><span>Honey Cake</span><b>Quote</b></div>
+      <div class="menu-row"><span>Vanilla Cream Profiteroles</span><b>Quote</b></div>
+      <div class="menu-row"><span>Seasonal Dessert Selection</span><b>Quote</b></div>
+      <div class="menu-row"><span>Mini Dessert Assortment</span><b>Quote</b></div>
+    </div>
+
+    <div class="rule" id="fruit"></div>
+    <h3>Fruit & Special Platters</h3>
+    <div class="menu-list">
+      <div class="menu-row"><span>Seasonal Fresh Fruit Platter</span><b>Quote</b></div>
+      <div class="menu-row"><span>Premium Cheese & Fruit Board</span><b>Quote</b></div>
+      <div class="menu-row"><span>Custom Celebration Platter</span><b>Quote</b></div>
+      <div class="menu-row"><span>Vegetable & Dip Platter</span><b>Quote</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">What We Cater</div>
+      <h2>Food for Every <span class="gold">Occasion</span></h2>
+      <p>Tell us about your event and we will discuss a menu and service plan that fits.</p>
+    </div>
+
+    <div class="grid grid-4">
+      <article class="service-card"><div class="icon">💍</div><h3>Wedding Catering</h3><p>Buffet menus, reception food, platters and custom selections for your special day.</p></article>
+      <article class="service-card"><div class="icon">🎂</div><h3>Birthday Parties</h3><p>Food for family birthdays, milestone celebrations and private gatherings.</p></article>
+      <article class="service-card"><div class="icon">🏢</div><h3>Corporate Catering</h3><p>Office lunches, team gatherings, meetings and company celebrations.</p></article>
+      <article class="service-card"><div class="icon">🥂</div><h3>Private Events</h3><p>Anniversaries, family celebrations and special occasions.</p></article>
+      <article class="service-card"><div class="icon">🔥</div><h3>BBQ & Smokehouse</h3><p>Smoked meats and hearty menus for outdoor events and BBQ gatherings.</p></article>
+      <article class="service-card"><div class="icon">🌿</div><h3>Outdoor Catering</h3><p>Discuss outdoor buffet and event catering options for your venue.</p></article>
+      <article class="service-card"><div class="icon">🎓</div><h3>Graduation Parties</h3><p>Menus for graduations, family gatherings and group celebrations.</p></article>
+      <article class="service-card"><div class="icon">🎄</div><h3>Holiday Catering</h3><p>Seasonal menus for Christmas, New Year and holiday events.</p></article>
+      <article class="service-card"><div class="icon">🍽️</div><h3>Buffet Catering</h3><p>Buffet-style service and food selections for groups and receptions.</p></article>
+      <article class="service-card"><div class="icon">🍤</div><h3>Cocktail Receptions</h3><p>Canapés, finger foods, appetizers and platter selections.</p></article>
+      <article class="service-card"><div class="icon">👨‍👩‍👧‍👦</div><h3>Family Gatherings</h3><p>Comforting food and generous platters for family occasions.</p></article>
+      <article class="service-card"><div class="icon">🥗</div><h3>Custom Menus</h3><p>Ask about vegetarian choices, dietary needs and special requests.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="gallery" style="background:#f6f0e6">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Food & Gatherings</div>
+      <h2>Our <span class="gold">Gallery</span></h2>
+      <p>Buffet tables, appetizers and smokehouse favourites. Replace these sample images with your own event photos when ready.</p>
+    </div>
+
+    <div class="gallery">
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=700&q=80" alt="Catering buffet"><figcaption>Buffet Catering</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=700&q=80" alt="Catering food selection"><figcaption>Food for Gatherings</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1515003197210-e0cd7184f8b5?auto=format&fit=crop&w=700&q=80" alt="Catered platter"><figcaption>Handcrafted Platters</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=700&q=80" alt="Barbecue food"><figcaption>Smokehouse Favourites</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=700&q=80" alt="Barbecue ribs"><figcaption>Smoked Ribs</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=700&q=80" alt="Roasted meat"><figcaption>Roasted Meats</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=700&q=80" alt="Grilled food"><figcaption>Freshly Prepared</figcaption></figure>
+      <figure><img loading="lazy" src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=700&q=80" alt="Food spread"><figcaption>Made to Share</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Simple Planning</div>
+      <h2>How It <span class="gold">Works</span></h2>
+      <p>From your first inquiry to your event day.</p>
+    </div>
+    <div class="steps">
+      <article class="step"><b>01</b><h3>Tell Us Your Plans</h3><p>Share your date, event type, venue and guest count.</p></article>
+      <article class="step"><b>02</b><h3>Choose Your Menu</h3><p>Select a package or request custom dishes and smoked meats.</p></article>
+      <article class="step"><b>03</b><h3>Review Your Quote</h3><p>We discuss availability, menu details and additional services.</p></article>
+      <article class="step"><b>04</b><h3>Confirm Your Order</h3><p>Payment and event arrangements are confirmed with the business.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section order-section" id="order">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Order & Quote Request</div>
+      <h2>Plan Your <span class="gold">Gathering</span></h2>
+      <p>Enter your event details, choose a package or smoked meats and review your estimate before secure payment.</p>
+    </div>
+
+    <div class="order-layout">
+      <form class="form-card" id="orderForm">
+        <h3>Your Contact Details</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">Full name *</label>
+            <input id="name" name="name" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="phone">Phone *</label>
+            <input id="phone" name="phone" type="tel" required autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="eventDate">Event date *</label>
+            <input id="eventDate" name="eventDate" type="date" required>
+          </div>
+          <div class="field">
+            <label for="eventType">Event type</label>
+            <select id="eventType" name="eventType">
+              <option>Wedding</option>
+              <option>Birthday</option>
+              <option>Corporate</option>
+              <option>Private party</option>
+              <option>Family gathering</option>
+              <option>Holiday</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="guests">Number of guests *</label>
+            <input id="guests" name="guests" type="number" min="1" max="500" value="25" required>
+          </div>
+          <div class="field full">
+            <label for="location">Event venue / address *</label>
+            <input id="location" name="location" required autocomplete="street-address">
+          </div>
+          <div class="field">
+            <label for="serviceType">Service preference</label>
+            <select id="serviceType" name="serviceType">
+              <option>Pickup</option>
+              <option>Delivery — quote required</option>
+              <option>Buffet setup — quote required</option>
+              <option>Full service — quote required</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="time">Preferred event time</label>
+            <input id="time" name="time" type="time">
+          </div>
+        </div>
+
+        <div class="rule"></div>
+        <h3>Select a Catering Package</h3>
+        <label for="package">Package</label>
+        <select id="package" name="package">
+          <option value="">No package — smoked meats only</option>
+          <option value="classic">Classic — $30 CAD/person</option>
+          <option value="signature">Signature — $55 CAD/person</option>
+          <option value="premium">Premium — $80 CAD/person</option>
+        </select>
+
+        <div class="rule"></div>
+        <h3>Smoked Meats — Quantity in Pounds</h3>
+        <p class="muted">Enter the number of pounds for each product. Leave at zero if not needed.</p>
+        <div id="meatInputs"></div>
+
+        <div class="rule"></div>
+        <h3>Additional Menu Requests</h3>
+        <label for="extraMenu">Other dishes, platters or menu selections</label>
+        <textarea id="extraMenu" name="extraMenu" placeholder="For example: Caesar salad, pierogies, cheese platter, desserts..."></textarea>
+
+        <label for="notes">Additional details / dietary requirements</label>
+        <textarea id="notes" name="notes" placeholder="Tell us about allergies, setup, delivery or special requests..."></textarea>
+
+        <div class="note">
+          The displayed estimate includes only the published package and smoked-meat prices. Delivery, buffet setup, taxes and custom menu items are not included unless separately quoted. Your event is not confirmed until Ember & Gatherer accepts the request.
+        </div>
+
+        <button class="btn btn-red" type="submit" style="width:100%;margin-top:18px">
+          Continue to Secure Checkout →
+        </button>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
+      </form>
+
+      <aside class="cart-card">
+        <h3>Your Order Summary</h3>
+        <p class="muted" style="font-size:.86rem">Your estimate updates automatically as you make selections.</p>
+        <div id="cartLines"><p class="muted">No items selected yet.</p></div>
+        <div class="total">
+          <span>Estimated total</span>
+          <span id="cartTotal">$0.00 CAD</span>
+        </div>
+        <p class="fineprint">CAD · Prices per person or per pound as indicated. Final confirmation is subject to availability and business approval.</p>
+        <div class="rule"></div>
+        <p><strong>Need help?</strong></p>
+        <p class="muted" style="font-size:.88rem">Call us before placing a large or custom order.</p>
+        <a href="tel:+13683992562" class="btn btn-outline" style="width:100%">Call +1 (368) 399-2562</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Questions</div>
+      <h2>Frequently Asked <span class="gold">Questions</span></h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>How far in advance should I book catering?</summary>
+        <p>For weddings and larger events, contact us as early as possible. Availability depends on the event date, guest count and menu.</p>
+      </details>
+      <details>
+        <summary>Can I customize a catering package?</summary>
+        <p>Yes. Share your preferred dishes and dietary requirements in the order form. Custom selections are confirmed by quote.</p>
+      </details>
+      <details>
+        <summary>Are smoked meat prices per pound?</summary>
+        <p>Yes. The published smoked meat prices are Canadian dollars per pound of finished product.</p>
+      </details>
+      <details>
+        <summary>Do you offer delivery and buffet setup?</summary>
+        <p>These services can be discussed when requesting a quote. Any additional fees will be confirmed before payment.</p>
+      </details>
+      <details>
+        <summary>When is my event confirmed?</summary>
+        <p>Submitting a request or completing online payment does not by itself guarantee event availability. Ember & Gatherer must confirm the event details.</p>
+      </details>
+      <details>
+        <summary>Can you accommodate allergies or dietary preferences?</summary>
+        <p>Please list all allergies and dietary requirements in the order form. We will discuss what can be accommodated.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact" style="background:#f6f0e6">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Get in Touch</div>
+      <h2>Let's Make Your Event <span class="gold">Memorable</span></h2>
+      <p>Contact Ember & Gatherer Smokehouse & Catering in Edmonton, Alberta.</p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-panel">
+        <h3>Contact Information</h3>
+        <p class="muted">We would be happy to discuss your event, menu ideas and catering requirements.</p>
+        <div class="contact-links">
+          <a href="tel:+13683992562">☎ +1 (368) 399-2562</a>
+          <a href="tel:+17808186312">☎ +1 (780) 818-6312</a>
+        </div>
+        <div class="map-panel">
+          <div>
+            <strong>Ember & Gatherer</strong><br>
+            Edmonton, Alberta, Canada<br>
+            <span class="muted">Service area and event venue confirmed when booking.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-panel">
+        <h3>Request Your Catering Quote</h3>
+        <p class="muted">Tell us your event date and approximate number of guests. We can help you build a custom menu.</p>
+        <a class="btn btn-red" href="#order">Start an Order Request →</a>
+        <div class="rule"></div>
+        <h3>Our Promise</h3>
+        <p class="muted">Thoughtful preparation, generous portions and a menu designed around bringing people together.</p>
+        <img src="assets/ember-logo.svg" alt="Ember & Gatherer emblem" style="width:155px;margin:10px auto 0;opacity:.9">
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img src="assets/ember-logo.svg" alt="Ember & Gatherer" style="width:180px;background:#fff;border-radius:12px;padding:8px;margin-bottom:12px">
+        <p>Artisan smoked meats and catering for weddings, corporate events, family celebrations and gatherings in Edmonton, Alberta.</p>
+      </div>
+      <div>
+        <h3>Explore</h3>
+        <a href="#about">About Us</a>
+        <a href="#packages">Catering Packages</a>
+        <a href="#smoked">Smoked Meats</a>
+        <a href="#menu">Full Menu</a>
+      </div>
+      <div>
+        <h3>Services</h3>
+        <a href="#services">Wedding Catering</a>
+        <a href="#services">Corporate Events</a>
+        <a href="#services">Buffet Catering</a>
+        <a href="#services">Custom Menus</a>
+      </div>
+      <div>
+        <h3>Contact</h3>
+        <a href="tel:+13683992562">+1 (368) 399-2562</a>
+        <a href="tel:+17808186312">+1 (780) 818-6312</a>
+        <a href="#contact">Edmonton, Alberta</a>
+        <a href="#order">Order / Request a Quote</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Ember & Gatherer Smokehouse & Catering. All rights reserved.</span>
+      <span>Prepared in Edmonton, Alberta, Canada.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="mobile-cta">
+  <a class="btn btn-red" href="#order">Order / Request a Quote →</a>
+</div>
+
+<script>
+const MEATS = [
+  {
+    id:'whole_chicken',
+    name:'Whole Chicken',
+    price:10.89,
+    img:'https://images.unsplash.com/photo-1587593810167-a84920ea0781?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'leg_quarters',
+    name:'Chicken Leg Quarters',
+    price:10.89,
+    img:'https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'wings',
+    name:'Chicken Wings',
+    price:17.24,
+    img:'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'pork_belly',
+    name:'Pork Belly',
+    price:12.70,
+    img:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'pork_loin',
+    name:'Pork Loin',
+    price:13.15,
+    img:'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'tenderloin',
+    name:'Pork Tenderloin',
+    price:15.42,
+    img:'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'sirloin',
+    name:'Beef Top Sirloin',
+    price:22.23,
+    img:'https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'ribs',
+    name:'Pork Ribs',
+    price:14.51,
+    img:'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'salmon',
+    name:'Salmon',
+    price:26.76,
+    img:'https://images.unsplash.com/photo-1462138663169-7b5c0c0b5a0d?auto=format&fit=crop&w=360&q=75'
+  },
+  {
+    id:'shrimp',
+    name:'Shrimp',
+    price:20.41,
+    img:'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=360&q=75'
+  }
+];
 
 const PACKAGES = {
-  classic: { name: "Classic Catering", cents: 3000 },
-  signature: { name: "Signature Catering", cents: 5500 },
-  premium: { name: "Premium Catering", cents: 8000 }
+  classic:{name:'Classic Catering',price:30},
+  signature:{name:'Signature Catering',price:55},
+  premium:{name:'Premium Catering',price:80}
 };
 
-const MEATS = {
-  whole_chicken: ["Whole Chicken", 1089],
-  leg_quarters: ["Chicken Leg Quarters", 1089],
-  wings: ["Chicken Wings", 1724],
-  pork_belly: ["Pork Belly", 1270],
-  pork_loin: ["Pork Loin", 1315],
-  tenderloin: ["Pork Tenderloin", 1542],
-  sirloin: ["Beef Top Sirloin", 2223],
-  ribs: ["Pork Ribs", 1451],
-  salmon: ["Salmon", 2676],
-  shrimp: ["Shrimp", 2041]
-};
+const money = n =>
+  new Intl.NumberFormat('en-CA',{
+    style:'currency',
+    currency:'CAD'
+  }).format(n);
 
-const clean = (value, max = 500) =>
-  String(value ?? "").trim().slice(0, max);
+const smokedGrid = document.getElementById('smokedGrid');
+const meatInputs = document.getElementById('meatInputs');
 
-export default async function handler(req, res) {
+MEATS.forEach(m => {
+  const article = document.createElement('article');
+  article.className = 'smoked-item';
 
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).json({
-      error: "Method not allowed."
+  article.innerHTML = `
+    <img src="${m.img}" alt="${m.name}" loading="lazy">
+    <div>
+      <h3>${m.name}</h3>
+      <div class="price">${money(m.price)} <small>/ lb</small></div>
+    </div>
+  `;
+
+  smokedGrid.appendChild(article);
+
+  const row = document.createElement('div');
+  row.className = 'qty-row';
+
+  row.innerHTML = `
+    <label for="qty_${m.id}">
+      ${m.name} — ${money(m.price)}/lb
+    </label>
+    <input
+      id="qty_${m.id}"
+      type="number"
+      min="0"
+      max="200"
+      step="1"
+      value="0"
+      inputmode="numeric"
+      data-meat="${m.id}"
+      aria-label="Pounds of ${m.name}"
+    >
+  `;
+
+  meatInputs.appendChild(row);
+});
+
+const packageSelect = document.getElementById('package');
+const guestsInput = document.getElementById('guests');
+const cartLines = document.getElementById('cartLines');
+const cartTotal = document.getElementById('cartTotal');
+
+function getOrder() {
+  const pkg = packageSelect.value;
+
+  const guests = Math.max(
+    1,
+    Math.min(500,Number(guestsInput.value) || 1)
+  );
+
+  const meats = {};
+  let lines = [];
+  let total = 0;
+
+  if(pkg && PACKAGES[pkg]) {
+    const amount = PACKAGES[pkg].price * guests;
+
+    lines.push({
+      name:`${PACKAGES[pkg].name} × ${guests} guests`,
+      amount
     });
+
+    total += amount;
   }
 
-  if (!process.env.STRIPE_SECRET_KEY) {
-    return res.status(500).json({
-      error: "Stripe is not configured. Add STRIPE_SECRET_KEY in Vercel Environment Variables."
+  document.querySelectorAll('[data-meat]').forEach(input => {
+    const qty = Math.max(
+      0,
+      Math.min(200,Math.floor(Number(input.value) || 0))
+    );
+
+    const id = input.dataset.meat;
+    const meat = MEATS.find(m => m.id === id);
+
+    meats[id] = qty;
+
+    if(qty) {
+      const amount = qty * meat.price;
+
+      lines.push({
+        name:`${meat.name} × ${qty} lb`,
+        amount
+      });
+
+      total += amount;
+    }
+  });
+
+  return {pkg,guests,meats,lines,total};
+}
+
+function renderCart() {
+  const order = getOrder();
+
+  cartLines.innerHTML = order.lines.length
+    ? order.lines.map(line => `
+      <div class="cart-line">
+        <span>${line.name}</span>
+        <strong>${money(line.amount)}</strong>
+      </div>
+    `).join('')
+    : '<p class="muted">No items selected yet.</p>';
+
+  cartTotal.textContent = money(order.total);
+}
+
+packageSelect.addEventListener('change',renderCart);
+guestsInput.addEventListener('input',renderCart);
+meatInputs.addEventListener('input',renderCart);
+
+document.querySelectorAll('.choose-package').forEach(btn => {
+  btn.addEventListener('click',() => {
+    packageSelect.value = btn.dataset.package;
+    renderCart();
+    document.getElementById('order').scrollIntoView({
+      behavior:'smooth'
     });
+  });
+});
+
+document.getElementById('menuToggle').addEventListener('click',() => {
+  document.getElementById('navlinks').classList.toggle('open');
+});
+
+document.querySelectorAll('.navlinks a').forEach(a => {
+  a.addEventListener('click',() => {
+    document.getElementById('navlinks').classList.remove('open');
+  });
+});
+
+document.getElementById('year').textContent =
+  new Date().getFullYear();
+
+const notice = document.getElementById('paymentNotice');
+const params = new URLSearchParams(location.search);
+
+if(params.get('payment') === 'success') {
+  notice.hidden = false;
+  notice.textContent =
+    'Thank you! Stripe reports that your payment was submitted. Ember & Gatherer will follow up to confirm your event details.';
+} else if(params.get('payment') === 'cancelled') {
+  notice.hidden = false;
+  notice.classList.add('cancel');
+  notice.textContent =
+    'Checkout was cancelled. Your selections can still be reviewed below.';
+}
+
+const form = document.getElementById('orderForm');
+const status = document.getElementById('formStatus');
+
+form.addEventListener('submit',async event => {
+  event.preventDefault();
+  status.textContent = '';
+
+  const order = getOrder();
+  const formData = new FormData(form);
+
+  const payload = {
+    name:formData.get('name'),
+    email:formData.get('email'),
+    phone:formData.get('phone'),
+    eventDate:formData.get('eventDate'),
+    eventType:formData.get('eventType'),
+    guests:order.guests,
+    location:formData.get('location'),
+    serviceType:formData.get('serviceType'),
+    time:formData.get('time'),
+    packageKey:order.pkg,
+    meats:order.meats,
+    extraMenu:formData.get('extraMenu'),
+    notes:[
+      formData.get('notes'),
+      `Preferred time: ${formData.get('time') || 'Not specified'}`,
+      `Other menu requests: ${formData.get('extraMenu') || 'None'}`
+    ].join('\n')
+  };
+
+  if(!order.lines.length) {
+    const subject = encodeURIComponent(
+      'Catering quote request — Ember & Gatherer'
+    );
+
+    const body = encodeURIComponent(`
+Name: ${payload.name}
+Email: ${payload.email}
+Phone: ${payload.phone}
+Event date: ${payload.eventDate}
+Event type: ${payload.eventType}
+Guests: ${payload.guests}
+Venue: ${payload.location}
+Service: ${payload.serviceType}
+Menu requests: ${payload.extraMenu}
+Notes: ${payload.notes}
+    `);
+
+    status.textContent =
+      'No priced products selected. Your email app will open with a quote request.';
+
+    location.href =
+      `mailto:?subject=${subject}&body=${body}`;
+
+    return;
   }
+
+  const submit = form.querySelector('button[type="submit"]');
+
+  submit.disabled = true;
+  submit.textContent = 'Connecting to secure checkout…';
+
+  status.textContent =
+    'Creating your secure Stripe checkout session…';
 
   try {
-
-    const body = req.body || {};
-
-    const name = clean(body.name, 100);
-    const email = clean(body.email, 254).toLowerCase();
-    const phone = clean(body.phone, 40);
-    const eventDate = clean(body.eventDate, 30);
-    const location = clean(body.location, 300);
-    const notes = clean(body.notes, 500);
-    const packageKey = clean(body.package, 30);
-    const guests = Number(body.guests);
-
-    const selectedMeats =
-      body.smokedMeats &&
-      typeof body.smokedMeats === "object" &&
-      !Array.isArray(body.smokedMeats)
-        ? body.smokedMeats
-        : {};
-
-    if (!name || !email || !phone || !eventDate || !location) {
-      return res.status(400).json({
-        error: "Please complete all required contact and event fields."
-      });
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({
-        error: "Please enter a valid email address."
-      });
-    }
-
-    if (packageKey && !PACKAGES[packageKey]) {
-      return res.status(400).json({
-        error: "Invalid catering package."
-      });
-    }
-
-    if (
-      packageKey &&
-      (!Number.isInteger(guests) || guests < 1 || guests > 500)
-    ) {
-      return res.status(400).json({
-        error: "Guest count must be between 1 and 500."
-      });
-    }
-
-    const line_items = [];
-
-    if (packageKey) {
-
-      const item = PACKAGES[packageKey];
-
-      line_items.push({
-        price_data: {
-          currency: "cad",
-          product_data: {
-            name: item.name,
-            description: "Catering package per person"
-          },
-          unit_amount: item.cents
-        },
-        quantity: guests
-      });
-
-    }
-
-    const meatDescriptions = [];
-
-    for (const [id, rawQty] of Object.entries(selectedMeats)) {
-
-      if (!MEATS[id]) {
-        return res.status(400).json({
-          error: "Unknown smoked meat item."
-        });
-      }
-
-      const quantity = Number(rawQty);
-
-      if (
-        !Number.isInteger(quantity) ||
-        quantity < 0 ||
-        quantity > 200
-      ) {
-        return res.status(400).json({
-          error: "Smoked meat quantities must be whole pounds from 0 to 200."
-        });
-      }
-
-      if (quantity > 0) {
-
-        const [productName, unitAmount] = MEATS[id];
-
-        line_items.push({
-          price_data: {
-            currency: "cad",
-            product_data: {
-              name: productName,
-              description: "Finished product, per pound"
-            },
-            unit_amount: unitAmount
-          },
-          quantity: quantity
-        });
-
-        meatDescriptions.push(
-          `${productName}: ${quantity} lb`
-        );
-
-      }
-    }
-
-    if (!line_items.length) {
-      return res.status(400).json({
-        error: "Choose a catering package or at least one smoked meat item."
-      });
-    }
-
-    const baseUrl = (
-      process.env.SITE_URL ||
-      `https://${req.headers.host}`
-    ).replace(/\/$/, "");
-
-    const metadata = {
-      customer_name: name,
-      customer_phone: phone,
-      event_date: eventDate,
-      event_location: location,
-      guest_count: String(guests || 0),
-      catering_package: packageKey || "Smoked meats only",
-      smoked_meats: meatDescriptions.join("; ").slice(0, 500),
-      menu_notes: notes
-    };
-
-    const session = await stripe.checkout.sessions.create({
-
-      mode: "payment",
-
-      payment_method_types: ["card"],
-
-      line_items,
-
-      customer_email: email,
-
-      billing_address_collection: "auto",
-
-      phone_number_collection: {
-        enabled: true
+    const response = await fetch('/api/checkout',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
       },
-
-      metadata,
-
-      payment_intent_data: {
-        metadata
-      },
-
-      success_url:
-        `${baseUrl}/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-
-      cancel_url:
-        `${baseUrl}/?payment=cancelled`
-
+      body:JSON.stringify(payload)
     });
 
-    return res.status(200).json({
-      url: session.url
-    });
+    const data = await response.json();
 
-  } catch (error) {
+    if(!response.ok) {
+      throw new Error(
+        data.error || 'Checkout could not be created.'
+      );
+    }
 
-    console.error("Stripe Checkout error:", error);
+    if(!data.url) {
+      throw new Error(
+        'Stripe did not return a checkout link.'
+      );
+    }
 
-    return res.status(500).json({
-      error: "Unable to create Stripe checkout. Please try again or contact Ember & Gatherer."
-    });
+    window.location.href = data.url;
 
+  } catch(error) {
+    status.textContent =
+      error.message +
+      ' You can call Ember & Gatherer to complete your request.';
+
+    submit.disabled = false;
+    submit.textContent =
+      'Continue to Secure Checkout →';
   }
+});
 
-}
+// Image fallback if a remote photo cannot load.
+document.querySelectorAll('img').forEach(img => {
+  img.addEventListener('error',() => {
+    if(!img.dataset.fallback) {
+      img.dataset.fallback = '1';
+      img.src = 'assets/food-placeholder.svg';
+    }
+  });
+});
+
+renderCart();
+</script>
+
+</body>
+</html>
