@@ -1,601 +1,644 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f8f6f0">
-<title>Ember & Gatherer | Smokehouse & Catering — Edmonton</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+
+<title>Ember & Gatherer | Smokehouse & Catering</title>
+
 <style>
-:root{
-  --ink:#292521;
-  --muted:#746d63;
-  --gold:#b18a4a;
-  --gold2:#d9bd83;
-  --cream:#fbf9f4;
-  --paper:#fffefa;
-  --line:#e8dfcf;
-  --wine:#7c344b;
-  --shadow:0 14px 40px rgba(53,40,22,.09)
+:root {
+  --red: #9f2638;
+  --red-dark: #741b2b;
+  --wine: #641d2c;
+  --rose: #f7e9e9;
+  --white: #ffffff;
+  --marble: #fbfaf8;
+  --ink: #292323;
+  --muted: #777070;
+  --line: #eadcda;
+  --shadow: 0 12px 35px rgba(80,25,35,.10);
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  background:var(--cream);
-  color:var(--ink);
-  font-family:Georgia,'Times New Roman',serif;
-  line-height:1.5
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-a{color:inherit;text-decoration:none}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.wrap{width:min(1160px,92%);margin:auto}
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:rgba(255,254,250,.94);
-  backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--line)
+
+html {
+  scroll-behavior: smooth;
 }
-.nav{
-  display:flex;
-  align-items:center;
-  gap:18px;
-  padding:10px 0
+
+body {
+  background: var(--marble);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.6;
 }
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:230px
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
-.brand img{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  object-fit:cover;
-  object-position:center;
-  box-shadow:0 2px 12px #0002;
-  border:2px solid var(--gold2)
+
+button, input, select, textarea {
+  font: inherit;
 }
-.brand strong{display:block;font-size:20px;letter-spacing:.02em}
-.brand small{
-  display:block;
-  color:var(--muted);
-  font:700 9px Arial,sans-serif;
-  letter-spacing:.19em
+
+button {
+  cursor: pointer;
 }
-.links{
-  display:flex;
-  align-items:center;
-  gap:17px;
-  margin-left:auto;
-  font:12px Arial,sans-serif;
-  font-weight:700
+
+.container {
+  width: min(1200px, 92%);
+  margin: auto;
 }
-.links a:hover{color:var(--gold)}
-.nav-actions{display:flex;gap:8px;align-items:center}
-.btn{
-  display:inline-flex;
-  justify-content:center;
-  align-items:center;
-  border:1px solid var(--gold);
-  background:var(--gold);
-  color:white;
-  padding:12px 19px;
-  border-radius:999px;
-  font:700 12px Arial,sans-serif;
-  letter-spacing:.04em;
-  transition:.2s
+
+/* HEADER */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,.97);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 3px 18px rgba(0,0,0,.04);
 }
-.btn:hover{background:#98733c;transform:translateY(-1px)}
-.btn.light{
-  background:transparent;
-  color:var(--ink);
-  border-color:var(--line)
+
+.navigation {
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
-.btn.light:hover{border-color:var(--gold);color:var(--gold)}
-.cart-pill{white-space:nowrap}
-.cart-count{
-  display:inline-grid;
-  place-items:center;
-  margin-left:7px;
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  background:white;
-  color:var(--gold);
-  font-size:11px
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
-.hero{padding:48px 0 34px}
-.hero-grid{
-  display:grid;
-  grid-template-columns:1.02fr .98fr;
-  gap:34px;
-  align-items:center
+
+.logo img {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
 }
-.eyebrow{
-  color:var(--wine);
-  font:700 11px Arial,sans-serif;
-  letter-spacing:.22em;
-  text-transform:uppercase
+
+.logo-name {
+  font-size: 21px;
+  color: var(--wine);
+  font-weight: bold;
 }
-h1{
-  font-size:clamp(42px,6vw,72px);
-  line-height:1.02;
-  font-weight:500;
-  margin:14px 0
+
+.logo-subtitle {
+  display: block;
+  font: 10px Arial, sans-serif;
+  letter-spacing: 3px;
+  color: var(--muted);
 }
-h1 em{color:var(--gold);font-weight:400}
-.hero p{
-  max-width:540px;
-  color:var(--muted);
-  font-size:17px
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font: 12px Arial, sans-serif;
+  font-weight: bold;
 }
-.hero-photo{position:relative}
-.hero-photo img{
-  display:block;
-  width:100%;
-  height:430px;
-  object-fit:cover;
-  border-radius:24px;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow)
+
+.nav-links a:hover {
+  color: var(--red);
 }
-.photo-tag{
-  position:absolute;
-  bottom:16px;
-  left:16px;
-  right:16px;
-  padding:12px 15px;
-  background:#fffefaeb;
-  border-radius:12px;
-  color:var(--ink);
-  font:700 11px Arial,sans-serif;
-  letter-spacing:.08em
+
+.button {
+  display: inline-block;
+  background: var(--red);
+  color: white;
+  border: 1px solid var(--red);
+  border-radius: 5px;
+  padding: 12px 22px;
+  font: bold 12px Arial, sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: .2s;
 }
-.trust{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin:16px 0 28px
+
+.button:hover {
+  background: var(--red-dark);
 }
-.trust div{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:14px;
-  color:var(--muted);
-  font:12px Arial,sans-serif
+
+.button-outline {
+  background: white;
+  color: var(--red);
 }
-.trust b{display:block;color:var(--ink);margin-bottom:4px}
-section{padding:48px 0}
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  gap:20px;
-  margin-bottom:22px
+
+.button-outline:hover {
+  color: white;
 }
-.section-head h2{
-  font-size:clamp(28px,4vw,42px);
-  font-weight:500;
-  margin:7px 0
+
+/* HERO */
+
+.hero {
+  padding: 65px 0;
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.97), rgba(255,255,255,.78)),
+    url("assets/marble-background.jpg") center/cover;
 }
-.section-head p{color:var(--muted);margin:0}
-.packages{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 45px;
 }
-.package{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:var(--shadow)
+
+.eyebrow {
+  color: var(--red);
+  font: bold 12px Arial, sans-serif;
+  letter-spacing: 3px;
+  text-transform: uppercase;
 }
-.package img{
-  display:block;
-  width:100%;
-  height:205px;
-  object-fit:cover
+
+.hero h1 {
+  font-size: clamp(42px, 6vw, 72px);
+  line-height: 1.08;
+  margin: 20px 0;
+  font-weight: normal;
 }
-.package-body{padding:20px}
-.package h3{font-size:24px;margin:0 0 5px}
-.price{font-size:30px;color:var(--gold)}
-.price small{font:12px Arial,sans-serif;color:var(--muted)}
-.package ul{padding-left:18px;color:var(--muted);font-size:14px}
-.catalog-layout{
-  display:grid;
-  grid-template-columns:250px 1fr;
-  gap:22px
+
+.hero h1 span {
+  color: var(--red);
+  font-style: italic;
 }
-.sidebar{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:16px;
-  height:max-content
+
+.hero p {
+  color: var(--muted);
+  font-size: 17px;
+  margin-bottom: 25px;
 }
-.sidebar h3{margin:0 0 12px}
-.cat-btn{
-  display:block;
-  width:100%;
-  text-align:left;
-  border:0;
-  background:transparent;
-  padding:9px 10px;
-  border-radius:9px;
-  color:var(--muted);
-  font-size:13px
+
+.hero-image img {
+  width: 100%;
+  height: 430px;
+  object-fit: cover;
+  border: 7px solid white;
+  box-shadow: var(--shadow);
+  border-radius: 4px;
 }
-.cat-btn:hover,.cat-btn.active{
-  background:#f2eadc;
-  color:var(--ink)
+
+/* GENERAL SECTIONS */
+
+section {
+  padding: 65px 0;
 }
-.subnav{font-size:12px;color:var(--muted);margin-top:12px}
-.toolbar{
-  display:flex;
-  gap:10px;
-  margin-bottom:16px
+
+.section-title {
+  text-align: center;
+  margin-bottom: 35px;
 }
-.toolbar input,.toolbar select{
-  min-width:0;
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:10px;
-  background:white
+
+.section-title h2 {
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: normal;
+  color: var(--wine);
+  margin: 10px 0;
 }
-.toolbar input{flex:1}
-.product-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px
+
+.section-title p {
+  color: var(--muted);
 }
-.product{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:15px;
-  overflow:hidden
+
+.red-line {
+  width: 65px;
+  height: 3px;
+  background: var(--red);
+  margin: 15px auto;
 }
-.menu-photo{
-  display:block;
-  width:100%;
-  height:160px;
-  object-fit:cover
+
+/* PACKAGES */
+
+.package-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
 }
-.product-body{padding:13px}
-.product h3{font-size:17px;margin:0 0 5px}
-.product p{font-size:12px;color:var(--muted);min-height:34px}
-.product .tag{
-  display:inline-block;
-  font:10px Arial,sans-serif;
-  color:var(--wine);
-  margin-bottom:5px
+
+.package-card {
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  text-align: center;
+  padding-bottom: 25px;
 }
-.product-bottom{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px
+
+.package-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
 }
-.product-price{font-weight:bold;color:var(--gold)}
-.add-btn{
-  border:0;
-  background:var(--gold);
-  color:white;
-  padding:9px 12px;
-  border-radius:20px;
-  font:700 11px Arial,sans-serif
+
+.package-card h3 {
+  color: var(--wine);
+  font-size: 25px;
+  margin: 18px 0 5px;
 }
-.smoke-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px
+
+.package-price {
+  font-size: 30px;
+  color: var(--red);
+  margin: 10px;
 }
-.smoke-card{
-  border:1px solid var(--line);
-  border-radius:15px;
-  background:var(--paper);
-  padding:16px;
-  text-align:center
+
+.package-card p {
+  color: var(--muted);
+  padding: 0 18px 18px;
+  font-size: 14px;
 }
-.smoke-card h3{font-size:16px}
-.smoke-card b{display:block;color:var(--gold);font-size:20px}
-.smoke-card small{color:var(--muted);font-size:11px}
-.smoke-card input{
-  width:65px;
-  padding:7px;
-  border:1px solid var(--line);
-  border-radius:7px;
-  margin:8px
+
+/* MENU */
+
+.menu-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 25px;
 }
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px
+
+.menu-sidebar {
+  background: white;
+  border: 1px solid var(--line);
+  padding: 20px;
+  height: fit-content;
 }
-.gallery img{
-  width:100%;
-  height:205px;
-  object-fit:cover;
-  border-radius:16px;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow)
+
+.menu-sidebar h3 {
+  color: var(--wine);
+  margin-bottom: 15px;
 }
-.gallery img.wide{grid-column:span 2}
-.banquet{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:24px;
-  align-items:center;
-  background:#f1eadf;
-  border-radius:22px;
-  padding:20px
+
+.category-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 5px;
+  background: white;
+  color: var(--ink);
 }
-.banquet img{
-  width:100%;
-  height:340px;
-  object-fit:cover;
-  border-radius:16px
+
+.category-button.active,
+.category-button:hover {
+  color: var(--red);
+  font-weight: bold;
 }
-.calc{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:22px;
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:24px;
-  box-shadow:var(--shadow)
+
+.menu-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-.calc-option,.field{margin-bottom:15px}
-.field label{
-  display:block;
-  font:700 12px Arial,sans-serif;
-  margin-bottom:6px
+
+.menu-toolbar input,
+.menu-toolbar select {
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: white;
+  width: 100%;
 }
-.field input,.field select,.field textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:10px;
-  background:white
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 17px;
 }
-.stepper{display:flex;align-items:center;gap:15px}
-.stepper button{
-  width:34px;
-  height:34px;
-  border:1px solid var(--line);
-  background:white;
-  border-radius:50%
+
+.menu-item {
+  background: white;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
-.total-box{
-  background:#f5efe5;
-  padding:20px;
-  border-radius:16px
+
+.menu-item img {
+  width: 100%;
+  height: 165px;
+  object-fit: cover;
 }
-.total-line{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  padding:8px 0;
-  border-bottom:1px solid var(--line)
+
+.menu-item-content {
+  padding: 15px;
 }
-.grand{font-size:25px;color:var(--gold);font-weight:bold}
-.cart-layout{
-  display:grid;
-  grid-template-columns:1fr 340px;
-  gap:22px
+
+.menu-item h3 {
+  color: var(--wine);
+  font-size: 18px;
 }
-.cart-items,.checkout{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:20px
+
+.menu-item p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 6px 0;
 }
-.cart-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:13px 0;
-  border-bottom:1px solid var(--line)
+
+.menu-price {
+  color: var(--red);
+  font-weight: bold;
+  font-size: 18px;
 }
-.cart-row button{
-  border:0;
-  background:#f2eadc;
-  padding:6px 10px;
-  border-radius:8px
+
+/* CART */
+
+.cart-panel {
+  background: white;
+  border: 1px solid var(--line);
+  padding: 25px;
+  box-shadow: var(--shadow);
 }
-.empty{color:var(--muted);padding:24px;text-align:center}
-.notice{font-size:12px;color:var(--muted)}
-.faq-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
 }
-.faq{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:17px;
-  color:var(--muted);
-  font-size:14px
+
+.cart-total {
+  text-align: right;
+  padding: 20px 0;
+  font-size: 23px;
+  color: var(--red);
 }
-.faq b{display:block;color:var(--ink);margin-bottom:5px}
-footer{
-  background:#f0e9dd;
-  border-top:1px solid var(--line);
-  padding:34px 0;
-  margin-top:30px
+
+/* FORMS */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
-.footer-grid{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr;
-  gap:20px
+
+.form-field {
+  margin-bottom: 16px;
 }
-.footer-grid p,.footer-grid a{
-  color:var(--muted);
-  font-size:13px
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  font: bold 12px Arial, sans-serif;
 }
-@media(max-width:900px){
-  .links{display:none}
-  .hero-grid,.banquet,.calc,.cart-layout{grid-template-columns:1fr}
-  .hero-photo img{height:330px}
-  .catalog-layout{grid-template-columns:1fr}
-  .smoke-grid{grid-template-columns:repeat(3,1fr)}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--line);
+  background: white;
 }
-@media(max-width:600px){
-  .nav{gap:8px}
-  .brand{min-width:0}
-  .brand img{width:48px;height:48px}
-  .brand strong{font-size:16px}
-  .brand small{font-size:8px}
-  .nav-actions .btn{padding:9px 12px;font-size:10px}
-  .packages,.product-grid,.gallery,.faq-grid{grid-template-columns:1fr 1fr}
-  .smoke-grid{grid-template-columns:1fr 1fr}
-  .section-head{display:block}
-  .toolbar{flex-direction:column}
-  .gallery img{height:140px}
-  .cart-layout{grid-template-columns:1fr}
-  .footer-grid{grid-template-columns:1fr}
+
+.form-field textarea {
+  min-height: 100px;
+}
+
+/* FOOTER */
+
+footer {
+  background: var(--wine);
+  color: white;
+  padding: 45px 0;
+}
+
+footer p {
+  color: #f1dfe2;
+  margin-top: 8px;
+}
+
+@media(max-width: 850px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hero-grid,
+  .menu-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .package-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media(max-width: 550px) {
+  .package-grid,
+  .menu-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image img {
+    height: 280px;
+  }
+
+  .navigation {
+    min-height: 70px;
+  }
+
+  .logo img {
+    width: 48px;
+    height: 48px;
+  }
 }
 </style>
-</head>
-<body>
-<header class="topbar">
-  <div class="wrap nav">
-    <a class="brand" href="#home">
-      <img id="brandImage" alt="Ember & Gatherer emblem">
-      <span>
-        <strong>Ember & Gatherer</strong>
-        <small>SMOKEHOUSE & CATERING · EDMONTON</small>
-      </span>
+</head><body>
+
+<!-- HEADER -->
+<header>
+  <div class="container navigation">
+
+    <a href="#home" class="logo">
+      <img src="assets/ember-logo.png" alt="Ember & Gatherer Logo">
+      <div>
+        <div class="logo-name">Ember & Gatherer</div>
+        <span class="logo-subtitle">SMOKEHOUSE & CATERING</span>
+      </div>
     </a>
-    <nav class="links">
-      <a href="#packages">Packages</a>
+
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#packages">Catering</a>
       <a href="#menu">Menu</a>
       <a href="#smokehouse">Smokehouse</a>
+      <a href="#weddings">Weddings</a>
       <a href="#gallery">Gallery</a>
-      <a href="#calculator">Calculator</a>
-      <a href="#faq">Information</a>
+      <a href="#contact">Contact</a>
     </nav>
-    <div class="nav-actions">
-      <a class="btn light" href="#order">Order</a>
-      <a class="btn cart-pill" href="#order">
-        Cart <span class="cart-count" id="cartCount">0</span>
-      </a>
-    </div>
+
+    <a href="#order" class="button">Order Now</a>
+
   </div>
 </header>
+
 <main>
+
+<!-- HERO -->
 <section class="hero" id="home">
-  <div class="wrap hero-grid">
+  <div class="container hero-grid">
+
     <div>
-      <div class="eyebrow">Smokehouse · Catering · Edmonton, Alberta</div>
-      <h1>Flavor that<br><em>brings people together.</em></h1>
-      <p>House-smoked meats, signature appetizers and catering for weddings, banquets, corporate events and private celebrations.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px">
-        <a class="btn" href="#menu">Explore the Menu</a>
-        <a class="btn light" href="#calculator">Calculate Catering</a>
-      </div>
-    </div>
-    <div class="hero-photo">
-      <img id="heroImage" alt="Ember & Gatherer catering buffet">
-      <div class="photo-tag">Smokehouse & Catering · Edmonton, Alberta</div>
-    </div>
-  </div>
-  <div class="wrap trust">
-    <div><b>Classic · Signature · Premium</b>Catering packages</div>
-    <div><b>Free delivery $100+</b>Free delivery on orders of $100 CAD or more</div>
-    <div><b>Online ordering</b>Secure Stripe checkout</div>
-  </div>
-</section>
-<section id="packages">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Catering packages</div>
-        <h2>Choose Your Catering Package</h2>
-        <p>Choose a ready-made package or create a custom event menu.</p>
-      </div>
-    </div>
-    <div class="packages">
-      <article class="package">
-        <img id="classicImg" alt="Classic catering package">
-        <div class="package-body">
-          <h3>Classic</h3>
-          <div class="price">$30 <small>CAD / person</small></div>
-          <ul>
-            <li>Selection of classic appetizers</li>
-            <li>Fresh salads and side dishes</li>
-            <li>Beautiful buffet presentation</li>
-          </ul>
-          <button class="btn" onclick="addPackage('Classic',30)">Choose Classic</button>
-        </div>
-      </article>
-      <article class="package">
-        <img id="signatureImg" alt="Signature catering package">
-        <div class="package-body">
-          <h3>Signature</h3>
-          <div class="price">$55 <small>CAD / person</small></div>
-          <ul>
-            <li>Signature appetizers and platters</li>
-            <li>Premium salads and sides</li>
-            <li>House specialties</li>
-          </ul>
-          <button class="btn" onclick="addPackage('Signature',55)">Choose Signature</button>
-        </div>
-      </article>
-      <article class="package">
-        <img id="premiumImg" alt="Premium catering package">
-        <div class="package-body">
-          <h3>Premium</h3>
-          <div class="price">$80 <small>CAD / person</small></div>
-          <ul>
-            <li>Premium smoked meat selection</li>
-            <li>Luxury appetizer and food stations</li>
-            <li>Special event presentation</li>
-          </ul>
-          <button class="btn" onclick="addPackage('Premium',80)">Choose Premium</button>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-<section id="menu">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Our food selection</div>
-        <h2>Explore Our Menu</h2>
-        <p>Browse our catering menu and add your favorites to your order.</p>
-      </div>
+      <div class="eyebrow">Edmonton · Alberta · Canada</div>
+
+      <h1>
+        Bringing People Together
+        Through <span>Great Food.</span>
+      </h1>
+
+      <p>
+        Experience exceptional catering, handcrafted appetizers,
+        delicious smoked meats and beautifully presented food
+        for weddings, corporate events and private celebrations.
+      </p>
+
+      <a href="#menu" class="button">Explore Our Menu</a>
+      <a href="#contact" class="button button-outline">Plan Your Event</a>
     </div>
 
-    <div class="catalog-layout">
-      <aside class="sidebar">
-        <h3>Menu Categories</h3>
-        <button class="cat-btn active" onclick="filterMenu('All',this)">All Items</button>
-        <button class="cat-btn" onclick="filterMenu('Smoked Meats',this)">Smoked Meats</button>
-        <button class="cat-btn" onclick="filterMenu('Appetizers',this)">Appetizers</button>
-        <button class="cat-btn" onclick="filterMenu('Platters',this)">Platters</button>
-        <button class="cat-btn" onclick="filterMenu('Salads',this)">Salads</button>
-        <button class="cat-btn" onclick="filterMenu('Side Dishes',this)">Side Dishes</button>
-        <button class="cat-btn" onclick="filterMenu('Hot Dishes',this)">Hot Dishes</button>
-        <button class="cat-btn" onclick="filterMenu('Desserts',this)">Desserts</button>
-        <button class="cat-btn" onclick="filterMenu('Wedding Catering',this)">Wedding Catering</button>
-        <div class="subnav">
-          Custom menus are available for weddings, corporate events and private celebrations.
-        </div>
+    <div class="hero-image">
+      <img
+        src="assets/menu/menu-056.jpg"
+        alt="Ember and Gatherer smoked meat catering">
+    </div>
+
+  </div>
+</section>
+
+<!-- INTRO -->
+<section>
+  <div class="container section-title">
+    <div class="eyebrow">Welcome to Ember & Gatherer</div>
+    <h2>Quality Food. Beautiful Presentation.</h2>
+    <div class="red-line"></div>
+    <p>
+      From intimate gatherings to large celebrations,
+      we bring flavor, quality and care to every table.
+    </p>
+  </div>
+</section>
+
+<!-- CATERING PACKAGES -->
+<section id="packages">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Our Catering</div>
+      <h2>Catering Packages</h2>
+      <div class="red-line"></div>
+      <p>Choose the perfect package for your special occasion.</p>
+    </div>
+
+    <div class="package-grid">
+
+      <article class="package-card">
+        <img src="assets/menu/menu-005.jpg" alt="Classic catering">
+        <h3>Classic Package</h3>
+        <div class="package-price">$30 <small>/ person</small></div>
+        <p>
+          A delicious selection of appetizers, salads,
+          sides and traditional favorites.
+        </p>
+        <button class="button" onclick="addPackage('Classic',30)">
+          Choose Classic
+        </button>
+      </article>
+
+      <article class="package-card">
+        <img src="assets/menu/menu-054.jpg" alt="Signature catering">
+        <h3>Signature Package</h3>
+        <div class="package-price">$55 <small>/ person</small></div>
+        <p>
+          A generous selection of signature dishes,
+          premium appetizers and delicious sides.
+        </p>
+        <button class="button" onclick="addPackage('Signature',55)">
+          Choose Signature
+        </button>
+      </article>
+
+      <article class="package-card">
+        <img src="assets/menu/menu-056.jpg" alt="Premium catering">
+        <h3>Premium Package</h3>
+        <div class="package-price">$80 <small>/ person</small></div>
+        <p>
+          An elevated catering experience featuring
+          premium smoked meats and special selections.
+        </p>
+        <button class="button" onclick="addPackage('Premium',80)">
+          Choose Premium
+        </button>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Discover Our Food</div>
+      <h2>Our Catering Menu</h2>
+      <div class="red-line"></div>
+      <p>Explore our food selection and add your favorites to your cart.</p>
+    </div>
+
+    <div class="menu-layout">
+
+      <aside class="menu-sidebar">
+        <h3>Categories</h3>
+
+        <button class="category-button active"
+          onclick="filterMenu('All',this)">All Menu</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Appetizers',this)">Appetizers</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Platters',this)">Platters</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Smoked Meats',this)">Smoked Meats</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Salads',this)">Salads</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Side Dishes',this)">Side Dishes</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Hot Dishes',this)">Hot Dishes</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Desserts',this)">Desserts</button>
+
+        <button class="category-button"
+          onclick="filterMenu('Wedding Catering',this)">Wedding Catering</button>
       </aside>
 
-      <div>
-        <div class="toolbar">
-          <input id="menuSearch" type="search" placeholder="Search menu..." oninput="renderMenu()">
+      <div class="menu-content">
+
+        <div class="menu-toolbar">
+          <input
+            type="search"
+            id="menuSearch"
+            placeholder="Search menu..."
+            oninput="renderMenu()">
+
           <select id="menuSort" onchange="renderMenu()">
             <option value="default">Featured</option>
             <option value="low">Price: Low to High</option>
@@ -603,95 +646,146 @@ footer{
             <option value="name">Name: A to Z</option>
           </select>
         </div>
-        <div class="product-grid" id="menuGrid"></div>
+
+        <div class="menu-grid" id="menuGrid">
+          <!-- Menu products are generated by JavaScript -->
+        </div>
+
       </div>
     </div>
   </div>
 </section>
 
+<!-- SMOKEHOUSE -->
 <section id="smokehouse">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Low and slow</div>
-        <h2>From Our Smokehouse</h2>
-        <p>Rich smoky flavor, carefully prepared for your table.</p>
-      </div>
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Low & Slow</div>
+      <h2>Our Smokehouse Selection</h2>
+      <div class="red-line"></div>
+      <p>
+        Carefully prepared smoked meats with rich,
+        authentic smokehouse flavor.
+      </p>
     </div>
-    <div class="smoke-grid" id="smokeGrid"></div>
+
+    <div class="menu-grid" id="smokeGrid">
+      <!-- Smokehouse products are generated by JavaScript -->
+    </div>
+
   </div>
 </section>
 
+<!-- WEDDINGS -->
 <section id="weddings">
-  <div class="wrap">
-    <div class="banquet">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Special Celebrations</div>
+      <h2>Wedding Catering</h2>
+      <div class="red-line"></div>
+      <p>
+        Beautiful food and memorable catering
+        for your most important day.
+      </p>
+    </div>
+
+    <div class="hero-grid">
+
       <div>
-        <div class="eyebrow">Weddings & special events</div>
-        <h2>Make Your Celebration Unforgettable</h2>
-        <p>From elegant appetizer tables to generous buffet spreads, Ember & Gatherer brings delicious food and thoughtful presentation to your special day.</p>
+        <h2>Make Your Wedding Unforgettable</h2>
+
+        <p>
+          Our wedding catering selections include
+          elegant appetizers, fresh salads, hot dishes,
+          smoked meats, platters and beautifully
+          arranged buffet tables.
+        </p>
+
         <ul>
-          <li>Wedding buffet selections</li>
-          <li>Appetizer and grazing tables</li>
+          <li>Wedding buffet packages</li>
+          <li>Appetizer and canapé selections</li>
           <li>Smoked meat stations</li>
-          <li>Hot dishes, salads and sides</li>
+          <li>Fresh salads and side dishes</li>
           <li>Custom menus for your guest count</li>
+          <li>Private event catering</li>
         </ul>
-        <a class="btn" href="#order">Request Wedding Catering</a>
+
+        <a href="#calculator" class="button">
+          Calculate Wedding Catering
+        </a>
       </div>
-      <img id="weddingImage" alt="Wedding catering buffet">
+
+      <div class="hero-image">
+        <img src="assets/menu/menu-007.jpg"
+          alt="Wedding buffet catering">
+      </div>
+
     </div>
+
   </div>
 </section>
 
+<!-- GALLERY -->
 <section id="gallery">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">A taste of our table</div>
-        <h2>Food & Catering Gallery</h2>
-        <p>Explore our catering presentation and food selection.</p>
-      </div>
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Our Food & Events</div>
+      <h2>Gallery</h2>
+      <div class="red-line"></div>
+      <p>A look at our food, platters and catering presentation.</p>
     </div>
-    <div class="gallery" id="galleryGrid"></div>
+
+    <div class="menu-grid" id="galleryGrid">
+      <!-- Gallery images are generated by JavaScript -->
+    </div>
+
   </div>
 </section>
 
+<!-- CALCULATOR -->
 <section id="calculator">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Plan your event</div>
-        <h2>Catering Price Calculator</h2>
-        <p>Estimate your catering package based on the number of guests.</p>
-      </div>
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Plan Your Event</div>
+      <h2>Catering Calculator</h2>
+      <div class="red-line"></div>
+      <p>Estimate the cost of your catering package.</p>
     </div>
 
-    <div class="calc">
-      <div>
-        <div class="field">
-          <label for="calcPackage">Catering Package</label>
+    <div class="cart-panel">
+
+      <div class="form-grid">
+
+        <div class="form-field">
+          <label for="calcPackage">Package</label>
           <select id="calcPackage" onchange="calculateCatering()">
-            <option value="30">Classic — $30 per person</option>
-            <option value="55" selected>Signature — $55 per person</option>
-            <option value="80">Premium — $80 per person</option>
+            <option value="30">Classic — $30/person</option>
+            <option value="55" selected>Signature — $55/person</option>
+            <option value="80">Premium — $80/person</option>
           </select>
         </div>
 
-        <div class="field">
+        <div class="form-field">
           <label for="guestCount">Number of Guests</label>
-          <div class="stepper">
-            <button type="button" onclick="changeGuests(-1)">−</button>
-            <input id="guestCount" type="number" min="1" max="1000" value="30" oninput="calculateCatering()" style="width:100px;text-align:center">
-            <button type="button" onclick="changeGuests(1)">+</button>
-          </div>
+          <input
+            type="number"
+            id="guestCount"
+            min="1"
+            max="1000"
+            value="30"
+            oninput="calculateCatering()">
         </div>
 
-        <div class="field">
+        <div class="form-field">
           <label for="eventDate">Event Date</label>
-          <input id="eventDate" type="date">
+          <input type="date" id="eventDate">
         </div>
 
-        <div class="field">
+        <div class="form-field">
           <label for="eventType">Event Type</label>
           <select id="eventType">
             <option>Wedding</option>
@@ -702,146 +796,726 @@ footer{
           </select>
         </div>
 
-        <button class="btn" type="button" onclick="addCalculatedPackage()">Add Package to Cart</button>
       </div>
 
-      <div class="total-box">
-        <h3>Your Estimate</h3>
-        <div class="total-line"><span>Package price</span><b id="calcUnit">$55.00</b></div>
-        <div class="total-line"><span>Guests</span><b id="calcGuests">30</b></div>
-        <div class="total-line"><span>Food subtotal</span><b id="calcSubtotal">$1,650.00</b></div>
-        <div class="total-line"><span>Delivery</span><b>Calculated at checkout</b></div>
-        <div class="total-line"><span>Estimated total</span><b class="grand" id="calcTotal">$1,650.00</b></div>
-        <p class="notice">This is an estimate. Final catering details and availability will be confirmed with your order.</p>
-      </div>
+      <h3>Estimated Price</h3>
+      <div class="cart-total" id="calcTotal">$1,650.00 CAD</div>
+
+      <button class="button" onclick="addCalculatedPackage()">
+        Add Catering Package to Cart
+      </button>
+
     </div>
   </div>
 </section>
 
+<!-- ORDER SECTION -->
 <section id="order">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Your selection</div>
-        <h2>Shopping Cart & Order</h2>
-        <p>Review your items and send your order request.</p>
-      </div>
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Online Ordering</div>
+      <h2>Your Shopping Cart</h2>
+      <div class="red-line"></div>
+      <p>Review your selection and continue to checkout.</p>
     </div>
 
-    <div class="cart-layout">
-      <div class="cart-items">
-        <h3>Your Cart</h3>
-        <div id="cartItems">
-          <div class="empty">Your cart is currently empty.</div>
-        </div>
+    <div class="cart-panel">
+
+      <div id="cartItems">
+        <p>Your cart is currently empty.</p>
       </div>
 
-      <aside class="checkout">
-        <h3>Order Summary</h3>
-        <div class="total-line"><span>Subtotal</span><b id="orderSubtotal">$0.00</b></div>
-        <div class="total-line"><span>Delivery</span><b id="deliveryCost">$15.00</b></div>
-        <div class="total-line"><span>Total</span><b class="grand" id="orderTotal">$15.00</b></div>
-        <p class="notice">Delivery is $15 for orders under $100 CAD. Delivery is free for orders of $100 CAD or more.</p>
+      <div class="cart-row">
+        <span>Subtotal</span>
+        <strong id="orderSubtotal">$0.00 CAD</strong>
+      </div>
 
-        <form id="orderForm" onsubmit="submitOrder(event)">
-          <div class="field">
+      <div class="cart-row">
+        <span>Delivery</span>
+        <strong id="deliveryCost">$15.00 CAD</strong>
+      </div>
+
+      <div class="cart-total" id="orderTotal">$15.00 CAD</div>
+
+      <p>
+        Delivery is $15 CAD for orders under $100 CAD.
+        Delivery is free for orders of $100 CAD or more.
+      </p>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT & ORDER FORM -->
+<section id="contact">
+  <div class="container">
+
+    <div class="section-title">
+      <div class="eyebrow">Get In Touch</div>
+      <h2>Contact & Order Details</h2>
+      <div class="red-line"></div>
+      <p>Tell us about your order or upcoming event.</p>
+    </div>
+
+    <div class="cart-panel">
+
+      <form id="orderForm" onsubmit="submitOrder(event)">
+
+        <div class="form-grid">
+
+          <div class="form-field">
             <label for="customerName">Full Name *</label>
-            <input id="customerName" name="name" required autocomplete="name">
+            <input id="customerName" required>
           </div>
 
-          <div class="field">
+          <div class="form-field">
             <label for="customerEmail">Email *</label>
-            <input id="customerEmail" name="email" type="email" required autocomplete="email">
+            <input id="customerEmail" type="email" required>
           </div>
 
-          <div class="field">
+          <div class="form-field">
             <label for="customerPhone">Phone *</label>
-            <input id="customerPhone" name="phone" type="tel" required autocomplete="tel">
+            <input id="customerPhone" type="tel" required>
           </div>
 
-          <div class="field">
+          <div class="form-field">
             <label for="orderDate">Preferred Date *</label>
-            <input id="orderDate" name="date" type="date" required>
+            <input id="orderDate" type="date" required>
           </div>
 
-          <div class="field">
-            <label for="orderAddress">Delivery Address *</label>
-            <textarea id="orderAddress" name="address" rows="2" required></textarea>
-          </div>
+        </div>
 
-          <div class="field">
-            <label for="orderNotes">Additional Details</label>
-            <textarea id="orderNotes" name="notes" rows="3" placeholder="Event details, dietary requirements, delivery instructions..."></textarea>
-          </div>
+        <div class="form-field">
+          <label for="orderAddress">Delivery Address *</label>
+          <textarea id="orderAddress" required></textarea>
+        </div>
 
-          <button class="btn" type="submit" style="width:100%">Continue to Secure Checkout</button>
-          <p class="notice">Payments are processed securely through Stripe when the checkout service is configured.</p>
-        </form>
-        <div id="orderMessage" role="status" aria-live="polite"></div>
-      </aside>
+        <div class="form-field">
+          <label for="orderNotes">Additional Details</label>
+          <textarea id="orderNotes"
+            placeholder="Tell us about your event, guest count or special requests..."></textarea>
+        </div>
+
+        <button class="button" type="submit">
+          Continue to Secure Checkout
+        </button>
+
+        <p id="orderMessage" aria-live="polite"></p>
+
+      </form>
+
     </div>
   </div>
 </section>
 
-<section id="faq">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <div class="eyebrow">Good to know</div>
-        <h2>Frequently Asked Questions</h2>
-      </div>
-    </div>
-
-    <div class="faq-grid">
-      <div class="faq">
-        <b>Where do you provide catering?</b>
-        We are based in Edmonton, Alberta. Contact us to discuss your event location.
-      </div>
-      <div class="faq">
-        <b>How much is delivery?</b>
-        Delivery is $15 CAD for orders under $100 CAD. Orders of $100 CAD or more qualify for free delivery.
-      </div>
-      <div class="faq">
-        <b>Can I customize my catering menu?</b>
-        Yes. Contact us with your guest count, event date and menu preferences.
-      </div>
-      <div class="faq">
-        <b>Do you cater weddings?</b>
-        Yes. We offer wedding buffet options, appetizer tables and custom catering arrangements.
-      </div>
-      <div class="faq">
-        <b>How do I pay?</b>
-        Online checkout is designed to use secure Stripe payment processing.
-      </div>
-      <div class="faq">
-        <b>Can I request special dietary options?</b>
-        Please include dietary requirements in the order notes so they can be reviewed.
-      </div>
-    </div>
-  </div>
-</section>
 </main>
 
+<!-- FOOTER -->
 <footer>
-  <div class="wrap footer-grid">
-    <div>
-      <h3>Ember & Gatherer</h3>
-      <p>Smokehouse & Catering</p>
-      <p>Edmonton, Alberta, Canada</p>
-      <p>Flavor that brings people together.</p>
-    </div>
-    <div>
-      <h3>Explore</h3>
-      <p><a href="#packages">Catering Packages</a></p>
-      <p><a href="#menu">Menu</a></p>
-      <p><a href="#gallery">Gallery</a></p>
-    </div>
-    <div>
-      <h3>Order</h3>
-      <p><a href="#calculator">Catering Calculator</a></p>
-      <p><a href="#order">Online Order</a></p>
-      <p><a href="#faq">Information</a></p>
-    </div>
+  <div class="container">
+
+    <h2>Ember & Gatherer</h2>
+    <p>Smokehouse & Catering</p>
+    <p>Edmonton, Alberta, Canada</p>
+
+    <p>
+      Flavor, quality and hospitality
+      for every occasion.
+    </p>
+
+    <p style="margin-top:25px">
+      © <span id="year"></span> Ember & Gatherer.
+      All rights reserved.
+    </p>
+
   </div>
-  <div class="wrap notice" style="margin-top:25px">© <span id="year"></span> Ember & Gatherer. All rights reserved.</div>
-</footer>
+</footer><script>
+/* =========================================
+   EMBER & GATHERER — WEBSITE JAVASCRIPT
+   White & Red Edition
+   ========================================= */
+
+const DELIVERY_FEE = 15;
+const FREE_DELIVERY_FROM = 100;
+
+const menuItems = [
+  {id:1,name:"Smoked Beef Brisket",category:"Smoked Meats",price:28,unit:"lb",image:"menu-001.jpg",description:"Slow-smoked beef brisket."},
+  {id:2,name:"Pulled Pork",category:"Smoked Meats",price:22,unit:"lb",image:"menu-002.jpg",description:"Tender smoked pulled pork."},
+  {id:3,name:"Smoked Pork Ribs",category:"Smoked Meats",price:26,unit:"rack",image:"menu-003.jpg",description:"Smoky, tender pork ribs."},
+  {id:4,name:"Smoked Chicken",category:"Smoked Meats",price:19,unit:"each",image:"menu-004.jpg",description:"Juicy smoked chicken."},
+  {id:5,name:"Smoked Sausage",category:"Smoked Meats",price:18,unit:"lb",image:"menu-005.jpg",description:"House-style smoked sausage."},
+  {id:6,name:"Meat & Cheese Platter",category:"Platters",price:75,unit:"platter",image:"menu-006.jpg",description:"A generous selection for sharing."},
+  {id:7,name:"Classic Appetizer Platter",category:"Appetizers",price:65,unit:"platter",image:"menu-007.jpg",description:"A selection of party favourites."},
+  {id:8,name:"Fresh Garden Salad",category:"Salads",price:35,unit:"bowl",image:"menu-008.jpg",description:"Fresh seasonal vegetables."},
+  {id:9,name:"Caesar Salad",category:"Salads",price:40,unit:"bowl",image:"menu-009.jpg",description:"Classic Caesar salad."},
+  {id:10,name:"Roasted Potatoes",category:"Side Dishes",price:30,unit:"tray",image:"menu-010.jpg",description:"Seasoned roasted potatoes."},
+  {id:11,name:"Macaroni & Cheese",category:"Side Dishes",price:40,unit:"tray",image:"menu-011.jpg",description:"Creamy baked macaroni and cheese."},
+  {id:12,name:"BBQ Baked Beans",category:"Side Dishes",price:32,unit:"tray",image:"menu-012.jpg",description:"Slow-cooked barbecue beans."},
+  {id:13,name:"Roasted Chicken",category:"Hot Dishes",price:55,unit:"tray",image:"menu-013.jpg",description:"Oven-roasted chicken."},
+  {id:14,name:"Beef Meatballs",category:"Hot Dishes",price:60,unit:"tray",image:"menu-014.jpg",description:"Tender meatballs in savoury sauce."},
+  {id:15,name:"Dessert Platter",category:"Desserts",price:55,unit:"platter",image:"menu-015.jpg",description:"A selection of assorted desserts."},
+  {id:16,name:"Classic Wedding Buffet",category:"Wedding Catering",price:30,unit:"person",image:"menu-016.jpg",description:"Classic buffet catering package."},
+  {id:17,name:"Signature Wedding Buffet",category:"Wedding Catering",price:55,unit:"person",image:"menu-017.jpg",description:"Our signature wedding buffet."},
+  {id:18,name:"Premium Wedding Buffet",category:"Wedding Catering",price:80,unit:"person",image:"menu-018.jpg",description:"Premium event dining experience."}
+];
+
+const smokeItems = [
+  {id:101,name:"Smoked Beef Brisket",price:28,unit:"lb",image:"menu-001.jpg"},
+  {id:102,name:"Pulled Pork",price:22,unit:"lb",image:"menu-002.jpg"},
+  {id:103,name:"Smoked Pork Ribs",price:26,unit:"rack",image:"menu-003.jpg"},
+  {id:104,name:"Smoked Chicken",price:19,unit:"each",image:"menu-004.jpg"},
+  {id:105,name:"Smoked Sausage",price:18,unit:"lb",image:"menu-005.jpg"}
+];
+
+let cart = [];
+
+try {
+  const savedCart = localStorage.getItem("emberGathererCart");
+  if (savedCart) cart = JSON.parse(savedCart);
+  if (!Array.isArray(cart)) cart = [];
+} catch (error) {
+  cart = [];
+}
+
+let activeCategory = "All";
+
+/* ---------- HELPERS ---------- */
+
+function money(value) {
+  return new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD"
+  }).format(Number(value) || 0);
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[char]);
+}
+
+function imagePath(filename) {
+  return "assets/menu/" + filename;
+}
+
+function saveCart() {
+  try {
+    localStorage.setItem("emberGathererCart", JSON.stringify(cart));
+  } catch (error) {
+    console.warn("Cart could not be saved.", error);
+  }
+}
+
+/* ---------- MENU ---------- */
+
+function renderMenu() {
+  const grid = document.getElementById("menuGrid");
+  if (!grid) return;
+
+  const search = (
+    document.getElementById("menuSearch")?.value || ""
+  ).toLowerCase();
+
+  const sort = document.getElementById("menuSort")?.value || "default";
+
+  let items = menuItems.filter(item => {
+    const matchesCategory =
+      activeCategory === "All" ||
+      item.category === activeCategory;
+
+    const matchesSearch =
+      item.name.toLowerCase().includes(search) ||
+      item.description.toLowerCase().includes(search) ||
+      item.category.toLowerCase().includes(search);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  if (sort === "low") items.sort((a,b) => a.price - b.price);
+  if (sort === "high") items.sort((a,b) => b.price - a.price);
+  if (sort === "name") items.sort((a,b) => a.name.localeCompare(b.name));
+
+  if (!items.length) {
+    grid.innerHTML = "<p>No menu items found. Please try another search.</p>";
+    return;
+  }
+
+  grid.innerHTML = items.map(item => `
+    <article class="menu-card">
+      <img
+        src="${imagePath(item.image)}"
+        alt="${escapeHTML(item.name)}"
+        loading="lazy"
+        onerror="this.style.display='none'"
+      >
+      <div class="menu-card-content">
+        <span class="menu-category">${escapeHTML(item.category)}</span>
+        <h3>${escapeHTML(item.name)}</h3>
+        <p>${escapeHTML(item.description)}</p>
+        <div class="menu-card-bottom">
+          <strong>${money(item.price)} / ${escapeHTML(item.unit)}</strong>
+          <button type="button" onclick="addToCart(${item.id})">
+            Add to Order
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join("");
+}
+
+function filterMenu(category, button) {
+  activeCategory = category;
+
+  document.querySelectorAll(".category-button").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  if (button) button.classList.add("active");
+
+  renderMenu();
+}
+
+/* ---------- SMOKEHOUSE ---------- */
+
+function renderSmokehouse() {
+  const grid = document.getElementById("smokeGrid");
+  if (!grid) return;
+
+  grid.innerHTML = smokeItems.map(item => `
+    <article class="menu-card">
+      <img
+        src="${imagePath(item.image)}"
+        alt="${escapeHTML(item.name)}"
+        loading="lazy"
+        onerror="this.style.display='none'"
+      >
+      <div class="menu-card-content">
+        <h3>${escapeHTML(item.name)}</h3>
+        <strong>${money(item.price)} / ${escapeHTML(item.unit)}</strong>
+        <button type="button" onclick="addToCart(${item.id})">
+          Add to Order
+        </button>
+      </div>
+    </article>
+  `).join("");
+}
+
+/* ---------- CART ---------- */
+
+function findProduct(id) {
+  return menuItems.find(item => item.id === id) ||
+         smokeItems.find(item => item.id === id);
+}
+
+function addToCart(id) {
+  const product = findProduct(Number(id));
+  if (!product) return;
+
+  const existing = cart.find(item =>
+    item.id === product.id && !item.guests
+  );
+
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      unit: product.unit,
+      quantity: 1
+    });
+  }
+
+  saveCart();
+  renderCart();
+  showMessage(product.name + " added to your order.");
+}
+
+function addPackage(name, price) {
+  const guests = Math.max(
+    1,
+    Number(document.getElementById("guestCount")?.value) || 30
+  );
+
+  const existing = cart.find(item =>
+    item.packageName === name
+  );
+
+  if (existing) {
+    existing.guests = guests;
+    existing.quantity = 1;
+  } else {
+    cart.push({
+      id: "package-" + name.toLowerCase(),
+      name: name + " Catering Package",
+      packageName: name,
+      price: Number(price),
+      unit: "person",
+      quantity: 1,
+      guests: guests
+    });
+  }
+
+  saveCart();
+  renderCart();
+  showMessage(name + " package added for " + guests + " guests.");
+}
+
+function getSubtotal() {
+  return cart.reduce((total, item) => {
+    const quantity = item.guests || item.quantity || 1;
+    return total + (Number(item.price) * quantity);
+  }, 0);
+}
+
+function changeQuantity(index, change) {
+  if (!cart[index]) return;
+
+  if (cart[index].guests) {
+    cart[index].guests = Math.max(1, cart[index].guests + change);
+  } else {
+    cart[index].quantity = Math.max(0, cart[index].quantity + change);
+    if (cart[index].quantity === 0) cart.splice(index, 1);
+  }
+
+  saveCart();
+  renderCart();
+}
+
+function removeCartItem(index) {
+  cart.splice(index, 1);
+  saveCart();
+  renderCart();
+}
+
+function renderCart() {
+  const container = document.getElementById("cartItems");
+  const subtotalElement = document.getElementById("orderSubtotal");
+  const deliveryElement = document.getElementById("deliveryCost");
+  const totalElement = document.getElementById("orderTotal");
+
+  const subtotal = getSubtotal();
+  const delivery = subtotal === 0 || subtotal >= FREE_DELIVERY_FROM
+    ? 0
+    : DELIVERY_FEE;
+
+  if (container) {
+    if (!cart.length) {
+      container.innerHTML = "<p>Your order is currently empty.</p>";
+    } else {
+      container.innerHTML = cart.map((item, index) => {
+        const count = item.guests || item.quantity;
+        const lineTotal = item.price * count;
+
+        return `
+          <div class="cart-item">
+            <div>
+              <strong>${escapeHTML(item.name)}</strong>
+              <p>${money(item.price)} × ${count} ${escapeHTML(item.unit || "")}</p>
+              <strong>${money(lineTotal)}</strong>
+            </div>
+            <div class="cart-controls">
+              <button type="button" onclick="changeQuantity(${index},-1)">−</button>
+              <span>${count}</span>
+              <button type="button" onclick="changeQuantity(${index},1)">+</button>
+              <button type="button" onclick="removeCartItem(${index})">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  }
+
+  if (subtotalElement) subtotalElement.textContent = money(subtotal);
+  if (deliveryElement) {
+    deliveryElement.textContent = delivery === 0 && subtotal > 0
+      ? "FREE"
+      : money(delivery);
+  }
+  if (totalElement) totalElement.textContent = money(subtotal + delivery);
+
+  const count = cart.reduce((sum, item) =>
+    sum + (item.guests || item.quantity || 1), 0
+  );
+
+  document.querySelectorAll(".cart-count").forEach(element => {
+    element.textContent = count;
+  });
+}
+
+/* ---------- CATERING CALCULATOR ---------- */
+
+function calculateCatering() {
+  const packageSelect = document.getElementById("calcPackage");
+  const guestInput = document.getElementById("guestCount");
+  const totalElement = document.getElementById("calcTotal");
+
+  if (!packageSelect || !guestInput || !totalElement) return;
+
+  const price = Number(packageSelect.value) || 30;
+  const guests = Math.max(1, Number(guestInput.value) || 1);
+
+  totalElement.textContent = money(price * guests);
+}
+
+function addCalculatedPackage() {
+  const packageSelect = document.getElementById("calcPackage");
+  const guestInput = document.getElementById("guestCount");
+
+  if (!packageSelect || !guestInput) return;
+
+  const price = Number(packageSelect.value) || 30;
+  const guests = Math.max(1, Number(guestInput.value) || 1);
+
+  const packageNames = {
+    30: "Classic",
+    55: "Signature",
+    80: "Premium"
+  };
+
+  const name = packageNames[price] || "Custom";
+
+  const existing = cart.find(item => item.packageName === name);
+
+  if (existing) {
+    existing.guests = guests;
+  } else {
+    cart.push({
+      id: "package-" + name.toLowerCase(),
+      name: name + " Catering Package",
+      packageName: name,
+      price: price,
+      unit: "person",
+      quantity: 1,
+      guests: guests
+    });
+  }
+
+  saveCart();
+  renderCart();
+  showMessage("Catering package added to your order.");
+}
+
+/* ---------- GALLERY ---------- */
+
+function renderGallery() {
+  const gallery = document.getElementById("galleryGrid");
+  if (!gallery) return;
+
+  const photos = [
+    "menu-001.jpg",
+    "menu-002.jpg",
+    "menu-003.jpg",
+    "menu-004.jpg",
+    "menu-005.jpg",
+    "menu-006.jpg",
+    "menu-007.jpg",
+    "menu-008.jpg",
+    "menu-009.jpg",
+    "menu-010.jpg",
+    "menu-011.jpg",
+    "menu-012.jpg"
+  ];
+
+  gallery.innerHTML = photos.map((photo, index) => `
+    <div class="gallery-item">
+      <img
+        src="${imagePath(photo)}"
+        alt="Ember & Gatherer catering food ${index + 1}"
+        loading="lazy"
+        onerror="this.parentElement.style.display='none'"
+      >
+    </div>
+  `).join("");
+}
+
+/* ---------- ORDER FORM ---------- */
+
+function showMessage(message) {
+  let box = document.getElementById("siteMessage");
+
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "siteMessage";
+    box.className = "site-message";
+    document.body.appendChild(box);
+  }
+
+  box.textContent = message;
+  box.classList.add("visible");
+
+  window.clearTimeout(box.hideTimer);
+  box.hideTimer = window.setTimeout(() => {
+    box.classList.remove("visible");
+  }, 3500);
+}
+
+async function submitOrder(event) {
+  event.preventDefault();
+
+  if (!cart.length) {
+    showMessage("Please add items to your order first.");
+    return;
+  }
+
+  const form = document.getElementById("orderForm");
+  if (!form || !form.reportValidity()) return;
+
+  const customer = {
+    name: document.getElementById("customerName")?.value.trim() || "",
+    email: document.getElementById("customerEmail")?.value.trim() || "",
+    phone: document.getElementById("customerPhone")?.value.trim() || "",
+    date: document.getElementById("orderDate")?.value || "",
+    address: document.getElementById("orderAddress")?.value.trim() || "",
+    notes: document.getElementById("orderNotes")?.value.trim() || ""
+  };
+
+  const button = form.querySelector('[type="submit"]');
+  const originalText = button ? button.textContent : "";
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Preparing checkout...";
+  }
+
+  try {
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        customer,
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.guests || item.quantity || 1,
+          unit: item.unit || ""
+        }))
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Unable to create checkout session.");
+    }
+
+    if (data.url) {
+      window.location.href = data.url;
+      return;
+    }
+
+    if (data.sessionId && window.Stripe) {
+      const stripe = Stripe(data.publishableKey);
+      const result = await stripe.redirectToCheckout({
+        sessionId: data.sessionId
+      });
+
+      if (result.error) throw result.error;
+      return;
+    }
+
+    throw new Error("Checkout URL was not returned by the server.");
+
+  } catch (error) {
+    console.error("Checkout error:", error);
+    showMessage(
+      error.message ||
+      "Checkout could not be started. Please contact us."
+    );
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalText || "Place Order";
+    }
+  }
+}
+
+/* ---------- MOBILE NAVIGATION ---------- */
+
+function setupMobileNavigation() {
+  const toggle = document.querySelector(".mobile-menu-toggle");
+  const nav = document.querySelector(".main-nav");
+
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      nav.classList.toggle("open");
+      toggle.setAttribute(
+        "aria-expanded",
+        nav.classList.contains("open") ? "true" : "false"
+      );
+    });
+
+    nav.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+}
+
+/* ---------- INITIALIZE ---------- */
+
+function initializeWebsite() {
+  renderMenu();
+  renderSmokehouse();
+  renderGallery();
+  renderCart();
+  calculateCatering();
+  setupMobileNavigation();
+
+  const year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
+
+  const search = document.getElementById("menuSearch");
+  if (search) search.addEventListener("input", renderMenu);
+
+  const sort = document.getElementById("menuSort");
+  if (sort) sort.addEventListener("change", renderMenu);
+
+  document.getElementById("calcPackage")?.addEventListener(
+    "change", calculateCatering
+  );
+
+  document.getElementById("guestCount")?.addEventListener(
+    "input", calculateCatering
+  );
+
+  const form = document.getElementById("orderForm");
+  if (form) form.addEventListener("submit", submitOrder);
+
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("payment") === "success") {
+    showMessage("Thank you! Your payment was successful.");
+    cart = [];
+    saveCart();
+    renderCart();
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  if (params.get("payment") === "cancelled") {
+    showMessage("Checkout was cancelled. Your cart is still available.");
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeWebsite);
+} else {
+  initializeWebsite();
+}
+</script>
+
+</body>
+</html>
