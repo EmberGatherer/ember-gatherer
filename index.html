@@ -1,419 +1,121 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ember & Gatherer | Smokehouse & Catering Edmonton</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-main: #1a1a1a;
-            --text-muted: #555555;
-            --primary: #9b1d31;
-            --primary-hover: #801527;
-            --gold: #d4af37;
-            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
-            --border-color: #eaeaea;
-            --card-bg: #fdfdfd;
-        }
+Ember & Gatherer
+SMOKEHOUSE & CATERING · EDMONTON
+Order
+Cart 0
+SMOKEHOUSE · CATERING · EDMONTON, ALBERTA
+Flavour that brings people together.
+House-smoked specialties, signature appetizers and catering for weddings, banquets, corporate events and private celebrations.
+View Menu
+Plan Your Catering
+Smokehouse & Catering in Edmonton, Alberta
+Classic · Signature · Premium
+Catering Packages
+Free delivery $100+
+Free delivery on orders of $100 CAD or more
+Online ordering
+Online ordering and payment
+CATERING PACKAGES
+Catering Packages
+Choose a catering package or create a custom menu for your event.
+Classic
+$30 CAD / person
+	•	3 appetizers
+	•	Signature meat assortment
+	•	Choice of salad: Caesar or Greek
+	•	Choice of main course
+	•	Pierogi and profiteroles
+Add Package
+Signature
+$55 CAD / person
+	•	4 appetizers
+	•	Deluxe meat assortment
+	•	2 salads
+	•	2 main courses
+	•	2 side dishes and 1 dessert
+Add Package
+Premium
+$80 CAD / person
+	•	5 appetizers
+	•	Meat and cheese assortment
+	•	3 salads and 3 main courses
+	•	3 side dishes and 2 desserts
+	•	Seasonal fruit
+Add Package
+À LA CARTE
+Food Menu
+Browse the full Ember & Gatherer menu and all 132 wedding buffet items. All prices are shown in Canadian dollars (CAD). Wedding buffet prices are displayed in CAD, converted at 1 USD = 1.4257 CAD using the Bank of Canada reference rate dated November 13, 2026.
+Categories
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
+Browse every category or search the full menu.
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-        }
-
-        /* Header / Navbar */
-        header {
-            position: sticky;
-            top: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 5%;
-            z-index: 1000;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-main);
-        }
-
-        .logo-area img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .logo-text h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .logo-text span {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn-check {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-        }
-
-        .btn-check:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .cart-trigger {
-            background: none;
-            border: 1px solid var(--border-color);
-            padding: 8px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 60px 5% 40px;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .hero-tag {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--primary);
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-
-        .hero h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 30px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-            max-width: 450px;
-            margin: 0 auto 30px;
-        }
-
-        .btn-main-red {
-            width: 100%;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(155, 29, 49, 0.2);
-            transition: transform 0.1s;
-        }
-
-        .btn-main-gold {
-            width: 100%;
-            background: var(--gold-gradient);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        .hero-features {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* Menu Section */
-        .menu-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 5%;
-        }
-
-        .menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .menu-header h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-        }
-
-        .categories-scroll {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-        }
-
-        .category-chip {
-            padding: 8px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            background: white;
-            cursor: pointer;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .category-chip.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
-        }
-
-        .menu-item-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .menu-item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-        }
-
-        .item-img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            background: #eee;
-        }
-
-        .item-content {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .item-title {
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 8px;
-        }
-
-        .item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-
-        .item-price {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 0.95rem;
-        }
-
-        .btn-add {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        /* Cart Drawer */
-        .cart-drawer {
-            position: fixed;
-            right: -400px;
-            top: 0;
-            width: 100%;
-            max-width: 400px;
-            height: 100%;
-            background: white;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-            z-index: 2000;
-            transition: right 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
-        .cart-drawer.open {
-            right: 0;
-        }
-
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-
-        .cart-body {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px 0;
-        }
-
-        .cart-footer {
-            border-top: 1px solid var(--border-color);
-            padding-top: 15px;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <a href="#" class="logo-area">
-            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=100&auto=format&fit=crop&q=80" alt="Logo">
-            <div class="logo-text">
-                <h1>Ember & Gatherer</h1>
-                <span>Smokehouse & Catering</span>
-            </div>
-        </a>
-        <div class="nav-right">
-            <button class="btn-check" onclick="alert('Форма запиту доступності відкрита!')">Check Availability</button>
-            <button class="cart-trigger" onclick="toggleCart()">🛒 <span id="cart-count">0</span></button>
-        </div>
-    </header>
-
-    <section class="hero">
-        <div class="hero-tag">From your first tasting to the reception</div>
-        <h2>Wedding & Event Catering in Edmonton, without the guesswork.</h2>
-        <p>Hot, handcrafted buffet catering with authentic smokehouse meats, Ukrainian classics, and European dishes—delivered, professionally set up and ready before dinner service.</p>
-        
-        <div class="hero-buttons">
-            <button class="btn-main-red">Check Availability & Request a Quote →</button>
-            <button class="btn-main-gold">Request a Tasting →</button>
-        </div>
-
-        <div class="hero-features">
-            <span>• No automatic gratuity</span>
-            <span>• We respond within 24 hours — 7 days a week</span>
-        </div>
-    </section>
-
-    <div class="menu-container">
-        <div class="menu-header">
-            <h3>Повне меню (132 позиції)</h3>
-            <div class="categories-scroll">
-                <button class="category-chip active">Усі позиції</button>
-                <button class="category-chip">Плато та асорті</button>
-                <button class="category-chip">М'ясо та BBQ</button>
-                <button class="category-chip">Супи та страви</button>
-                <button class="category-chip">Десерти та напої</button>
-            </div>
-        </div>
-
-        <div class="menu-grid" id="menu-grid">
-            <!-- Динамічні картки меню -->
-        </div>
-    </div>
-
-    <script>
-        // Приклад динамічного рендерингу для демонстрації коду
-        const sampleItems = [
-            { name: "Копчений бріскет", price: "18.50 CAD / особа", img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&auto=format&fit=crop&q=80" },
-            { name: "Реберця BBQ", price: "16.50 CAD / особа", img: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=400&auto=format&fit=crop&q=80" },
-            { name: "Борщ традиційний", price: "5.00 CAD / особа", img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&auto=format&fit=crop&q=80" },
-            { name: "Котлета по-київськи", price: "14.00 CAD / особа", img: "https://images.unsplash.com/photo-1604908176997-125f2596f37c?w=400&auto=format&fit=crop&q=80" }
-        ];
-
-        const grid = document.getElementById('menu-grid');
-        sampleItems.forEach(item => {
-            grid.innerHTML += `
-                <div class="menu-item-card">
-                    <img src="${item.img}" class="item-img" alt="${item.name}">
-                    <div class="item-content">
-                        <div class="item-title">${item.name}</div>
-                        <div class="item-footer">
-                            <span class="item-price">${item.price}</span>
-                            <button class="btn-add" onclick="alert('Додано до замовлення!')">Додати</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-
-        function toggleCart() {
-            alert('Кошик відкритий');
-        }
-    </script>
-</body>
-</html>
+Menu orderPrice: low to highPrice: high to low
+HOUSE SMOKED
+Smokehouse & BBQ
+Prices are per pound of finished product, as listed in the Smokehouse menu. Choose the number of pounds to add to your cart.
+WEDDINGS · BANQUETS · CORPORATE
+Banquets & Large Events
+Weddings, corporate events, family celebrations, buffets and full banquet service. Menus are available for events of up to 150 guests. Banquet pricing is confirmed individually.
+Request a Quote
+OUR CATERING MOMENTS
+Catering Gallery
+Photos of our menus, banquets, buffets and food presentations.
+PLAN YOUR EVENT
+Catering Calculator
+Choose a package and guest count. Your estimate can be added to the cart.
+Package
+Classic — $30 / personSignature — $55 / personPremium — $80 / person
+Number of guests
+−
+50
++
+Event type
+WeddingCorporate EventBanquetBirthdayPrivate EventOther
+Add Estimate to Cart
+ESTIMATE
+Package per Guest
+$55.00
+Guests
+50
+Menu
+$2,750.00
+Delivery
+Free
+Estimated Total
+$2,750.00
+Delivery is $15 CAD for orders under $100 CAD. Orders of $100 CAD or more qualify for free delivery. Additional services and applicable taxes may be quoted separately.
+ONLINE ORDERING
+Cart & Checkout
+Review your selected items and enter your contact and delivery details.
+Your cart is empty. Add menu items or a catering package.
+Order Details
+Full Name *
+Phone Number *
+Email
+Event / Delivery Date
+Delivery Address *
+Order Notes
+Subtotal
+$0.00
+Delivery
+$15.00
+Total
+$15.00
+Continue to Secure Checkout
+You will be redirected to Stripe secure checkout. Card details are not stored on this website.
+HELPFUL INFORMATION
+Helpful Information
+When is delivery free?
+Delivery is free for orders of $100 CAD or more. Orders under $100 CAD have a $15 CAD delivery fee.
+Can I create a custom menu?
+Yes. Choose dishes from the menu or request a custom quote.
+Do you cater large events?
+Yes. We cater weddings, banquets, corporate events and buffets. Large events receive a custom quote.
+How does payment work?
+Stripe creates a secure checkout page for each order.
+Ember & Gatherer
+SMOKEHOUSE & CATERING
+Smokehouse & Catering in Edmonton, Alberta.
+Explore
+Menu Smokehouse Packages Gallery
+Contact
++1 (368) 399-2562 +1 (780) 818-6312 Edmonton, Alberta
