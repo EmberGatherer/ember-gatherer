@@ -390,6 +390,19 @@ footer{background:#342427;color:#f6e9df;border-top:3px solid var(--gold)}footer 
 @media(max-width:650px){.wrap{width:92%}.nav{min-height:66px}.brand img{width:52px;height:48px}.brand b{font-size:13px}.brand small{font-size:7px}.cart-pill{padding:9px 11px;font-size:11px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:40px}.hero-banner img{max-height:330px}.perks{grid-template-columns:1fr 1fr}.perks .perk:last-child{grid-column:span 2}.packages{grid-template-columns:1fr}.package-actions{grid-template-columns:1fr 1fr}.catalog{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-wrap:nowrap;overflow-x:auto;max-height:none;gap:6px;padding:9px}.sidebar h3{display:none}.cat-btn{flex:0 0 auto;width:auto;white-space:nowrap;padding:9px 12px}.cat-btn.active{box-shadow:inset 0 -3px var(--red)}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:9px}.product img{height:112px}.product h3{font-size:14px}.product p{font-size:10px}.smoke-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.smoke-card img{height:120px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gallery img{height:145px}.service-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.story-card img{height:120px}.story-card>div{padding:10px}.story-card h3{font-size:15px}.story-card p{font-size:10px;line-height:1.5}.about-grid,.about-details,.calculator,.cart-layout{grid-template-columns:1fr}.sample-modal-panel{padding:20px 16px}.sample-menu-content{grid-template-columns:1fr}.stripe-panel{display:block}.stripe-btn{width:100%;margin:8px 0}.payment-notice{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.catering-atmosphere:before,.product,.gallery img{animation:none;transition:none}}
 
+
+/* Category-first menu layout: keep every dish inside its own category */
+.category-groups{display:block!important}
+.menu-category-group{margin:0 0 34px;padding:22px;background:#fff;border:1px solid #eadbd6;border-radius:14px;box-shadow:0 8px 24px rgba(73,39,34,.045)}
+.menu-category-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:15px;margin-bottom:18px;border-bottom:1px solid #eee2dc}
+.menu-category-heading h3{font:600 25px Georgia,serif;color:#811a32;margin:5px 0}
+.menu-category-heading p{margin:0;color:#76696b;font-size:13px}
+.category-product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.category-view-btn{border:1px solid #d9b9b1;border-radius:7px;background:#fff;color:#8b1b34;padding:10px 14px;font-weight:700;white-space:nowrap}
+.category-view-btn:hover{background:#fbf0f1}
+@media(max-width:760px){.menu-category-group{padding:13px;margin-bottom:20px}.menu-category-heading{align-items:flex-start}.menu-category-heading h3{font-size:20px}.category-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.category-view-btn{font-size:11px;padding:8px}}
+@media(max-width:390px){.category-product-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1233,29 +1246,36 @@ function renderMenu(){
   const sort=document.getElementById('sortMenu').value;
   if(sort==='low')list.sort((a,b)=>a.price-b.price);
   if(sort==='high')list.sort((a,b)=>b.price-a.price);
-  const pages=Math.max(1,Math.ceil(list.length/MENU_PAGE_SIZE));
-  menuPage=Math.min(Math.max(1,menuPage),pages);
-  const shown=list.slice((menuPage-1)*MENU_PAGE_SIZE,menuPage*MENU_PAGE_SIZE);
-  document.getElementById('resultsCount').textContent=`Showing ${list.length?((menuPage-1)*MENU_PAGE_SIZE+1):0}–${Math.min(menuPage*MENU_PAGE_SIZE,list.length)} of ${list.length} matching dishes`;
-  document.getElementById('productGrid').innerHTML=shown.map((x,i)=>`
-   <article class="product">
-    <img loading="lazy" alt="${escapeHTML(x.name)}" src="${photoFor((menuPage-1)*MENU_PAGE_SIZE+i,x.cat)}" onerror="this.onerror=null;this.src=IMAGES.buffet1">
-    <span class="tag">${escapeHTML(x.cat)}</span>
-    <h3>${escapeHTML(x.name)}</h3>
-    <p>${escapeHTML(x.portion||'Per guest')} · ${x.currency||'CAD'}</p>
-    <div class="product-bottom"><div><div class="product-price">${money(x.price)}</div><small>CAD / serving</small></div>
-    <button class="add" type="button" aria-label="Add ${escapeHTML(x.name)}" onclick="addMenuItem('${x.id}')">+</button></div>
-   </article>`).join('') || '<div class="empty">No dishes found. Try another search or category.</div>';
+  const grid=document.getElementById('productGrid');
   const pager=document.getElementById('menuPagination');
-  if(pager){
+  const card=(x,i)=>`<article class="product">
+    <img loading="lazy" alt="${escapeHTML(x.name)}" src="${photoFor(i,x.cat)}" onerror="this.onerror=null;this.src=IMAGES.buffet1">
+    <span class="tag">${escapeHTML(x.cat)}</span><h3>${escapeHTML(x.name)}</h3>
+    <p>${escapeHTML(x.desc||x.portion||'Prepared for sharing')} · ${x.currency||'CAD'}</p>
+    <div class="product-bottom"><div><div class="product-price">${money(x.price)}</div><small>CAD / ${escapeHTML(x.portion||'serving')}</small></div>
+    <button class="add" type="button" aria-label="Add ${escapeHTML(x.name)}" onclick="addMenuItem('${x.id}')">+</button></div></article>`;
+  if(selectedCategory==='All Categories'){
+    const groups=[...new Set(list.map(x=>x.cat))];
+    document.getElementById('resultsCount').textContent=`${list.length} dishes in ${groups.length} clearly separated categories`;
+    grid.classList.add('category-groups');
+    grid.innerHTML=groups.map((cat,gi)=>{
+      const items=list.filter(x=>x.cat===cat);
+      return `<section class="menu-category-group"><div class="menu-category-heading"><div><span class="kicker">Explore the menu</span><h3>${escapeHTML(cat)}</h3><p>${items.length} ${items.length===1?'item':'items'} in this category</p></div><button type="button" class="category-view-btn" onclick="selectCategory(${JSON.stringify(cat).replace(/"/g,'&quot;')})">View category →</button></div><div class="product-grid category-product-grid">${items.map((x,i)=>card(x,gi*31+i)).join('')}</div></section>`;
+    }).join('')||'<div class="empty">No dishes found. Try another search or category.</div>';
+    pager.innerHTML='';
+  }else{
+    grid.classList.remove('category-groups');
+    const pages=Math.max(1,Math.ceil(list.length/MENU_PAGE_SIZE));
+    menuPage=Math.min(Math.max(1,menuPage),pages);
+    const shown=list.slice((menuPage-1)*MENU_PAGE_SIZE,menuPage*MENU_PAGE_SIZE);
+    document.getElementById('resultsCount').textContent=`Showing ${list.length?((menuPage-1)*MENU_PAGE_SIZE+1):0}–${Math.min(menuPage*MENU_PAGE_SIZE,list.length)} of ${list.length} dishes in ${selectedCategory}`;
+    grid.innerHTML=shown.map((x,i)=>card(x,(menuPage-1)*MENU_PAGE_SIZE+i)).join('')||'<div class="empty">No dishes found. Try another search or category.</div>';
     const buttons=[];
-    buttons.push(`<button type="button" ${menuPage===1?'disabled':''} onclick="changeMenuPage(${menuPage-1})" aria-label="Previous page">← Previous</button>`);
+    buttons.push(`<button type="button" ${menuPage===1?'disabled':''} onclick="changeMenuPage(${menuPage-1})">← Previous</button>`);
     const first=Math.max(1,menuPage-2),last=Math.min(pages,menuPage+2);
-    for(let page=first;page<=last;page++)buttons.push(`<button type="button" ${page===menuPage?'aria-current="page"':''} onclick="changeMenuPage(${page})">${page}</button>`);
-    buttons.push(`<button type="button" ${menuPage===pages?'disabled':''} onclick="changeMenuPage(${menuPage+1})" aria-label="Next page">Next →</button>`);
-    buttons.push(`<span>Page ${menuPage} of ${pages}</span>`);
+    for(let page=first;page<=last;page++)buttons.push(`<button type="button" ${menuPage===page?'aria-current="page"':''} onclick="changeMenuPage(${page})">${page}</button>`);
+    buttons.push(`<button type="button" ${menuPage===pages?'disabled':''} onclick="changeMenuPage(${menuPage+1})">Next →</button><span>Page ${menuPage} of ${pages}</span>`);
     pager.innerHTML=buttons.join('');
-    pager.hidden=list.length<=MENU_PAGE_SIZE;
   }
 }
 function changeMenuPage(page){menuPage=page;renderMenu();document.getElementById('menu').scrollIntoView({behavior:'smooth',block:'start'});}
