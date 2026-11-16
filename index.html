@@ -390,6 +390,10 @@ footer{background:#342427;color:#f6e9df;border-top:3px solid var(--gold)}footer 
 @media(max-width:650px){.wrap{width:92%}.nav{min-height:66px}.brand img{width:52px;height:48px}.brand b{font-size:13px}.brand small{font-size:7px}.cart-pill{padding:9px 11px;font-size:11px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:40px}.hero-banner img{max-height:330px}.perks{grid-template-columns:1fr 1fr}.perks .perk:last-child{grid-column:span 2}.packages{grid-template-columns:1fr}.package-actions{grid-template-columns:1fr 1fr}.catalog{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-wrap:nowrap;overflow-x:auto;max-height:none;gap:6px;padding:9px}.sidebar h3{display:none}.cat-btn{flex:0 0 auto;width:auto;white-space:nowrap;padding:9px 12px}.cat-btn.active{box-shadow:inset 0 -3px var(--red)}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:9px}.product img{height:112px}.product h3{font-size:14px}.product p{font-size:10px}.smoke-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.smoke-card img{height:120px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gallery img{height:145px}.service-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.story-card img{height:120px}.story-card>div{padding:10px}.story-card h3{font-size:15px}.story-card p{font-size:10px;line-height:1.5}.about-grid,.about-details,.calculator,.cart-layout{grid-template-columns:1fr}.sample-modal-panel{padding:20px 16px}.sample-menu-content{grid-template-columns:1fr}.stripe-panel{display:block}.stripe-btn{width:100%;margin:8px 0}.payment-notice{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.catering-atmosphere:before,.product,.gallery img{animation:none;transition:none}}
 
+
+/* Dish photography: exact item mapping only; never show a random substitute. */
+.product .menu-dish-photo{display:block;width:100%;height:170px;object-fit:cover;border-radius:12px;background:#f7eee9}
+.product .product-photo-placeholder{height:170px;width:100%;display:flex;align-items:center;justify-content:center;border-radius:12px;background:linear-gradient(135deg,#f8f1eb,#fff);border:1px dashed #dfc8bc;color:#8b6d66;font-size:13px;font-weight:700;letter-spacing:.04em;text-align:center}
 </style>
 </head>
 <body>
@@ -4177,6 +4181,16 @@ function renderCategories(){
   nav.innerHTML=categories.map(c=>`<button class="cat-btn ${selectedCategory===c?'active':''}" onclick="selectCategory(${JSON.stringify(c).replace(/"/g,'&quot;')})">${c}</button>`).join('');
 }
 function selectCategory(c){selectedCategory=c;menuPage=1;renderCategories();renderMenu();}
+function menuPhotoHTML(item){
+  // Never substitute an unrelated dish photo. Use only the image explicitly mapped
+  // to this menu item and only when that exact local asset exists in this build.
+  const match=String(item.image||'').match(/^assets\/menu\/menu-(\d+)\.jpg$/);
+  const number=match?Number(match[1]):0;
+  if(number>=29 && number<=111){
+    return `<img class="menu-dish-photo" loading="lazy" alt="${escapeHTML(item.name)}" src="${item.image}" onerror="this.outerHTML='<div class=\'product-photo-placeholder\'>Photo coming soon</div>'">`;
+  }
+  return `<div class="product-photo-placeholder" role="img" aria-label="Photo coming soon for ${escapeHTML(item.name)}">Photo coming soon</div>`;
+}
 function renderMenu(){
   const query=(document.getElementById('searchMenu').value||'').trim().toLowerCase();
   const type=document.getElementById('menuType').value;
@@ -4196,7 +4210,7 @@ function renderMenu(){
   document.getElementById('resultsCount').textContent=`Showing ${list.length?((menuPage-1)*MENU_PAGE_SIZE+1):0}–${Math.min(menuPage*MENU_PAGE_SIZE,list.length)} of ${list.length} matching dishes`;
   document.getElementById('productGrid').innerHTML=shown.map((x,i)=>`
    <article class="product">
-    <img loading="lazy" alt="${escapeHTML(x.name)}" src="${photoFor((menuPage-1)*MENU_PAGE_SIZE+i,x.cat)}" onerror="this.onerror=null;this.src=IMAGES.buffet1">
+    ${menuPhotoHTML(x)}
     <span class="tag">${escapeHTML(x.cat)}</span>
     <h3>${escapeHTML(x.name)}</h3>
     <p>${escapeHTML(x.portion||'Per guest')} · ${x.currency||'CAD'}</p>
