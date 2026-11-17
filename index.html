@@ -748,6 +748,63 @@ function menuPhotoHTML(item){
   if(!key && /whole chicken/.test(name)) key='whole_smoked_chicken_photo';
   const src=key?IMAGES[key]:null;
   if(src) return `<img class="menu-dish-photo" loading="lazy" alt="${escapeHTML(item.name)}" src="${src}">`;
+
+  // Reuse only a dish photo already embedded in this menu when the food is a close match.
+  // Unmatched dishes intentionally keep a placeholder rather than showing an unrelated photo.
+  const photoAliases={
+    'steamed vegetables':'Four-Vegetable Medley',
+    'grilled vegetables':'Grilled Vegetables',
+    'green beans':'Green Beans',
+    'mini schnitzel platter':'Schnitzel',
+    'vegetable sticks with pesto':'Vegetable Platter',
+    'antipasto platter':'Deluxe Meat Platter',
+    'herring & beet crostini':'Shuba Layered Beet & Herring Salad',
+    'cucumber & sprat canapes':'Sprat & Cornichon Canapé',
+    'dark rye sprat canapes':'Sprat & Cornichon Canapé',
+    'sliced baguette':'Bread Basket',
+    'bread basket with butter':'Bread Basket',
+    'european cheese platter':'Cheese Platter with Honey & Nuts',
+    'christmas potato salad':'Potato Salad with Ham',
+    'grilled eggplant rolls':'Eggplant Rolls with Walnuts',
+    'mediterranean pasta salad':'Pasta Salad',
+    'tomato & mozzarella caprese':'Caprese Salad',
+    'potato salad':'Potato Salad',
+    'smoked salmon platter':'Fish Platter with Lightly Salted Salmon',
+    'chicken & pineapple skewers':'Chicken Shashlik',
+    'egg & salmon in pita':'Spinach Roll with Salmon & Cream Cheese',
+    'cheese roll':'Spinach & Cheese Roll Assortment',
+    'tomato & mozzarella skewers':'Caprese Skewer',
+    'sweet & sour chicken wings':'Chicken Quarter',
+    'roasted ham':'Baked Ham',
+    'beef goulash':'Beef Stew',
+    'borscht':'Borscht',
+    'dumplings':'Assorted Varenyky',
+    'ukrainian meat patties':'Beef & Pork Patties',
+    'bolognese lasagna':'Lasagna',
+    'meatballs':'Swedish Meatballs',
+    'mushroom soup':'Cream of Mushroom Soup',
+    'salmon fillet with lemon sauce':'Baked Salmon',
+    'ukrainian beef stew':'Beef Stew',
+    'assorted ukrainian sausages':'Ukrainian Sausage',
+    'seasonal vegetables skillet':'Roasted Vegetables',
+    'meat stuffed sauerkraut cabbage rolls':'Cabbage Rolls with Meat',
+    'sweet cabbage rolls with meat':'Cabbage Rolls with Meat',
+    'imperial vegetables':'Four-Vegetable Medley',
+    'potato & bacon pierogi':'Potato & Bacon Varenyky',
+    'potato & cheddar pierogi':'Potato & Cheddar Varenyky',
+    'potato & cheese pierogi':'Potato & Cheddar Varenyky',
+    'potato & onion pierogi':'Assorted Varenyky',
+    'rice with vegetables':'Vegetable Rice',
+    'roasted baby potatoes':'Rosemary Roasted Potatoes',
+    'fresh fruit salad':'Fresh Fruit Assortment',
+    'fruit platter':'Fresh Fruit Assortment',
+    'pancakes with jam':'Pancakes'
+  };
+  const alias=photoAliases[name];
+  if(alias){
+    const sourceItem=MENU.find(x=>String(x.name||'').toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9]+/g,' ').trim()===String(alias).toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9]+/g,' ').trim() && /^data:image\/(?:jpeg|jpg|png|webp);base64,/.test(String(x.image||'')));
+    if(sourceItem) return `<img class="menu-dish-photo" loading="lazy" alt="${escapeHTML(item.name)}" src="${sourceItem.image}">`;
+  }
   return `<div class="product-photo-placeholder" role="img" aria-label="Photo coming soon for ${escapeHTML(item.name)}">Photo coming soon</div>`;
 }
 function renderMenu(){
