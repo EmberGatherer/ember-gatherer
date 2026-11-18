@@ -38,10 +38,10 @@ img{max-width:100%;display:block}a{color:inherit;text-decoration:none}button,inp
 .perk b{display:block;color:var(--red2);font-size:17px}
 .perk span{font-size:12px;color:var(--muted)}
 section{padding:46px 0}
-.stripe-panel{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:20px 0;padding:20px;border:1px solid #efd0d6;border-radius:16px;background:linear-gradient(120deg,#fff7f8,#fff)}
-.stripe-panel h3{margin:4px 0;color:var(--red2);font:600 22px Georgia,serif}
-.stripe-panel p{max-width:650px;color:var(--muted);font-size:13px;margin:6px 0}
-.stripe-btn{min-width:220px}
+.square-panel{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:20px 0;padding:20px;border:1px solid #efd0d6;border-radius:16px;background:linear-gradient(120deg,#fff7f8,#fff)}
+.square-panel h3{margin:4px 0;color:var(--red2);font:600 22px Georgia,serif}
+.square-panel p{max-width:650px;color:var(--muted);font-size:13px;margin:6px 0}
+.square-btn{min-width:220px}
 
 .section-head{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:22px}
 .kicker{font-size:11px;color:var(--red);font-weight:800;letter-spacing:.18em;text-transform:uppercase}
@@ -381,13 +381,13 @@ h2{letter-spacing:-.02em}.packages{grid-template-columns:repeat(4,minmax(0,1fr))
 .menu-pagination{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:22px 0 4px}.menu-pagination button{border:1px solid #e4cbc5;background:#fff;color:var(--red2);border-radius:10px;padding:9px 13px;font-weight:700}.menu-pagination button[aria-current="page"]{background:var(--red2);color:#fff;border-color:var(--red2)}.menu-pagination button:disabled{opacity:.4;cursor:not-allowed}.menu-pagination span{font-size:12px;color:var(--muted);padding:0 6px}
 .smoke-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}.smoke-card{border-radius:16px;display:flex;flex-direction:column;align-items:stretch}.smoke-card img{height:145px}.smoke-card h3{margin:10px 0 4px}.smoke-controls{display:flex;align-items:center;gap:7px;margin-top:9px}.smoke-controls input{width:68px;min-width:0;border:1px solid #e5d1ca;border-radius:9px;padding:8px;text-align:center}.smoke-controls .btn{flex:1;padding:9px 10px;font-size:12px}
 .gallery{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.gallery img{height:205px;border-radius:15px;box-shadow:0 6px 18px rgba(63,30,32,.06);transition:transform .2s}.gallery img:hover{transform:scale(1.015)}
-.calculator,.cart-layout{gap:16px}.calculator,.panel{border-color:#eadbd6;border-radius:18px;box-shadow:var(--shadow)}.total-box{background:linear-gradient(135deg,#fff3f3,#fffaf4);border-color:#ecd5cd;border-radius:16px}.grand{color:var(--red2)}.cart-row{align-items:center}.qty button{min-width:30px;min-height:30px}.stripe-panel{border-color:#e4c8bd;background:linear-gradient(115deg,#fff7f1,#fff1f3);border-radius:16px}.stripe-panel h3{color:var(--red2)}
+.calculator,.cart-layout{gap:16px}.calculator,.panel{border-color:#eadbd6;border-radius:18px;box-shadow:var(--shadow)}.total-box{background:linear-gradient(135deg,#fff3f3,#fffaf4);border-color:#ecd5cd;border-radius:16px}.grand{color:var(--red2)}.cart-row{align-items:center}.qty button{min-width:30px;min-height:30px}.square-panel{border-color:#e4c8bd;background:linear-gradient(115deg,#fff7f1,#fff1f3);border-radius:16px}.square-panel h3{color:var(--red2)}
 .about-section{background:rgba(255,252,249,.82)}.service-story-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.story-card{border-radius:16px}.story-card img{height:175px}.story-card>div{padding:15px}.story-card h3{font-size:18px}.story-card p{font-size:13px;line-height:1.65}.about-copy,.about-feature,.about-details>div{border-radius:18px}.service-note{background:#fff4ec;border-color:#e8d2b9;border-left-color:var(--gold);line-height:1.65}
 .payment-notice{position:relative;z-index:5;margin:12px auto 0;width:min(1200px,92%);padding:13px 16px;border:1px solid #c8ddce;border-radius:12px;background:#f0f8f1;color:#285b38;font-weight:700}.payment-notice.cancelled{background:#fff5e9;border-color:#edd8b7;color:#80551d}
 footer{background:#342427;color:#f6e9df;border-top:3px solid var(--gold)}footer strong{color:#f0d5a6}footer p,footer small{color:#e4d6cf}
 @media(max-width:1050px){.packages{grid-template-columns:repeat(2,minmax(0,1fr))}.smoke-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.service-story-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.navlinks{display:none}.mobile-menu{display:inline-flex;align-items:center;justify-content:center}.navlinks.is-open{display:flex!important;position:absolute;top:100%;left:0;right:0;margin:0;padding:14px 4%;background:#fffdfb;border-bottom:1px solid var(--line);box-shadow:0 12px 20px rgba(40,20,20,.08);flex-wrap:wrap;gap:12px;z-index:40}.navlinks.is-open a{padding:8px 10px;background:#fff6f4;border-radius:9px}.nav{position:relative}}
-@media(max-width:650px){.wrap{width:92%}.nav{min-height:66px}.brand img{width:52px;height:48px}.brand b{font-size:13px}.brand small{font-size:7px}.cart-pill{padding:9px 11px;font-size:11px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:40px}.hero-banner img{max-height:330px}.perks{grid-template-columns:1fr 1fr}.perks .perk:last-child{grid-column:span 2}.packages{grid-template-columns:1fr}.package-actions{grid-template-columns:1fr 1fr}.catalog{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-wrap:nowrap;overflow-x:auto;max-height:none;gap:6px;padding:9px}.sidebar h3{display:none}.cat-btn{flex:0 0 auto;width:auto;white-space:nowrap;padding:9px 12px}.cat-btn.active{box-shadow:inset 0 -3px var(--red)}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:9px}.product img{height:112px}.product h3{font-size:14px}.product p{font-size:10px}.smoke-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.smoke-card img{height:120px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gallery img{height:145px}.service-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.story-card img{height:120px}.story-card>div{padding:10px}.story-card h3{font-size:15px}.story-card p{font-size:10px;line-height:1.5}.about-grid,.about-details,.calculator,.cart-layout{grid-template-columns:1fr}.sample-modal-panel{padding:20px 16px}.sample-menu-content{grid-template-columns:1fr}.stripe-panel{display:block}.stripe-btn{width:100%;margin:8px 0}.payment-notice{font-size:13px}}
+@media(max-width:650px){.wrap{width:92%}.nav{min-height:66px}.brand img{width:52px;height:48px}.brand b{font-size:13px}.brand small{font-size:7px}.cart-pill{padding:9px 11px;font-size:11px}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:40px}.hero-banner img{max-height:330px}.perks{grid-template-columns:1fr 1fr}.perks .perk:last-child{grid-column:span 2}.packages{grid-template-columns:1fr}.package-actions{grid-template-columns:1fr 1fr}.catalog{grid-template-columns:1fr}.sidebar{position:static;display:flex;flex-wrap:nowrap;overflow-x:auto;max-height:none;gap:6px;padding:9px}.sidebar h3{display:none}.cat-btn{flex:0 0 auto;width:auto;white-space:nowrap;padding:9px 12px}.cat-btn.active{box-shadow:inset 0 -3px var(--red)}.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{padding:9px}.product img{height:112px}.product h3{font-size:14px}.product p{font-size:10px}.smoke-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.smoke-card img{height:120px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.gallery img{height:145px}.service-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.story-card img{height:120px}.story-card>div{padding:10px}.story-card h3{font-size:15px}.story-card p{font-size:10px;line-height:1.5}.about-grid,.about-details,.calculator,.cart-layout{grid-template-columns:1fr}.sample-modal-panel{padding:20px 16px}.sample-menu-content{grid-template-columns:1fr}.square-panel{display:block}.square-btn{width:100%;margin:8px 0}.payment-notice{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.catering-atmosphere:before,.product,.gallery img{animation:none;transition:none}}
 
 
@@ -532,11 +532,11 @@ footer .social-links{margin:12px 0 18px}
    <div class="field"><label for="orderDate">Event / Delivery Date</label><input id="orderDate" type="date"></div>
    <div class="field"><label for="orderAddress">Delivery Address *</label><input id="orderAddress" autocomplete="street-address" required></div>
    <div class="field"><label for="orderNotes">Additional Details</label><textarea id="orderNotes" placeholder="Guest count, event type, dietary requests, pickup or delivery notes…"></textarea></div>
-   <div class="stripe-panel">
-    <div><span class="kicker">Secure online payment</span><h3>Pay online with Stripe</h3>
-    <p>When Stripe Checkout is connected, customers can pay securely by card through Stripe. Your card details are handled by Stripe, not stored on this website.</p></div>
-    <button class="btn stripe-btn" type="button" onclick="startStripeCheckout()">Continue to Secure Payment</button>
-    <p id="stripeStatus" class="notice" aria-live="polite">Online payment setup is ready for your secure Stripe Checkout endpoint.</p>
+   <div class="square-panel">
+    <div><span class="kicker">Secure online payment</span><h3>Pay online with Square</h3>
+    <p>Customers can pay securely by card through Square Checkout. Your card details are handled by Square, not stored on this website.</p></div>
+    <button class="btn square-btn" type="button" onclick="startSquareCheckout()">Continue to Secure Payment</button>
+    <p id="squareStatus" class="notice" aria-live="polite">Online payment is securely processed by Square Checkout.</p>
    </div>
    <button class="btn" type="button" onclick="submitOrder()">Prepare Order Request</button>
    <button class="btn outline" type="button" onclick="copyOrder()">Copy Order Summary</button>
@@ -896,9 +896,9 @@ function submitOrder(){
  const link=document.createElement('a');link.href=sms;link.className='btn';link.textContent='Send Order by Text Message';link.style.marginTop='12px';
  const status=document.getElementById('orderStatus');status.appendChild(document.createElement('br'));status.appendChild(link);
 }
-// Add your own HTTPS Stripe Checkout Session endpoint here after backend setup.
-const STRIPE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
-async function startStripeCheckout(){
+// Square-hosted Checkout endpoint. The access token stays on the Vercel server.
+const SQUARE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
+async function startSquareCheckout(){
  if(!cart.length){alert('Your cart is empty. Add items before paying.');return;}
  if(customMenuMode && subtotal()<600){alert('Custom Menu requires a minimum food and beverage order of $600 CAD before GST. Add more items to continue.');return;}
  const name=document.getElementById('customerName').value.trim();
@@ -906,10 +906,10 @@ async function startStripeCheckout(){
  const email=document.getElementById('customerEmail').value.trim();
  const address=document.getElementById('orderAddress').value.trim();
  if(!name||!phone||!address){alert('Please enter your name, phone number and delivery address first.');return;}
- const status=document.getElementById('stripeStatus');
- if(!STRIPE_CHECKOUT_ENDPOINT){
-   status.textContent='Stripe is not connected yet. Add your secure Stripe Checkout Session endpoint to STRIPE_CHECKOUT_ENDPOINT in this file. Do not paste a Stripe secret key into this HTML.';
-   alert('The website is ready for Stripe, but a secure Stripe Checkout endpoint must be connected before payments can be accepted.');
+ const status=document.getElementById('squareStatus');
+ if(!SQUARE_CHECKOUT_ENDPOINT){
+   status.textContent='Square is not connected yet. Check SQUARE_ACCESS_TOKEN and SQUARE_LOCATION_ID in Vercel. Never put the Square Access Token in this HTML.';
+   alert('Square Checkout is not configured yet. Please contact us before attempting payment.');
    return;
  }
  const payload={
@@ -922,11 +922,11 @@ async function startStripeCheckout(){
    totalCents:Math.round((subtotal()+delivery())*100)
  };
  try{
-   status.textContent='Connecting securely to Stripe…';
-   const response=await fetch(STRIPE_CHECKOUT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+   status.textContent='Connecting securely to Square…';
+   const response=await fetch(SQUARE_CHECKOUT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
    const result=await response.json().catch(()=>({}));
    if(!response.ok)throw new Error(result.error||('Checkout request failed ('+response.status+').'));
-   if(!result.url||!String(result.url).startsWith('https://'))throw new Error(result.error||'The checkout service did not return a valid secure Stripe URL.');
+   if(!result.url||!String(result.url).startsWith('https://'))throw new Error(result.error||'The checkout service did not return a valid secure Square URL.');
    window.location.href=result.url;
  }catch(error){
    status.textContent='Payment could not be started: '+error.message+' Please contact us to complete your order.';
@@ -954,22 +954,23 @@ const paymentState=new URLSearchParams(location.search).get('payment');
 const paymentNotice=document.getElementById('paymentNotice');
 if(paymentState==='success'){
  paymentNotice.hidden=false;
- const sessionId=new URLSearchParams(location.search).get('session_id');
- if(!sessionId){paymentNotice.textContent='We could not verify this checkout session. Your cart has been kept; please check your Stripe receipt or contact us.';}
+ const returnParams=new URLSearchParams(location.search);
+ const sessionId=returnParams.get('orderId')||returnParams.get('session_id');
+ if(!sessionId){paymentNotice.textContent='We could not verify this checkout session. Your cart has been kept; please check your Square receipt or contact us.';}
  else{
-  paymentNotice.textContent='Verifying your payment securely with Stripe…';
+  paymentNotice.textContent='Verifying your payment securely with Square…';
   fetch('/api/checkout-session?session_id='+encodeURIComponent(sessionId))
    .then(async response=>{const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Payment verification is unavailable.');return data;})
    .then(data=>{
     if(data.payment_status==='paid'){
-     paymentNotice.textContent='Thank you! Stripe has confirmed your payment. Please keep your Stripe receipt for your records.';
+     paymentNotice.textContent='Thank you! Square has confirmed your payment. Please keep your Square receipt for your records.';
      try{localStorage.removeItem('emberGathererCart');}catch(_){}
      cart=[];renderCart();
     }else{
-     paymentNotice.textContent='Stripe has not confirmed payment yet. Your cart has been kept. Please check your Stripe receipt or try again.';
+     paymentNotice.textContent='Square has not confirmed payment yet. Your cart has been kept. Please check your Square receipt or try again.';
     }
    })
-   .catch(error=>{paymentNotice.textContent='We could not verify the payment right now. Your cart has been kept. Please check your Stripe receipt or contact us.';});
+   .catch(error=>{paymentNotice.textContent='We could not verify the payment right now. Your cart has been kept. Please check your Square receipt or contact us.';});
  }
 }
 else if(paymentState==='cancelled'){paymentNotice.hidden=false;paymentNotice.classList.add('cancelled');paymentNotice.textContent='Your payment was cancelled. Your cart is still available so you can try again.';}
