@@ -534,9 +534,9 @@ footer .social-links{margin:12px 0 18px}
    <div class="field"><label for="orderNotes">Additional Details</label><textarea id="orderNotes" placeholder="Guest count, event type, dietary requests, pickup or delivery notes…"></textarea></div>
    <div class="square-panel">
     <div><span class="kicker">Secure online payment</span><h3>Pay online with Square</h3>
-    <p>Customers can pay securely by card through Square Checkout. Your card details are handled by Square, not stored on this website.</p></div>
+    <p>Customers can pay securely by card on Square’s hosted checkout page. Your card details are handled by Square, not stored on this website.</p></div>
     <button class="btn square-btn" type="button" onclick="startSquareCheckout()">Continue to Secure Payment</button>
-    <p id="squareStatus" class="notice" aria-live="polite">Online payment is securely processed by Square Checkout.</p>
+    <p id="squareStatus" class="notice" aria-live="polite">Secure Square Checkout will open on Square’s hosted payment page.</p>
    </div>
    <button class="btn" type="button" onclick="submitOrder()">Prepare Order Request</button>
    <button class="btn outline" type="button" onclick="copyOrder()">Copy Order Summary</button>
@@ -896,41 +896,25 @@ function submitOrder(){
  const link=document.createElement('a');link.href=sms;link.className='btn';link.textContent='Send Order by Text Message';link.style.marginTop='12px';
  const status=document.getElementById('orderStatus');status.appendChild(document.createElement('br'));status.appendChild(link);
 }
-// Square-hosted Checkout endpoint. The access token stays on the Vercel server.
-const SQUARE_CHECKOUT_ENDPOINT = '/api/create-checkout-session';
+const SQUARE_CHECKOUT_ENDPOINT = '/api/create-square-checkout';
 async function startSquareCheckout(){
  if(!cart.length){alert('Your cart is empty. Add items before paying.');return;}
- if(customMenuMode && subtotal()<600){alert('Custom Menu requires a minimum food and beverage order of $600 CAD before GST. Add more items to continue.');return;}
+ if(customMenuMode && subtotal()<600){alert('Custom Menu requires a minimum food and beverage order of $600 CAD before GST.');return;}
  const name=document.getElementById('customerName').value.trim();
  const phone=document.getElementById('customerPhone').value.trim();
  const email=document.getElementById('customerEmail').value.trim();
  const address=document.getElementById('orderAddress').value.trim();
  if(!name||!phone||!address){alert('Please enter your name, phone number and delivery address first.');return;}
  const status=document.getElementById('squareStatus');
- if(!SQUARE_CHECKOUT_ENDPOINT){
-   status.textContent='Square is not connected yet. Check SQUARE_ACCESS_TOKEN and SQUARE_LOCATION_ID in Vercel. Never put the Square Access Token in this HTML.';
-   alert('Square Checkout is not configured yet. Please contact us before attempting payment.');
-   return;
- }
- const payload={
-   customer:{name,phone,email,address,eventDate:document.getElementById('orderDate').value,notes:document.getElementById('orderNotes').value},
-   currency:'cad',
-   customMenuMode,
-   items:cart.map(x=>({name:x.name,unit:x.unit,quantity:x.qty,type:x.type||'menu',id:x.id||null,packageKey:x.packageKey||null,guests:x.guests||null,lbs:x.lbs||null,smokeIndex:Number.isInteger(x.smokeIndex)?x.smokeIndex:null})),
-   subtotalCents:Math.round(subtotal()*100),
-   deliveryCents:Math.round(delivery()*100),
-   totalCents:Math.round((subtotal()+delivery())*100)
- };
+ const payload={customer:{name,phone,email,address,eventDate:document.getElementById('orderDate').value,notes:document.getElementById('orderNotes').value},customMenuMode,items:cart.map(x=>({type:x.type||'menu',id:x.id||null,quantity:x.qty||1,packageKey:x.packageKey||null,guests:x.guests||null,smokeIndex:Number.isInteger(x.smokeIndex)?x.smokeIndex:null,lbs:x.lbs||null}))};
  try{
-   status.textContent='Connecting securely to Square…';
-   const response=await fetch(SQUARE_CHECKOUT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-   const result=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(result.error||('Checkout request failed ('+response.status+').'));
-   if(!result.url||!String(result.url).startsWith('https://'))throw new Error(result.error||'The checkout service did not return a valid secure Square URL.');
-   window.location.href=result.url;
- }catch(error){
-   status.textContent='Payment could not be started: '+error.message+' Please contact us to complete your order.';
- }
+  status.textContent='Connecting securely to Square…';
+  const response=await fetch(SQUARE_CHECKOUT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(result.error||('Checkout request failed ('+response.status+').'));
+  if(!result.url||!String(result.url).startsWith('https://'))throw new Error('Square did not return a valid secure checkout URL.');
+  window.location.href=result.url;
+ }catch(error){status.textContent='Payment could not be started: '+error.message+' Your cart has been kept.';}
 }
 function copyOrder(){
  const field=document.getElementById('orderSummary');
@@ -952,28 +936,13 @@ const siteNav=document.getElementById('siteNav');
 if(navToggle&&siteNav){navToggle.addEventListener('click',()=>{const open=siteNav.classList.toggle('is-open');navToggle.setAttribute('aria-expanded',String(open));navToggle.setAttribute('aria-label',open?'Close navigation':'Open navigation');navToggle.textContent=open?'×':'☰';});siteNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{siteNav.classList.remove('is-open');navToggle.setAttribute('aria-expanded','false');navToggle.setAttribute('aria-label','Open navigation');navToggle.textContent='☰';}));}
 const paymentState=new URLSearchParams(location.search).get('payment');
 const paymentNotice=document.getElementById('paymentNotice');
-if(paymentState==='success'){
+if(paymentState==='square-return'){
  paymentNotice.hidden=false;
- const returnParams=new URLSearchParams(location.search);
- const sessionId=returnParams.get('orderId')||returnParams.get('session_id');
- if(!sessionId){paymentNotice.textContent='We could not verify this checkout session. Your cart has been kept; please check your Square receipt or contact us.';}
- else{
-  paymentNotice.textContent='Verifying your payment securely with Square…';
-  fetch('/api/checkout-session?session_id='+encodeURIComponent(sessionId))
-   .then(async response=>{const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Payment verification is unavailable.');return data;})
-   .then(data=>{
-    if(data.payment_status==='paid'){
-     paymentNotice.textContent='Thank you! Square has confirmed your payment. Please keep your Square receipt for your records.';
-     try{localStorage.removeItem('emberGathererCart');}catch(_){}
-     cart=[];renderCart();
-    }else{
-     paymentNotice.textContent='Square has not confirmed payment yet. Your cart has been kept. Please check your Square receipt or try again.';
-    }
-   })
-   .catch(error=>{paymentNotice.textContent='We could not verify the payment right now. Your cart has been kept. Please check your Square receipt or contact us.';});
- }
+ paymentNotice.textContent='You have returned from Square Checkout. Please check your Square receipt or contact Ember & Gatherer to confirm your order. Your cart has been kept until confirmation.';
 }
-else if(paymentState==='cancelled'){paymentNotice.hidden=false;paymentNotice.classList.add('cancelled');paymentNotice.textContent='Your payment was cancelled. Your cart is still available so you can try again.';}
+else if(paymentState==='cancelled'){
+ paymentNotice.hidden=false;paymentNotice.classList.add('cancelled');paymentNotice.textContent='Your payment was not completed. Your cart is still available so you can try again.';
+}
 renderPackages();renderCategories();renderMenu();renderSmoke();renderAboutSection();
  renderGallery();renderCart();updateEstimate();
 
