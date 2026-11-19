@@ -250,12 +250,14 @@ module.exports = async function handler(req, res) {
         }))
       );
 
+      const codes = errors.map(e => e.code).filter(Boolean);
+      const invalidLocation = codes.includes('INVALID_VALUE');
+
       return send(res, 502, {
-        error: errors
-          .map(e => e.detail || e.code)
-          .filter(Boolean)
-          .join('; ') || 'Square could not create the checkout link.',
-        squareCodes: errors.map(e => e.code).filter(Boolean),
+        error: invalidLocation
+          ? 'Square rejected the Location ID. Check SQUARE_LOCATION_ID in Vercel.'
+          : 'Square could not create the checkout link. Check the Square credentials and settings in Vercel.',
+        squareCodes: codes,
         httpStatus: response.status
       });
     }
